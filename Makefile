@@ -39,7 +39,7 @@ dev:bin/dev.app
 
 clean:
 	@rm bin/dev.app
-	@rm test/*.o
+	@rm tests/*.o
 
 
 rootdict: MultiCumulants/LinkDef.h
