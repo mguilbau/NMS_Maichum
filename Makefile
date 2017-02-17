@@ -38,9 +38,8 @@ dev:bin/dev.app
 
 
 clean:
-	@rm MultiCumulants/cint_*
 	@rm bin/dev.app
-	@rm lib/MultiCumulants.so
+	@rm test/*.o
 
 
 rootdict: MultiCumulants/LinkDef.h
