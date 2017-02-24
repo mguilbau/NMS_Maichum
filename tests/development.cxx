@@ -1,7 +1,7 @@
 
 
 #include "MultiCumulants/QVector.h"
-#include "MultiCumulants/EtaRegion.h"
+#include "MultiCumulants/Subsets.h"
 
 #include <iostream>
 using namespace std;
@@ -11,7 +11,7 @@ int
 main(int argc, char** argv) {
 
 	QVector qv;
-	EtaRegion er(-1.5, -1.0);
+	Subset er;
 
 	cout << qv.toString() << endl;
 	cout << er.toString() << endl;

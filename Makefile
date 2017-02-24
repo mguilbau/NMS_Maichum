@@ -2,7 +2,7 @@
 
 NAME            := multicumulants
 #http://semver.org/
-VERSION         := 0.1.0
+VERSION         := 0.1.1
 
 
 # ROOT
@@ -25,8 +25,8 @@ LDFLAGS         := -Wl
 SOFLAGS         := -shared
 
 #------------------------------------------------------------------------------
-HEADERS 		:= MultiCumulants/QVector.h            \
-				   MultiCumulants/EtaRegion.h          
+HEADERS 		:= MultiCumulants/QVector.h \
+		           MultiCumulants/Subsets.h          
 
 tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
@@ -38,8 +38,8 @@ dev:bin/dev.app
 
 
 clean:
-	@rm bin/dev.app
-	@rm tests/*.o
+	@rm -f bin/dev.app
+	@rm -f tests/*.o
 
 
 rootdict: MultiCumulants/LinkDef.h

@@ -48,4 +48,10 @@ typedef unsigned short Size;
 /** Type of Powers */
 typedef unsigned short Power;
 
+/**
+ *  enum to contain the particle charge
+**/
+enum pCharge {kNeg = -1, kNull = 0, kPos = 1, kCharged = 2, kAll = 3};
+
+
 #endif
