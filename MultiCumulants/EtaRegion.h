@@ -5,7 +5,9 @@
 
 #include <string>
 
-
+// logging library
+#define LOGURU_IMPLEMENTATION 1
+#include "loguru.hpp"
 
 /**
  * Class to define an Eta Region
@@ -29,8 +31,11 @@ public:
 	
 
 	virtual void set( Real min, Real max ){
+		// You can log the scope of the current function call, this helps in profiling (not really needed here, just example)
+		LOG_SCOPE_FUNCTION(INFO);
 		this->_min = min;
 		this->_max = max;
+		LOG_F( INFO, "_min=%f, _max=%f", this->_min, this->_max );
 	}
 
 	/**

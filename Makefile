@@ -18,7 +18,7 @@ ROOT_ARCH      	= $(shell root-config --arch)
 
 CXX             := g++ -c 
 CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic
-CPPFLAGS        := -I.
+CPPFLAGS        := -I. -I./vendor/loguru
 
 LD              := g++
 LDFLAGS         := -Wl
@@ -39,7 +39,7 @@ dev:bin/dev.app
 
 clean:
 	@rm bin/dev.app
-	@rm test/*.o
+	@rm tests/*.o
 
 
 rootdict: MultiCumulants/LinkDef.h
