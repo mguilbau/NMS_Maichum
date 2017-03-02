@@ -32,6 +32,7 @@ tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/dev.app: tests/development.o
+	@mkdir -p bin
 	$(LD) $(LDFLAGS) -o $@ $^
 
 dev:bin/dev.app
