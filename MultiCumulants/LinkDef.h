@@ -4,5 +4,5 @@
 #pragma link off all global;
 #pragma link off all typedef;
 
-#pragma link C++ class EtaRegion+;
+#pragma link C++ class Subsets+;
 #pragma link C++ class QVector+;

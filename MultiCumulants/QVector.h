@@ -5,7 +5,7 @@
 
 // logging library
 #define LOGURU_IMPLEMENTATION 1
-#include "loguru.hpp"
+//#include "loguru.hpp"
 
 class QVector
 {
@@ -13,10 +13,10 @@ public:
 	virtual const char* name() const { return "Q Vector"; }
 	virtual const char* classname() const {  return "QVector"; }
 	QVector() {
-		LOG_SCOPE_FUNCTION(INFO);
+		//LOG_SCOPE_FUNCTION(INFO);
 	}
 	~QVector() {
-		LOG_SCOPE_FUNCTION(INFO);
+		//LOG_SCOPE_FUNCTION(INFO);
 	}
 
 
