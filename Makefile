@@ -18,7 +18,7 @@ ROOT_ARCH      	= $(shell root-config --arch)
 
 CXX             := g++ -c 
 CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic
-CPPFLAGS        := -I.
+CPPFLAGS        := -I. -I./vendor/loguru
 
 LD              := g++
 LDFLAGS         := -Wl
@@ -32,6 +32,7 @@ tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/dev.app: tests/development.o
+	@mkdir -p bin
 	$(LD) $(LDFLAGS) -o $@ $^
 
 dev:bin/dev.app
