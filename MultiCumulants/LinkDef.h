@@ -6,3 +6,7 @@
 
 #pragma link C++ class Subsets+;
 #pragma link C++ class QVector+;
+#pragma link C++ class Algorithm+;
+//#pragma link C++ class ToyMCGenerator+;
+//#pragma link C++ class ToyMCEvent+;
+//#pragma link C++ class ToyMCParticle+;

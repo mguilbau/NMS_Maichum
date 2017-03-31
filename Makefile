@@ -17,23 +17,27 @@ ROOT_ARCH      	= $(shell root-config --arch)
 
 
 CXX             := g++ -c 
-CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic
+CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS)
 CPPFLAGS        := -I. -I./vendor/loguru
 
 LD              := g++
-LDFLAGS         := -Wl
+LDFLAGS         := -Wl $(ROOTCFLAGS)
 SOFLAGS         := -shared
 
 #------------------------------------------------------------------------------
 HEADERS 		:= MultiCumulants/QVector.h \
-		           MultiCumulants/Subsets.h          
+		           MultiCumulants/Subsets.h \
+                           MultiCumulants/Algorithm.h \
+                           MultiCumulants/ToyMCEvent.h \
+                           MultiCumulants/ToyMCGenerator.h \
+                           MultiCumulants/ToyMCParticle.h         
 
 tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/dev.app: tests/development.o
 	@mkdir -p bin
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 
 dev:bin/dev.app
 
@@ -52,3 +56,4 @@ lib/MultiCumulants.so: MultiCumulants/cint_dictionary.o
 	$(LD) $(SOFLAGS) $(LDFLAGS) $(ROOTLIBS) $^ -o $@
 
 rootlib: lib/MultiCumulants.so
+# DO NOT DELETE
