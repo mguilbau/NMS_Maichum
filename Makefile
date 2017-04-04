@@ -42,7 +42,7 @@ bin/dev.app: tests/development.o
 
 dev:bin/dev.app
 
-tests/toymc.o: tests/toymc.cxx ToyMC/cint_dictionary.cxx $(HEADERS)
+tests/toymc.o: tests/toymc.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/toymc.app: tests/toymc.o ToyMC/cint_dictionary.o
@@ -60,7 +60,7 @@ ToyMC/cint_dictionary.cxx: ToyMC/LinkDef.h
 	rootcint -v4 -f $@ -c ToyMC/ToyMCEvent.h ToyMC/ToyMCParticle.h ToyMC/ToyMCGenerator.h $<
 
 ToyMC/cint_dictionary.o: ToyMC/cint_dictionary.cxx
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(ROOTCFLAGS) $< -o ToyMC/cint_dictionary.o
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(ROOTCFLAGS) $< -o $@
 
 lib/ToyMC.so: ToyMC/cint_dictionary.o
 	$(LD) $(SOFLAGS) $(LDFLAGS) $(ROOTLIBS) $^ -o $@

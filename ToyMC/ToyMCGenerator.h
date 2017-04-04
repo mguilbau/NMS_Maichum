@@ -18,8 +18,6 @@
 #include "ToyMC/BranchWriter.h"
 #include "ToyMC/TClonesArrayWriter.h"
 
-#define LOGURU_IMPLEMENTATION 1
-#include "vendor/loguru/loguru.hpp"
 
 
 /**
@@ -80,13 +78,10 @@ public:
 		this->_tree = new TTree("ToyMCTree", "Toy MC Tree");
 		this->_eventWriter.createBranch( this->_tree, "Event" );
 		this->_plcsWriter.createBranch( this->_tree, "Particles" );
-		LOG_F( INFO, "Created Branches for Event, Particles" );
 	}
 
 	void generate( int nevts = -1)
 	{
-		LOG_SCOPE_FUNCTION(INFO);
-
 		if ( nevts > 0 )
 			this->_nevts = nevts;
 
