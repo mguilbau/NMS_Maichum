@@ -17,6 +17,11 @@ make dev
 
 log file is bin/debug.log - will show all logging output during development running
 
+#### Toy MonteCarlo application
+```bash
+make bin/toymc.app
+./bin/toymc.app
+```
 
 #### Contribution Guidelines
 
