@@ -22,6 +22,18 @@ log file is bin/debug.log - will show all logging output during development runn
 make bin/toymc.app
 ./bin/toymc.app
 ```
+to create the ROOT shared library for interactive use:
+```bash
+make rootlib
+```
+
+then the ROOT shared library is in lib/ToyMC.so, you can load it into ROOT with:
+```c++
+gSystem->Load( "lib/ToyMC.so");
+```
+
+
+
 
 #### Contribution Guidelines
 
