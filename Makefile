@@ -32,6 +32,8 @@ HEADERS 		:= MultiCumulants/QVector.h \
                            ToyMC/ToyMCGenerator.h \
                            ToyMC/ToyMCParticle.h         
 
+# Objects to compile into ToyMc binary
+TOYMC 			:= tests/toymc.o
 
 tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
@@ -40,20 +42,26 @@ bin/dev.app: tests/development.o
 	@mkdir -p bin
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 
+.PHONY: dev
 dev:bin/dev.app
 
-tests/toymc.o: tests/toymc.cxx $(HEADERS)
+# Produces .o files for ToyMC
+$(TOYMC) : %.o: %.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
-bin/toymc.app: tests/toymc.o ToyMC/cint_dictionary.o
+bin/toymc.app: $(TOYMC) ToyMC/cint_dictionary.o
 	@mkdir -p bin
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 
+.PHONY: toymc
 toymc:bin/toymc.app
 
+.PHONY: clean
 clean:
 	@rm -f bin/*.app
 	@rm -f tests/*.o
+	@rm -f ToyMC/*.o
+	@rm -f ToyMC/cint_dictionary.*
 
 
 ToyMC/cint_dictionary.cxx: ToyMC/LinkDef.h
@@ -62,7 +70,8 @@ ToyMC/cint_dictionary.cxx: ToyMC/LinkDef.h
 ToyMC/cint_dictionary.o: ToyMC/cint_dictionary.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(ROOTCFLAGS) $< -o $@
 
-lib/ToyMC.so: ToyMC/cint_dictionary.o
+# include the toymc.o because it has the implementation of the logger
+lib/ToyMC.so: ToyMC/cint_dictionary.o $(TOYMC)
 	$(LD) $(SOFLAGS) $(LDFLAGS) $(ROOTLIBS) $^ -o $@
 
 .PHONY: rootlib

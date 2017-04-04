@@ -18,6 +18,9 @@
 #include "ToyMC/BranchWriter.h"
 #include "ToyMC/TClonesArrayWriter.h"
 
+#ifndef __CINT__
+	#include "vendor/loguru/loguru.hpp"
+#endif
 
 
 /**
@@ -38,25 +41,22 @@ public:
 	 */
 	ToyMCGenerator()
 	{
+		LOG_SCOPE_FUNCTION( INFO );
 		this->_nevts = 100;
 
 		commonSetup();
-
-		makeTree();
 	}
 
 	ToyMCGenerator(int nevts)
 	{
+		LOG_SCOPE_FUNCTION( INFO );
 		this->_nevts = nevts;
 		commonSetup();
-
-		makeTree();
 	}
 
 	~ToyMCGenerator()
 	{
-		this->_tree->Write();
-		this->_output->Close();
+		LOG_SCOPE_FUNCTION( 9 );
 	}
 
 	void commonSetup(){
@@ -69,10 +69,10 @@ public:
 		
 	}
 
-	void makeTree(){
-
-		// TODO: config output filename
-		this->_output = new TFile( "ToyMC.root", "RECREATE" );
+	void makeTree( std::string filename = "ToyMc.root" )
+	{
+		LOG_SCOPE_FUNCTION( INFO );
+		this->_output = new TFile( filename.c_str(), "RECREATE" );
 		// if you open the file first then the TTree can do buffered outputs
 
 		this->_tree = new TTree("ToyMCTree", "Toy MC Tree");
@@ -80,10 +80,12 @@ public:
 		this->_plcsWriter.createBranch( this->_tree, "Particles" );
 	}
 
-	void generate( int nevts = -1)
+	void generate( int nevts = -1, std::string filename = "ToyMC.root" )
 	{
 		if ( nevts > 0 )
 			this->_nevts = nevts;
+
+		makeTree( filename );
 
 		for(int ievt = 0; ievt<this->_nevts; ++ievt)
 		{
@@ -110,6 +112,8 @@ public:
 			//Fill TTree
 			this->_tree->Fill(); 
 		}
+
+		this->_tree->Write();
 	}
 	
 	/**

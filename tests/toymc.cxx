@@ -1,13 +1,13 @@
-#include "ToyMC/ToyMCGenerator.h"
+// logging library
+#define LOGURU_IMPLEMENTATION 1
+#include "vendor/loguru/loguru.hpp"
 
 #include <iostream>
 #include <cstdlib>
 #include <string>
 #include <random>
 
-// logging library
-#define LOGURU_IMPLEMENTATION 1
-#include "vendor/loguru/loguru.hpp"
+#include "ToyMC/ToyMCGenerator.h"
 
 using namespace std;
 
