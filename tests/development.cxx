@@ -2,7 +2,6 @@
 #include "MultiCumulants/Result.h"
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
-#include "MultiCumulants/ToyMCGenerator.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -25,10 +24,6 @@ main(int argc, char** argv) {
 	// sometimes the "stream" form of the logger is more convenient, use LOG_S( LEVEL ) << "MESSAGE";
 	// No need for an endl at the end of a line
 	
-        toymc::ToyMCGenerator g;
-        //LOG_S(INFO) << g.toString();
-
-
         size_t order = 4;
 
         cumulant::Subset s1(2);
