@@ -4,6 +4,6 @@
 #pragma link off all global;
 #pragma link off all typedef;
 
-#pragma link C++ class ToyMCGenerator+;
-#pragma link C++ class ToyMCEvent+;
-#pragma link C++ class ToyMCParticle+;
+#pragma link C++ class toymc::ToyMCEvent+;
+#pragma link C++ class toymc::ToyMCParticle+;
+#pragma link C++ class toymc::ToyMCGenerator+;

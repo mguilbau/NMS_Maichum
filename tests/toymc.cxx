@@ -16,7 +16,7 @@ void checkParam(int argc, char** argv);
 int 
 main(int argc, char** argv) {
 
-        checkParam(argc, argv);
+	checkParam(argc, argv);
 
 	loguru::set_thread_name("MAIN");
 	// logs everything to the debug.log file every run
@@ -25,9 +25,9 @@ main(int argc, char** argv) {
 	// sometimes the "stream" form of the logger is more convenient, use LOG_S( LEVEL ) << "MESSAGE";
 	// No need for an endl at the end of a line
 	
-        toymc::ToyMCGenerator g;
-        LOG_S(INFO) << g.toString();
-        g.generate();
+	toymc::ToyMCGenerator g;
+	LOG_S(INFO) << g.toString();
+	g.generate(1000);
 
 	return 0;
 }

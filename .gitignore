@@ -30,3 +30,8 @@
 
 # Log files
 *.log
+
+*.root
+
+# ignore ROOT Dictionary creation, because it is ROOT/Platform specific
+*cint_*

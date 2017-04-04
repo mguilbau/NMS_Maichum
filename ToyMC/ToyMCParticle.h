@@ -10,28 +10,38 @@
 namespace toymc
 {
 
-class ToyMCParticle
+class ToyMCParticle : public TObject
 {
 public:
 	virtual const char* name() const { return "ToyMCParticle"; }
-	virtual const char* classname() const { return "ToyMCParticle"; }
+	virtual const char* classname() const { return "toymc::ToyMCParticle"; }
 	
 	/**
 	 * Constructor - 
 	 */
 	ToyMCParticle()
-        {
-           set(0.,0.,0.);
-        }
+	{
+		reset();
+	}
 
 	~ToyMCParticle(){}
 
-        void set(double pt, double eta, double phi)
-        {
-          this->_phi = phi;
-          this->_pt  = pt;
-          this->_eta = eta;
-        }
+	void reset(){
+		set( 0.0, 0.0, 0.0 );
+	} 
+
+	virtual void copy( ToyMCParticle *that ){
+		this->_pt  = that->_pt;
+		this->_eta = that->_eta;
+		this->_phi = that->_phi;
+	}
+
+	void set(double pt, double eta, double phi)
+	{
+		this->_phi = phi;
+		this->_pt  = pt;
+		this->_eta = eta;
+	}
 
 	/**
 	 * builds the string representation of the object
@@ -45,10 +55,12 @@ public:
 	}
 
 protected:
-        double _phi;
-        double _pt;
-        double _eta;
+	double _phi;
+	double _pt;
+	double _eta;
+
+	ClassDef( ToyMCParticle, 1 )
 };
-}
+} // toymc NAMESPACE
 #endif
 
