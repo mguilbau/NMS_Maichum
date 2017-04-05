@@ -62,16 +62,19 @@ clean:
 	@rm -f tests/*.o
 	@rm -f ToyMC/*.o
 	@rm -f ToyMC/cint_dictionary.*
+	@rm -f ToyMC/*.pcm
 
 
 ToyMC/cint_dictionary.cxx: ToyMC/LinkDef.h
 	rootcint -v4 -f $@ -c ToyMC/ToyMCEvent.h ToyMC/ToyMCParticle.h ToyMC/ToyMCGenerator.h $<
+	-@[ -e "ToyMC/cint_dictionary_rdict.pcm" ] && mv -f ToyMC/cint_dictionary_rdict.pcm bin/		# ROOT 6
 
 ToyMC/cint_dictionary.o: ToyMC/cint_dictionary.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(ROOTCFLAGS) $< -o $@
 
 # include the toymc.o because it has the implementation of the logger
 lib/ToyMC.so: ToyMC/cint_dictionary.o $(TOYMC)
+	@mkdir -p lib
 	$(LD) $(SOFLAGS) $(LDFLAGS) $(ROOTLIBS) $^ -o $@
 
 .PHONY: rootlib

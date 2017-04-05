@@ -114,6 +114,9 @@ public:
 		}
 
 		this->_tree->Write();
+		this->_output->Write();
+		this->_output->Close();
+
 	}
 	
 	/**
