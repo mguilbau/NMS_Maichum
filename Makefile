@@ -35,16 +35,11 @@ HEADERS 		:= MultiCumulants/QVector.h \
 # Objects to compile into ToyMc binary
 TOYMC 			:= tests/toymc.o
 
-tests/development.o: tests/development.cxx $(HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+# this works for make v 3.8 and newer
+.DEFAULT_GOAL := toymc
 
-bin/dev.app: tests/development.o
-	@mkdir -p bin
-	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
-
-.PHONY: dev
-dev:bin/dev.app
-
+###########################################################################
+# TOY MonteCarlo binary
 # Produces .o files for ToyMC
 $(TOYMC) : %.o: %.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
@@ -56,6 +51,32 @@ bin/toymc.app: $(TOYMC) ToyMC/cint_dictionary.o
 .PHONY: toymc
 toymc:bin/toymc.app
 
+toymc_depend: .depend_toymc
+
+.depend_toymc: $(TOYMC:%.o=%.cxx) 
+	rm -f ./.depend_toymc
+	$(CXX) $(CPPFLAGS) $(ROOTCFLAGS) -MM $^ > ./.depend_toymc
+
+include .depend_toymc
+
+# TOY MonteCarlo binary
+###########################################################################
+
+###########################################################################
+# Generic development testing binary
+tests/development.o: tests/development.cxx $(HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+
+bin/dev.app: tests/development.o
+	@mkdir -p bin
+	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
+
+.PHONY: dev
+dev:bin/dev.app
+# Generic development testing binary
+###########################################################################
+
+
 .PHONY: clean
 clean:
 	@rm -f bin/*.app
@@ -63,6 +84,7 @@ clean:
 	@rm -f ToyMC/*.o
 	@rm -f ToyMC/cint_dictionary.*
 	@rm -f ToyMC/*.pcm
+	@rm -f .depend_*
 
 
 ToyMC/cint_dictionary.cxx: ToyMC/LinkDef.h

@@ -36,3 +36,6 @@
 # ignore ROOT Dictionary creation, because it is ROOT/Platform specific
 *cint_*
 *.pcm
+
+#make dependencies 
+.depend_*
