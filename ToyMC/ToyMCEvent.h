@@ -35,15 +35,15 @@ public:
 	}
 
 	virtual void copy( ToyMCEvent * that ){
-		this->_alpha = that->_alpha;
-		this->_beta  = that->_beta;
+		this->_mult = that->_mult;
+		this->_noff  = that->_noff;
 	}
 
-	void set(int alpha, UInt_t beta )
+	void set(int mult, UInt_t noff )
 	{
 		// this->_particles.reserve(npart);
-		this->_alpha = alpha;
-		this->_beta = beta;
+		this->_mult = mult;
+		this->_noff = noff;
 	}
 
 	void add(ToyMCParticle part) 
@@ -64,8 +64,8 @@ public:
 
 protected:
 	// std::vector<ToyMCParticle> _particles;
-	Int_t   _alpha;
-	UInt_t  _beta;
+	UInt_t  _mult;
+	UInt_t  _noff;
 
 	ClassDef( ToyMCEvent, 1 )
 };

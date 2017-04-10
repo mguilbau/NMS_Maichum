@@ -43,6 +43,10 @@ public:
 		this->_eta = eta;
 	}
 
+        double getphi() { return _phi; }
+        double getpt( ) { return _pt; }
+        double geteta() { return _eta; }
+
 	/**
 	 * builds the string representation of the object
 	 *
