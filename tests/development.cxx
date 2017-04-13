@@ -3,7 +3,6 @@
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
 
-#include "vendor/argparse.h"
 #include "vendor/cmdline.h"
 
 #include <iostream>
@@ -119,12 +118,13 @@ void cumulants(){
 	   qv.generateMask(val[n]);
 	   qv.fill(phi[n], w[n]);
 	}
+	LOG_F( INFO, qv.maskString().c_str() );
 	
 	LOG_S(INFO) << qv.print();
 	qv.reset();
 
 	cumulant::QVectorVector q = qv.getQ();
-	
+
 }
 
 void mc(){

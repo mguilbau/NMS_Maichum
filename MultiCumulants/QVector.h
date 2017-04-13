@@ -246,6 +246,21 @@ public:
                 return s;
         }
 
+        std::string maskString(){
+            std::string s = "";
+            size_t n = this->_mask.size();
+            for ( size_t i = 0 ; i < n; i++ ){
+                for ( size_t j = 0; j < this->_mask[i].size(); j++ ){
+                    if ( this->_mask[i][j] )
+                        s+= "[1]";
+                    else 
+                        s+= "[0]";
+                }
+                s+="\n";
+            }
+            return s;
+        }
+
 protected:
         Set _set;
         bool _useWeights;
