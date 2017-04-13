@@ -114,7 +114,7 @@ typedef std::vector< std::vector<QVector> > QVectorVector;
 
 class QVectorMask {
 public:
-	std::bitset<4> bits;
+	std::bitset<MAX_SET_SIZE> bits;
 	size_t i=0;
 	size_t j=0;
 };
@@ -212,7 +212,7 @@ public:
 		{
 			Real weight = (!this->_useWeights ? 1 : w);
 
-			std::bitset<4> setMask = this->_set.setMask(val);
+			std::bitset<MAX_SET_SIZE> setMask = this->_set.setMask(val);
 			// LOG_S(INFO) << "in Sets: " << setMask.to_string() << std::endl;
 
 			size_t nn = this->_masks.size();

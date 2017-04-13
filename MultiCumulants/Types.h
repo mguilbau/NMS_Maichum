@@ -4,6 +4,7 @@
 #include <vector>
 #include <complex>
 
+#define MAX_SET_SIZE 4
 
 /**
  * @file   correlations/Types.hh
