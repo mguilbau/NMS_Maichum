@@ -52,10 +52,10 @@ void cumulants(){
 
 	cumulant::Subset s1(2);
 	s1.set(0, "pT", 0., 10.0);
-	s1.set(1, "eta",-10,10);
+	s1.set(1, "eta",0,10);
 	cumulant::Subset s2(2);
 	s2.set(0, "pT", 0., 10.0);
-	s2.set(1, "eta",-10, 10);
+	s2.set(1, "eta",-10, 0);
 	cumulant::Subset s3(2);
 	s3.set(0, "pT", 0., 10.0);
 	s3.set(1, "eta",-10, 10);
@@ -114,11 +114,12 @@ void cumulants(){
 	cumulant::QVectorSet qv(h,qvset,false);
 	qv.reset();
 
+	LOG_S(INFO) << "\n" << qv.maskString() << endl;
 	for (int n = 0; n < 100; ++n) {
-	   qv.generateMask(val[n]);
-	   qv.fill(phi[n], w[n]);
+	   // qv.generateMask(val[n]);
+	   qv.fill(val[n], phi[n], w[n]);
 	}
-	LOG_F( INFO, qv.maskString().c_str() );
+	// 
 	
 	LOG_S(INFO) << qv.print();
 	qv.reset();
