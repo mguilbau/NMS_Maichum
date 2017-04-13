@@ -3,7 +3,6 @@
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
 
-#include "vendor/argparse.h"
 #include "vendor/cmdline.h"
 
 #include <iostream>
