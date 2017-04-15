@@ -36,6 +36,7 @@
 # ignore ROOT Dictionary creation, because it is ROOT/Platform specific
 *cint_*
 *.pcm
+bench_*.dat
 
 #make dependencies 
 .depend_*

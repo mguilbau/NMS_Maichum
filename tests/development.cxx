@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include <string>
 #include <random>
+#include <chrono>
+#include <fstream>
 
 using namespace std;
 
@@ -16,6 +18,7 @@ void checkParam(int argc, char** argv);
 
 void cumulants();
 void mc();
+void benchmark( int impl = 1, size_t horder = 4);
 
 int 
 main(int argc, char** argv) {
@@ -24,6 +27,8 @@ main(int argc, char** argv) {
 
 	parser.add("mc", '\0', "Run ToyMc");
 	parser.add("cumulants", '\0', "Run Cumulants");
+	parser.add<int>("benchmark", '\0', "Run Benchmarks", false, -1);
+	parser.add<size_t>("horder", '\0', "harmonic order (benchmarks)", false, 4);
 
 	parser.parse_check( argc, argv );
 
@@ -39,6 +44,8 @@ main(int argc, char** argv) {
 		mc();
 	} else if ( parser.exist( "cumulants" ) ){
 		cumulants();
+	} else if ( parser.get<int>( "benchmark" ) >= 1 ){
+		benchmark( parser.get<int>( "benchmark" ), parser.get<size_t>( "horder" ) );
 	} else {
 		cout << parser.usage() << endl;
 	}
@@ -48,7 +55,7 @@ main(int argc, char** argv) {
 void cumulants(){
 	LOG_F( INFO, "Cumulants" );
 
-	size_t order = 4;
+	const size_t order = 4;
 
 	cumulant::Subset s1(2);
 	s1.set(0, "pT", 0., 10.0);
@@ -111,7 +118,7 @@ void cumulants(){
 	h[2] = -2;
 	h[3] = -2;
 
-	cumulant::QVectorSet qv(h,qvset,false);
+	cumulant::impl2::QVectorSet qv(h,qvset,false);
 	qv.reset();
 
 	LOG_S(INFO) << "\n" << qv.maskString() << endl;
@@ -124,7 +131,7 @@ void cumulants(){
 	LOG_S(INFO) << qv.print();
 	qv.reset();
 
-	cumulant::QVectorVector q = qv.getQ();
+	cumulant::impl2::QVectorVector q = qv.getQ();
 
 }
 
@@ -139,4 +146,152 @@ void checkParam(int argc, char** argv)
 		LOG_S(INFO) << "Number of parameters: " << argc;
 		for(int ip=0; ip<argc; ++ip) 
 		  LOG_S(INFO) << "Argument " << ip << ": " << argv[ip];
+}
+
+
+
+void benchmark( int impl, size_t order ){
+	LOG_F( INFO, "BENCHMARK on filling QVectors" );
+
+
+	cumulant::Set qvset(order);
+
+	for ( size_t i = 0; i < order; i++ ){
+		cumulant::Subset s(2);
+		s.set(0, "pT", 0., 10.0);
+		s.set(1, "eta",0,10);
+		LOG_S(INFO) << s.toString();
+		qvset.setSubsetParams(i,s);
+	}
+	LOG_S(INFO) << qvset.toString();
+
+
+	double PI = 3.14159265358;
+	std::vector<double> phi;
+	std::vector<double> eta;
+	std::vector<double> pt;
+	std::vector<double> w;
+
+	std::random_device rd;
+	std::mt19937 ephi(rd());
+	std::mt19937 eeta(rd());
+	std::mt19937 ept(rd());
+	std::mt19937 ew(rd());
+	std::uniform_real_distribution<> distphi(0, 2*PI);
+	std::uniform_real_distribution<> disteta(-10, 10);
+	std::uniform_real_distribution<> distpt(0, 10);
+	std::uniform_real_distribution<> distw(0, 1);
+
+
+	size_t NEvents = 100;
+	size_t NTrk = 10000;
+
+	for (size_t n = 0; n < NTrk; ++n) {
+		phi.push_back(distphi(ephi));
+		eta.push_back(disteta(eeta));
+		pt.push_back(distpt(ept));
+		w.push_back(1.);
+	}
+
+	std::vector< vector<double> > val(NTrk, std::vector<double>(2,0.));
+	for (size_t n = 0; n < NTrk; ++n) {
+		val[n][0] = pt[n];
+		val[n][1] = eta[n];
+	}
+
+
+	HarmonicVector h(order);
+	h[0] = 2;
+	h[1] = 2;
+	h[2] = -2;
+	h[3] = -2;
+
+	
+
+	stringstream name;
+	name << "bench_" << impl << "_" << order << ".dat";
+	ofstream benchFile( name.str().c_str() );
+	benchFile << "implementation=" << impl << "\norder=" << order << "\n";
+	benchFile << "NTrk/Event=" << NTrk << "\n";
+
+	using namespace std::chrono;
+	
+	LOG_F( INFO, "%d\n%lu", impl, order );
+
+	if ( 1 == impl ){
+		cumulant::impl1::QVectorSet qv1(h,qvset,false);
+		qv1.reset();
+
+		for ( size_t iEvent = 0 ; iEvent < NEvents; iEvent++ ){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			for (size_t n = 0; n < NTrk; ++n) {
+				qv1.fill(val[n], phi[n], w[n]);
+			}
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+			benchFile << "duration=" << time_span.count() << "\n";
+			LOG_F( INFO, "duration(%lu Tracks)=%f", NTrk, time_span.count() );
+		}
+	}
+
+	if ( 2 == impl ){
+		cumulant::impl2::QVectorSet qv2(h,qvset,false);
+		qv2.reset();
+
+		LOG_S( INFO ) << "\n" << qv2.maskString() << endl;
+
+		for ( size_t iEvent = 0 ; iEvent < NEvents; iEvent++ ){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			for (size_t n = 0; n < NTrk; ++n) {
+				qv2.fill(val[n], phi[n], w[n]);
+			}
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+			LOG_F( INFO, "duration=%f", time_span.count() );
+			benchFile << "duration=" << time_span.count() << "\n";
+		}
+	}
+	
+
+	if ( 3 == impl ){
+		cumulant::impl3::QVectorSet qv3(h,qvset,false);
+		qv3.reset();
+
+		for ( size_t iEvent = 0 ; iEvent < NEvents; iEvent++ ){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			for (size_t n = 0; n < NTrk; ++n) {
+				qv3.fill(val[n], phi[n], w[n]);
+			}
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+			LOG_F( INFO, "duration=%f", time_span.count() );
+			benchFile << "duration=" << time_span.count() << "\n";
+		}
+	}
+
+	if ( 4 == impl ){
+		cumulant::impl4::QVectorSet qv4(h,qvset,false);
+		qv4.reset();
+
+		for ( size_t iEvent = 0 ; iEvent < NEvents; iEvent++ ){
+			high_resolution_clock::time_point t1 = high_resolution_clock::now();
+			for (size_t n = 0; n < NTrk; ++n) {
+				qv4.fill(val[n], phi[n], w[n]);
+			}
+			high_resolution_clock::time_point t2 = high_resolution_clock::now();
+			duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+			LOG_F( INFO, "duration=%f", time_span.count() );
+			benchFile << "duration=" << time_span.count() << "\n";
+		}
+	}
+	
+
+	benchFile.close();
+	// LOG_S(INFO) << "\n" << qv.maskString() << endl;
+
+
+	
+
+	
+
 }
