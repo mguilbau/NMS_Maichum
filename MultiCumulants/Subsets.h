@@ -108,7 +108,11 @@ public:
                 bool answer = true;
                 for(size_t ip=0; ip<this->_params.size(); ++ip)
                 {
-                  if(val[ip] < this->_params[ip].getMin() || val[ip] >= this->_params[ip].getMax()) answer = false; 
+                  //std::cout << "subset param name: " << ip << " ~~> " << this->_params[ip].getName() << std::endl;
+                  if(val[ip] < this->_params[ip].getMin() || val[ip] > this->_params[ip].getMax()) 
+                  {
+                     answer = false; 
+                  }
                 }  
                 return answer;
         }
@@ -163,6 +167,7 @@ public:
                 std::vector<bool> answers(this->_set.size(), true);
                 for(size_t isubset=0; isubset<answers.size(); ++isubset)
                 {
+                  //std::cout << answers.size() << std::endl;
                   answers[isubset] = this->_set[isubset].isFromSubset(val);
                 }
                 return answers;

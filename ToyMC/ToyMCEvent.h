@@ -46,10 +46,12 @@ public:
 		this->_noff = noff;
 	}
 
-	void add(ToyMCParticle part) 
+	void add() 
 	{
 		// this->_particles.push_back(part);
 	};
+
+        UInt_t getMult() { return this->_mult; }
 
 	/**
 	 * builds the string representation of the object

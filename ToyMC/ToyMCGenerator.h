@@ -9,6 +9,7 @@
 #include <TF1.h>
 #include <TMath.h>
 #include <TFile.h>
+#include <TCanvas.h>
 #include <TObject.h>
 #include <TRandom3.h>
 
@@ -68,6 +69,9 @@ public:
                 delete _hvnMod_mult;
                 delete _hvnMod_eta;
                 delete _hvnMod_pt;
+
+                delete this->_fvn;
+                delete this->_hvn;
 	}
 
 	void commonSetup( std::string system, std::string fctname, std::string afterburnersetting ){
@@ -88,7 +92,12 @@ public:
                 this->_etamin  = 0.;
                 this->_ptmin   = 0.;
                 this->_ptmin   = 0.;
-                
+
+                this->_isVnFluct = false;
+                this->_fvn = new TF1("fvn", "x/TMath::Power([0],2) *TMath::Exp(-1.*(x*x + [1]*[1])/2./TMath::Power([0],2)) *TMath::BesselI0(x*[1]/TMath::Power([0],2))", 0., .25);
+                this->_fvn->SetNpx(10000);
+                this->_hvn = 0x0;
+
                 std::string filename = "../data/ToyMCdistribution_" + fctname + ".root";
                 //TFile *f = TFile::Open(filename.c_str());
                 TFile f(filename.c_str());
@@ -158,6 +167,14 @@ public:
                    for(int ibin = 0; ibin < hvn->GetNbinsX(); ++ibin) this->_vn.push_back(hvn->GetBinContent(ibin+1));
                    delete hvn;
 
+                   //TODO: Generalize to all harmonics
+                   this->_fvn->SetParameter(1,this->_vn[2]);
+                   this->_fvn->SetParameter(0,0.046);
+
+                   this->_hvn = new TH1D("h","",1000,0.,1.); 
+                   for(int ibin = 0; ibin < this->_hvn->GetNbinsX(); ++ibin)
+                      this->_hvn->SetBinContent(ibin+1, this->_fvn->Eval(this->_hvn->GetXaxis()->GetBinCenter(ibin+1)));
+
                    f.Close();
                 }
         }
@@ -173,6 +190,49 @@ public:
 		this->_plcsWriter.createBranch( this->_tree, "Particles" );
 	}
 
+        std::string fourierFormula(double mult, double eta, double pt)
+        {
+            double pi = TMath::Pi();
+            std::string formula = Form("%f/2./%f*(1", mult, pi);
+            for(size_t iharm = 1; iharm < this->_vn.size(); ++iharm) 
+            {
+               double vn = this->_vn[iharm];
+               vn  *= this->_hvnMod_mult->GetBinContent(this->_hvnMod_mult->GetXaxis()->FindBin(mult));
+               vn  *= this->_hvnMod_eta ->GetBinContent(this->_hvnMod_eta ->GetXaxis()->FindBin(eta));
+               vn  *= this->_hvnMod_pt  ->GetBinContent(this->_hvnMod_pt  ->GetXaxis()->FindBin(pt));
+               //if(vn == 0. && this->_vn[iharm] != 0.) std::cout << "ZERO!!! pt = " << pt << " " << this->_vn[iharm] << std::endl;
+               formula += Form("+2*%f*cos(%zu*x)",vn,iharm);
+
+               //if(vn == 0. && this->_vn[iharm] != 0.) std::cout << "ZERO!!! " << mult << " " << eta << " " << pt << " " << this->_vn[iharm] << std::endl;
+            }
+            formula += ")";
+            //std::cout << formula << std::endl;
+            return formula;
+        }
+
+        void printFourierFormula()
+        {
+           std::cout << fourierFormula(1.,1.,1.).c_str() << std::endl;
+        } 
+
+        double flowFluctuation()
+        {
+           TRandom3 r(0);
+           return this->_hvn->GetRandom();
+        }
+
+        double generatePDF(double mult, double eta, double pt, double phi)
+        {
+                std::string formula = fourierFormula(mult,eta,pt);
+                TF1 *fPDF = new TF1("fPDF", formula.c_str(), -1*TMath::Pi(), 1*TMath::Pi());
+                
+                TRandom3 r1(0);
+                double pdfVal = fPDF->GetRandom()*this->_hphi->GetBinContent(this->_hphi->GetXaxis()->FindBin(phi));
+                delete fPDF;
+
+                return pdfVal;
+        }
+
 	void generate( int nevts = -1, std::string filename = "ToyMC.root" )
 	{
 		LOG_SCOPE_FUNCTION( INFO );
@@ -185,12 +245,16 @@ public:
 		{
                         //get the number of particles in this event
                         int nparticles = 0;
+
+                        TRandom3 r2(0);
                         nparticles = this->_hmult->GetRandom();
 
-                        //Number of particles entering the correlations
+                        //Number of particles entering the correlations *TO BE IMPLEMENTED CORRECTLY*
                         unsigned int mult = 0.;
-                        //Number of particles to define the event class
+                        //Number of particles to define the event class *TO BE IMPLEMENTED CORRECTLY*
                         unsigned int noff = 0.;
+                        //Event plane *TO BE IMPLEMENTED CORRECTLY*
+                        unsigned int psi = 0.;
 
                         std::cout <<
                         "\rToyMCGenerator::INFO:: ievt = " << ievt
@@ -200,6 +264,11 @@ public:
 
 			this->_plcsWriter.reset();
 
+                        for(size_t iharm = 1; iharm < this->_vn.size(); ++iharm) 
+                        {
+                           if(this->_isVnFluct && this->_isVnSet && iharm == 2) this->_vn[iharm] = flowFluctuation();
+                        }
+
 			for(int ipart = 0; ipart < nparticles; ++ipart)
 			{
 				// make sure we start fresh
@@ -207,20 +276,16 @@ public:
 				this->_plc.reset();
 				double pt  = this->_hpt->GetRandom();
 				double eta = this->_heta->GetRandom();
-				double phi = this->_hphi->GetRandom();
+				double phi = this->_hphi->GetRandom(); 
 
                                 //convulte vn distribution
                                 if(this->_isVnSet)
                                 {
-                                    double val = 0;
-                                    for(size_t iharm = 0; iharm < this->_vn.size(); ++iharm) 
-                                    {
-                                       double vn = this->_vn[iharm];
-                                       vn  *= this->_hvnMod_mult->GetBinContent(this->_hvnMod_mult->GetXaxis()->FindBin(mult));
-                                       vn  *= this->_hvnMod_eta ->GetBinContent(this->_hvnMod_eta ->GetXaxis()->FindBin(eta));
-                                       vn  *= this->_hvnMod_pt  ->GetBinContent(this->_hvnMod_pt  ->GetXaxis()->FindBin(pt));
-                                       val += vn*TMath::Cos(iharm*phi);
-                                    }
+                                    phi = generatePDF(nparticles, eta, pt, phi);
+                                }
+                                else
+                                {
+                                    phi = this->_hphi->GetRandom();
                                 }
 
                                 ++mult;
@@ -242,6 +307,8 @@ public:
 		this->_output->Close();
 
 	}
+
+        void setFlowFluctuations(bool flowFluct = true) { this->_isVnFluct = flowFluct; }
 	
 	/**
 	 * builds the string representation of the object
@@ -283,6 +350,10 @@ protected:
         int _multmax;
 
         bool _isVnSet;
+        bool _isVnFluct;
+
+        TF1*  _fvn;
+        TH1D* _hvn;
 
         std::vector<double> _vn;
 

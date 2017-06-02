@@ -188,6 +188,7 @@ public:
                      bool answer = true;
                      for (size_t ik = 0; ik < k; ++ik)
                      {
+                        //std::cout << k << " " << ik << " " << ints[ik] << std::endl;
                         answer *= this->_set.isFromSet(val)[ints[ik]];
                      }
                      this->_mask[k-1][nC] = answer;
@@ -206,7 +207,8 @@ public:
                {
                  for(size_t j = 0; j < this->_q[i].size(); ++j)
                  {
-                   if(this->_mask[i][j]) this->_q[i][j].fill(phi, weight, i); 
+                   if(this->_mask[i][j]) this->_q[i][j].fill(phi, weight, i);
+                   //else std::cout << "REJECTED" << i << j << std::endl;
                  }
                }
         }

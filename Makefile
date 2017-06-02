@@ -30,7 +30,18 @@ HEADERS 		:= MultiCumulants/QVector.h \
                            MultiCumulants/Algorithm.h \
                            ToyMC/ToyMCEvent.h \
                            ToyMC/ToyMCGenerator.h \
-                           ToyMC/ToyMCParticle.h         
+                           ToyMC/ToyMCParticle.h \
+                           correlations/Correlator.hh \
+                           correlations/FromQVector.hh \
+                           correlations/NestedLoops.hh \
+                           correlations/QVector.hh \
+                           correlations/Result.hh \
+                           correlations/Types.hh \
+                           correlations/closed/FromQVector.hh \
+                           correlations/recurrence/FromQVector.hh \
+                           correlations/recursive/FromQVector.hh \
+                           correlations/recursive/NestedLoops.hh
+
 
 # Objects to compile into ToyMc binary
 TOYMC 			:= tests/toymc.o
