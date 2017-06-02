@@ -173,6 +173,18 @@ public:
                 return answers;
         }
 
+        virtual std::bitset<MAX_SET_SIZE> setMask(std::vector<double> val)
+        {
+            std::bitset<MAX_SET_SIZE> bs;
+                for(size_t isubset=0; isubset<this->_set.size(); ++isubset)
+                {
+                    if (this->_set[isubset].isFromSubset(val))
+                        bs.set(isubset);
+                  // answers[isubset] = this->_set[isubset].isFromSubset(val);
+                }
+                return bs;
+        }
+
         virtual void setSubsetParams(unsigned int isubset, Subset subset)
         {
                 if(isubset >= this->_set.size()) return;
