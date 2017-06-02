@@ -66,7 +66,7 @@ toymc_depend: .depend_toymc
 
 .depend_toymc: $(TOYMC:%.o=%.cxx) 
 	rm -f ./.depend_toymc
-	$(CXX) $(CPPFLAGS) $(ROOTCFLAGS) -MM $^ > ./.depend_toymc
+	$(CXX) $(CPPFLAGS) $(ROOTCFLAGS) -MM $^ -MT $(TOYMC) > ./.depend_toymc
 
 include .depend_toymc
 
