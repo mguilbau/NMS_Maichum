@@ -88,6 +88,21 @@ dev:bin/dev.app
 ###########################################################################
 
 
+############################################################################
+# Generic partition testing binary
+tests/partition.o: tests/partition.cxx $(HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+
+bin/part.app: tests/partition.o
+	@mkdir -p bin
+	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
+
+.PHONY: part
+part:bin/part.app
+# Generic development testing binary
+###########################################################################
+
+
 .PHONY: clean
 clean:
 	@rm -f bin/*.app

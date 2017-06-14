@@ -428,6 +428,17 @@ namespace impl2{
 				return s;
 			}
 
+			void make_coeff(){
+
+				for ( size_t i = 0; i < this->_q.size(); i++ ){
+					for(size_t j = 0; j < this->_q[i].size(); ++j){  
+						
+					}
+				}
+
+
+			}
+
 	protected:
 			Set _set;
 			bool _useWeights;
