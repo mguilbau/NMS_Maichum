@@ -3,6 +3,20 @@
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
 
+#include <correlations/Types.hh>
+#include <correlations/Result.hh>
+#include <correlations/QVector.hh>
+#include <correlations/recursive/FromQVector.hh>
+#include <correlations/recurrence/FromQVector.hh>
+
+#include "ToyMC/ToyMCGenerator.h"
+#include "ToyMC/BranchReader.h"
+#include "ToyMC/TClonesArrayReader.h"
+#include "ToyMC/ToyMCEvent.h"
+#include "ToyMC/ToyMCParticle.h"
+#include "ToyMC/BranchWriter.h"
+#include "ToyMC/TClonesArrayWriter.h"
+
 #include "vendor/cmdline.h"
 
 #include <iostream>
@@ -17,7 +31,7 @@ using namespace std;
 void checkParam(int argc, char** argv);
 
 void cumulants();
-void mc();
+void mc(int nevent);
 void benchmark( int impl = 1, size_t horder = 4);
 
 int 
@@ -29,6 +43,7 @@ main(int argc, char** argv) {
 	parser.add("cumulants", '\0', "Run Cumulants");
 	parser.add<int>("benchmark", '\0', "Run Benchmarks", false, -1);
 	parser.add<size_t>("horder", '\0', "harmonic order (benchmarks)", false, 4);
+	parser.add<int>("nevent", '\0', "number of generated mc events", false, 1);
 
 	parser.parse_check( argc, argv );
 
@@ -41,7 +56,7 @@ main(int argc, char** argv) {
 	// No need for an endl at the end of a line
 	
 	if ( parser.exist( "mc" ) ){
-		mc();
+		mc( parser.get<int>( "nevent" ) );
 	} else if ( parser.exist( "cumulants" ) ){
 		cumulants();
 	} else if ( parser.get<int>( "benchmark" ) >= 1 ){
@@ -135,17 +150,16 @@ void cumulants(){
 
 }
 
-void mc(){
-	LOG_F( INFO, "ToyMc" );
+void mc(int nevts = -1){
 }
 
 
 //
 void checkParam(int argc, char** argv)
 {
-		LOG_S(INFO) << "Number of parameters: " << argc;
-		for(int ip=0; ip<argc; ++ip) 
-		  LOG_S(INFO) << "Argument " << ip << ": " << argv[ip];
+	LOG_S(INFO) << "Number of parameters: " << argc;
+	for(int ip=0; ip<argc; ++ip) 
+	LOG_S(INFO) << "Argument " << ip << ": " << argv[ip];
 }
 
 

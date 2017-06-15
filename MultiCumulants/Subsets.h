@@ -175,7 +175,7 @@ public:
 
         virtual std::bitset<MAX_SET_SIZE> setMask(std::vector<double> val)
         {
-            std::bitset<MAX_SET_SIZE> bs;
+                std::bitset<MAX_SET_SIZE> bs;
                 for(size_t isubset=0; isubset<this->_set.size(); ++isubset)
                 {
                     if (this->_set[isubset].isFromSubset(val))

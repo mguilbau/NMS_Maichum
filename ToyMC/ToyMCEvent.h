@@ -39,7 +39,7 @@ public:
 		this->_noff  = that->_noff;
 	}
 
-	void set(int mult, UInt_t noff )
+	void set(UInt_t mult, UInt_t noff )
 	{
 		// this->_particles.reserve(npart);
 		this->_mult = mult;

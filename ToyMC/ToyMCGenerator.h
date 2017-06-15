@@ -59,19 +59,19 @@ public:
 	~ToyMCGenerator()
 	{
 		LOG_SCOPE_FUNCTION( 9 );
-                delete _output;
+                //if(this->_output) delete this->_output;
 
-                delete _hmult;
-                delete _heta;
-                delete _hpt;
-                delete _hphi;
+                if( this->_hmult ) delete this->_hmult;
+                if( this->_heta  ) delete this->_heta;
+                if( this->_hpt   ) delete this->_hpt;
+                if( this->_hphi  ) delete this->_hphi;
 
-                delete _hvnMod_mult;
-                delete _hvnMod_eta;
-                delete _hvnMod_pt;
+                if( this->_hvnMod_mult ) delete this->_hvnMod_mult;
+                if( this->_hvnMod_eta  ) delete this->_hvnMod_eta;
+                if( this->_hvnMod_pt   ) delete this->_hvnMod_pt;
 
-                delete this->_fvn;
-                delete this->_hvn;
+                if( this->_fvn ) delete this->_fvn;
+                if( this->_hvn ) delete this->_hvn;
 	}
 
 	void commonSetup( std::string system, std::string fctname, std::string afterburnersetting ){
@@ -233,6 +233,26 @@ public:
                 return pdfVal;
         }
 
+        void generatePart(int nparticles)
+        {
+		//LOG_SCOPE_FUNCTION( INFO );
+		// make sure we start fresh
+		// reusing the same object is a huge performance boost inside loops
+		this->_plc.reset();
+
+		double pt  = this->_hpt->GetRandom();
+		double eta = this->_heta->GetRandom();
+		double phi = this->_hphi->GetRandom(); 
+
+                //convulte vn distribution
+                if(this->_isVnSet)
+                {
+                    phi = generatePDF(nparticles, eta, pt, phi);
+                }
+
+		this->_plc.set(pt, eta, phi);
+        }
+
 	void generate( int nevts = -1, std::string filename = "ToyMC.root" )
 	{
 		LOG_SCOPE_FUNCTION( INFO );
@@ -266,30 +286,14 @@ public:
 
                         for(size_t iharm = 1; iharm < this->_vn.size(); ++iharm) 
                         {
-                           if(this->_isVnFluct && this->_isVnSet && iharm == 2) this->_vn[iharm] = flowFluctuation();
+                           isFlowFluct(iharm);
+                           //if(this->_isVnFluct && this->_isVnSet) this->_vn[iharm] = flowFluctuation();
                         }
 
 			for(int ipart = 0; ipart < nparticles; ++ipart)
 			{
-				// make sure we start fresh
-				// reusing the same object is a huge performance boost inside loops
-				this->_plc.reset();
-				double pt  = this->_hpt->GetRandom();
-				double eta = this->_heta->GetRandom();
-				double phi = this->_hphi->GetRandom(); 
-
-                                //convulte vn distribution
-                                if(this->_isVnSet)
-                                {
-                                    phi = generatePDF(nparticles, eta, pt, phi);
-                                }
-                                else
-                                {
-                                    phi = this->_hphi->GetRandom();
-                                }
-
+                                generatePart(nparticles);
                                 ++mult;
-				this->_plc.set(pt, eta, phi);
 				this->_plcsWriter.add( this->_plc );
 			}
 
@@ -308,7 +312,30 @@ public:
 
 	}
 
+        TH1I* getMultHist() { return this->_hmult; }
+
+        void isFlowFluct(int iharm) 
+        {
+                if(this->_isVnFluct && this->_isVnSet && iharm == 2)
+                        this->_vn[iharm] = flowFluctuation();
+        }
+
         void setFlowFluctuations(bool flowFluct = true) { this->_isVnFluct = flowFluct; }
+
+        double getPlcPt() 
+        {
+                return this->_plc.getpt();
+        }
+	
+        double getPlcEta() 
+        {
+                return this->_plc.geteta();
+        }
+	
+        double getPlcPhi() 
+        {
+                return this->_plc.getphi();
+        }
 	
 	/**
 	 * builds the string representation of the object
