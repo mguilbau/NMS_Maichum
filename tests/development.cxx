@@ -70,7 +70,7 @@ main(int argc, char** argv) {
 void cumulants(){
 	LOG_F( INFO, "Cumulants" );
 
-	const size_t order = 4;
+	const size_t order = 3;
 
 	cumulant::Subset s1(2);
 	s1.set(0, "pT", 0., 10.0);
@@ -113,15 +113,16 @@ void cumulants(){
 	std::uniform_real_distribution<> distpt(0, 10);
 	std::uniform_real_distribution<> distw(0, 1);
 
-	for (int n = 0; n < 100; ++n) {
+	size_t NEvt = 100000;
+	for (int n = 0; n < NEvt; ++n) {
 		phi.push_back(distphi(ephi));
 		eta.push_back(disteta(eeta));
 		pt.push_back(distpt(ept));
 		w.push_back(1.);
 	}
 
-	std::vector< vector<double> > val(100, std::vector<double>(2,0.));
-	for (int n = 0; n < 100; ++n) {
+	std::vector< vector<double> > val(NEvt, std::vector<double>(2,0.));
+	for (int n = 0; n < NEvt; ++n) {
 		val[n][0] = pt[n];
 		val[n][1] = eta[n];
 	}
@@ -137,7 +138,7 @@ void cumulants(){
 	qv.reset();
 
 	LOG_S(INFO) << "\n" << qv.maskString() << endl;
-	for (int n = 0; n < 100; ++n) {
+	for (int n = 0; n < NEvt; ++n) {
 	   // qv.generateMask(val[n]);
 	   qv.fill(val[n], phi[n], w[n]);
 	}
