@@ -113,9 +113,9 @@ int main(int argc, char *argv[]) {
 
     printf( "h = %d --> # of terms = %lu \n", n, v.size() );
     
-    for ( int k = 1; k < n+1; k++){ 
+    //for ( int k = 1; k < n+1; k++){ 
         //extra loop (k) used to print them in order like in paper
-        for ( int a = n+1; a > 0; --a ){
+        //for ( int a = n+1; a > 0; --a ){
             //extra loop (a) used to print them in order like in paper
 
 
@@ -132,13 +132,13 @@ int main(int argc, char *argv[]) {
                     largest_part[ v[j][i] ]++;
                 }
 
-                if ( parts.size() != k || max_in_map( largest_part ) != a ) continue;
+                //if ( parts.size() != k || max_in_map( largest_part ) != a ) continue;
                 printf( "%s", msg.c_str() );;
                 printf( " => %+d * ", coeff( parts.size() ) );
                 print_as_Qvs( v[j], n, parts.size() );
                 printf( "\n" );
-            }
-        }
+            //}
+        //}
     }
 
         

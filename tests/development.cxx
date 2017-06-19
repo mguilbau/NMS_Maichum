@@ -2,6 +2,7 @@
 #include "MultiCumulants/Result.h"
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
+#include "MultiCumulants/Correlator.h"
 
 #include <correlations/Types.hh>
 #include <correlations/Result.hh>
@@ -31,7 +32,13 @@ using namespace std;
 void checkParam(int argc, char** argv);
 
 void cumulants();
-void mc(int nevent);
+void mc(int harm,
+        std::string system,  std::string partDist, std::string vnDist,
+        double ptMin,        double ptMax,
+        double etaMin,       double etaMax,
+        double multMin,      double multMax,
+        int    nEvt,         bool   vnFluct,
+        std::string version, std::string outFileName, int nevts);
 void benchmark( int impl = 1, size_t horder = 4);
 
 int 
@@ -56,7 +63,12 @@ main(int argc, char** argv) {
 	// No need for an endl at the end of a line
 	
 	if ( parser.exist( "mc" ) ){
-		mc( parser.get<int>( "nevent" ) );
+		mc( 2,
+                    "PbPb", "const", "const", 
+                    0.3, 3.0, 
+                    -2.4, 2.4, 
+                    10, 40, 
+                    10000, true, "v6", "10k_test_genAnalyze", parser.get<int>( "nevent" ) );
 	} else if ( parser.exist( "cumulants" ) ){
 		cumulants();
 	} else if ( parser.get<int>( "benchmark" ) >= 1 ){
@@ -67,7 +79,8 @@ main(int argc, char** argv) {
 	return 0;
 }
 
-void cumulants(){
+void 
+cumulants(){
 	LOG_F( INFO, "Cumulants" );
 
 	const size_t order = 3;
@@ -151,7 +164,18 @@ void cumulants(){
 
 }
 
-void mc(int nevts = -1){
+void mc(int harm,
+        std::string system,  std::string partDist, std::string vnDist,
+        double ptMin,        double ptMax,
+        double etaMin,       double etaMax,
+        double multMin,      double multMax,
+        int    nEvt,         bool   vnFluct,
+        std::string version, std::string outFileName, int nevts = -1)
+{
+	toymc::ToyMCGenerator g(system, partDist, vnDist);
+        g.setRanges(ptMin, ptMax, etaMin, etaMax, multMin, multMax);
+	LOG_S(INFO) << g.toString();
+	if(vnFluct) g.setFlowFluctuations();
 }
 
 

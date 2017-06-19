@@ -28,6 +28,7 @@ SOFLAGS         := -shared
 HEADERS 		:= MultiCumulants/QVector.h \
 		           MultiCumulants/Subsets.h \
                            MultiCumulants/Algorithm.h \
+		           MultiCumulants/Correlator.h \
                            ToyMC/ToyMCEvent.h \
                            ToyMC/ToyMCGenerator.h \
                            ToyMC/ToyMCParticle.h \
