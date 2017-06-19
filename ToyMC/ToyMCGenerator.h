@@ -2,7 +2,7 @@
 #define MULTICUMULANTS_TOYMCGENERATOR_H
 
 #include <string>
-
+#include <iomanip>  // setprecision
 
 // ROOT
 #include <TTree.h>

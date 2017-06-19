@@ -79,7 +79,7 @@ include .depend_toymc
 tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
-bin/dev.app: tests/development.o
+bin/dev.app: tests/development.o ToyMC/cint_dictionary.o
 	@mkdir -p bin
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 
