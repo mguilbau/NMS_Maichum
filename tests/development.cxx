@@ -291,40 +291,6 @@ void benchmark( int impl, size_t order ){
 		}
 	}
 	
-
-	if ( 3 == impl ){
-		cumulant::impl3::QVectorSet qv3(h,qvset,false);
-		qv3.reset();
-
-		for ( size_t iEvent = 0 ; iEvent < NEvents; iEvent++ ){
-			high_resolution_clock::time_point t1 = high_resolution_clock::now();
-			for (size_t n = 0; n < NTrk; ++n) {
-				qv3.fill(val[n], phi[n], w[n]);
-			}
-			high_resolution_clock::time_point t2 = high_resolution_clock::now();
-			duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
-			LOG_F( INFO, "duration=%f", time_span.count() );
-			benchFile << "duration=" << time_span.count() << "\n";
-		}
-	}
-
-	if ( 4 == impl ){
-		cumulant::impl4::QVectorSet qv4(h,qvset,false);
-		qv4.reset();
-
-		for ( size_t iEvent = 0 ; iEvent < NEvents; iEvent++ ){
-			high_resolution_clock::time_point t1 = high_resolution_clock::now();
-			for (size_t n = 0; n < NTrk; ++n) {
-				qv4.fill(val[n], phi[n], w[n]);
-			}
-			high_resolution_clock::time_point t2 = high_resolution_clock::now();
-			duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
-			LOG_F( INFO, "duration=%f", time_span.count() );
-			benchFile << "duration=" << time_span.count() << "\n";
-		}
-	}
-	
-
 	benchFile.close();
 	// LOG_S(INFO) << "\n" << qv.maskString() << endl;
 

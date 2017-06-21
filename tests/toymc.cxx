@@ -73,30 +73,30 @@ main(int argc, char** argv) {
 
         //analyze(2,"v6","ToyMCTTree_constVn_const_FlowFluct_ntrk200_10k",
         //        "ToyMCREsults_v2_flowfluc");
-        //analyze(2,"v5","ToyMCTTree_constVn_const_full",
-        //        "ToyMCREsults_v5_noflowfluc_full_test2");
+        analyze(2,"v5","ToyMCTTree_constVn_const_full",
+                "ToyMCREsults_v5_noflowfluc_full_test2");
 
-        //analyze(2,"v6","ToyMCTTree_constVn_const_FlowFluct_full",
-        //        "ToyMCREsults_v6_flowfluc_full",10);
+        analyze(2,"v6","ToyMCTTree_constVn_const_FlowFluct_full",
+                "ToyMCREsults_v6_flowfluc_full",10);
 
-        //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 50, 100000, true, "v6", "200k_newEvt_vnFluct_1050");
+        generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 50, 10, true, "v6", "10k_newEvt_vnFluct_1050");
         //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 50, 200000, false, "v5", "200k_newEvt_NovnFluct_1050");
         //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 200, 200000, true, "v6", "200k_newEvt_vnFluct_10200");
         //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 200, 200000, false, "v5", "200k_newEvt_NovnFluct_10200");
 
-        //genAndAnalyze(2,
-        //              "PbPb", "const", "const", 
-        //              0.3, 3.0, 
-        //              -2.4, 2.4, 
-        //              10, 40, 
-        //              10000, true, "v6", "10k_test_genAnalyze");
- 
-        genAndAnalyzeTree(2,
+        genAndAnalyze(2,
                       "PbPb", "const", "const", 
                       0.3, 3.0, 
                       -2.4, 2.4, 
                       10, 40, 
-                      100000, true, "v6", "100k_test_genAnalyzeTree");
+                      10000, true, "v6", "10k_test_genAnalyze");
+ 
+        //genAndAnalyzeTree(2,
+        //              "PbPb", "const", "const", 
+        //              0.3, 3.0, 
+        //              -2.4, 2.4, 
+        //              10, 40, 
+        //              100000, true, "v6", "100k_test_genAnalyzeTree");
  
         analyzeTree("v6", "100k_test_genAnalyzeTree",
                     "100k_test_genAnalyzeHist",
@@ -305,7 +305,7 @@ void genAndAnalyze(int harm,
               //Number of particles entering the correlations *TO BE IMPLEMENTED CORRECTLY*
               unsigned int mult = 0.;
               //Number of particles to define the event class *TO BE IMPLEMENTED CORRECTLY*
-              unsigned int noff = 0.;
+              //unsigned int noff = 0.;
         
               std::cout <<
               "\rToyMCGenerator::INFO:: ievt = " << ievt
@@ -665,7 +665,7 @@ void genAndAnalyze(int harm,
 
           std::cout << std::endl;
           std::cout << "Writting..." << std::endl;
-          TFile* fout = new TFile(Form("../data/%s.root", outFileName.c_str()), "recreate");
+          TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), outFileName.c_str()), "recreate");
           hmult->Write();
           hpt  ->Write();
           heta ->Write();
@@ -811,7 +811,7 @@ void genAndAnalyzeTree(int harm,
               //Number of particles entering the correlations *TO BE IMPLEMENTED CORRECTLY*
               mult = 0.;
               //Number of particles to define the event class *TO BE IMPLEMENTED CORRECTLY*
-              unsigned int noff = 0.;
+              //unsigned int noff = 0.;
         
               std::cout <<
               "\rToyMCGenerator::INFO:: ievt = " << ievt
@@ -904,7 +904,7 @@ void genAndAnalyzeTree(int harm,
 
           std::cout << std::endl;
           std::cout << "Writting..." << std::endl;
-          TFile* fout = new TFile(Form("../data/%s.root", outFileName.c_str()), "recreate");
+          TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), outFileName.c_str()), "recreate");
           hmult->Write();
           hpt  ->Write();
           heta ->Write();
@@ -1454,7 +1454,7 @@ void analyze(int harm,
         }
 
         std::cout << "Writting..." << std::endl;
-        TFile* fout = new TFile(Form("data/%s.root", outFileName.c_str()), "recreate");
+        TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), outFileName.c_str()), "recreate");
 
         hmult->Write();
         hpt  ->Write();
@@ -1530,7 +1530,7 @@ void analyzeTree(std::string version, std::string inFileName,
         UShort_t mult = 0;
         double C2Nstd = 0., C4Nstd = 0., wC2Nstd = 0., wC4Nstd = 0.;
         double C2Ngap = 0., C4Ngap = 0., wC2Ngap = 0., wC4Ngap = 0.;
-        TFile* fin = TFile::Open(Form("../data/%s.root",inFileName.c_str()));
+        TFile* fin = TFile::Open(Form("%s/%s.root", getenv("OUTPUTDIR"), inFileName.c_str()));
         //Global
         TH1I* hmult = dynamic_cast<TH1I*>(fin->Get("hmult")->Clone()); 
         TH1D* hpt   = dynamic_cast<TH1D*>(fin->Get("hpt")->Clone()); 
@@ -1898,7 +1898,7 @@ void analyzeTree(std::string version, std::string inFileName,
         }
 
         std::cout << "Writting..." << std::endl;
-        TFile* fout = new TFile(Form("../data/%s.root", outFileName.c_str()), "recreate");
+        TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), outFileName.c_str()), "recreate");
 
         hmult->Write();
         hpt  ->Write();

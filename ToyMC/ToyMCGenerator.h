@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iomanip>  // setprecision
+#include <stdlib.h> // getenv
 
 // ROOT
 #include <TTree.h>
@@ -98,7 +99,7 @@ public:
                 this->_fvn->SetNpx(10000);
                 this->_hvn = 0x0;
 
-                std::string filename = "../data/ToyMCdistribution_" + fctname + ".root";
+                std::string filename = std::string(getenv("DATADIR")) + "/ToyMCdistribution_" + fctname + ".root";
                 //TFile *f = TFile::Open(filename.c_str());
                 TFile f(filename.c_str());
 
@@ -156,7 +157,7 @@ public:
 
                 if(this->_isVnSet)
                 {
-                   std::string filename = "../data/ToyMCVn_" + afterburnersetting + ".root";
+                   std::string filename = std::string(getenv("DATADIR")) + "/ToyMCVn_" + afterburnersetting + ".root";
                    TFile f(filename.c_str());
 
                    this->_hvnMod_mult = dynamic_cast<TH1D*>( f.Get( (system + "/hvnMod_mult").c_str() )->Clone());
@@ -274,7 +275,7 @@ public:
                         //Number of particles to define the event class *TO BE IMPLEMENTED CORRECTLY*
                         unsigned int noff = 0.;
                         //Event plane *TO BE IMPLEMENTED CORRECTLY*
-                        unsigned int psi = 0.;
+                        //unsigned int psi = 0.;
 
                         std::cout <<
                         "\rToyMCGenerator::INFO:: ievt = " << ievt
