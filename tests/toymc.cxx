@@ -1,6 +1,7 @@
 // logging library
 #define LOGURU_IMPLEMENTATION 1
 #include "vendor/loguru/loguru.hpp"
+#include "vendor/cmdline.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -59,6 +60,7 @@ void analyze(int harm,
 void analyzeTree(std::string version, std::string inFileName,
                  std::string outFileName,
                  int nEvt = -1);
+
 int 
 main(int argc, char** argv) {
 
@@ -71,37 +73,111 @@ main(int argc, char** argv) {
 	// sometimes the "stream" form of the logger is more convenient, use LOG_S( LEVEL ) << "MESSAGE";
 	// No need for an endl at the end of a line
 
+
+	cmdline::parser parser;
+
+	parser.add("generate", '\0', "generate ToyMc");
+	parser.add("analyze", '\0', "analyze ToyMc output");
+	parser.add("analyzeToyMCout", '\0', "analyze tree ToyMc output");
+	parser.add<int>("nevents", '\0', "number of events to generate/analyze", false, -1);
+	parser.add<int>("harm", '\0', "harmonic to generate/analyze", false, -1);
+	parser.add<double>("ptmin", '\0', "ptmin to generate/analyze", false, 0.3);
+	parser.add<double>("ptmax", '\0', "ptmax to generate/analyze", false, 3.0);
+	parser.add<double>("etamin", '\0', "etamin to generate/analyze", false, -2.4);
+	parser.add<double>("etamax", '\0', "etamax to generate/analyze", false, 2.4);
+	parser.add<double>("multmin", '\0', "multmin to generate/analyze", false, 10.);
+	parser.add<double>("multmax", '\0', "multmax to generate/analyze", false, 40.);
+	parser.add<std::string>("system", '\0', "system to run", false, "PbPb");
+	parser.add<std::string>("kindist", '\0', "particle kin distributions", false, "const");
+	parser.add<std::string>("vndist", '\0', "vn distributions", false, "const");
+	parser.add<std::string>("version", '\0', "version", false, "v6");
+	parser.add<std::string>("output", '\0', "output file name", false, "output_toymc");
+	parser.add<std::string>("input", '\0', "input file name", false, "");
+	parser.add<bool>("isVnfluct", '\0', "etamax to generate/analyze", false, false);
+
+	parser.parse_check( argc, argv );
+
+	if ( parser.exist( "generate" ) && !parser.exist( "analyze" )  ){
+		generate( parser.get<std::string>( "system" ),
+                          parser.get<std::string>( "kindist" ),
+                          parser.get<std::string>( "vndist" ),
+                          parser.get<double>( "ptmin" ),
+                          parser.get<double>( "ptmax" ),
+                          parser.get<double>( "etamin" ),
+                          parser.get<double>( "etamax" ),
+                          parser.get<double>( "multmin" ),
+                          parser.get<double>( "multmax" ),
+                          parser.get<int>( "nevents" ),
+                          parser.get<bool>( "isVnfluct" ),
+                          parser.get<std::string>( "version" ),
+                          parser.get<std::string>( "output" ) );
+        }
+	else if ( parser.exist( "analyze" ) && !parser.exist( "generate" ) ){
+                if( parser.exist( "analyzeToyMCout" ) ){
+			analyze( parser.get<int>( "harm" ),
+	                         parser.get<std::string>( "version" ),
+	                         parser.get<std::string>( "input" ),
+	                         parser.get<std::string>( "output" ),
+	                         parser.get<int>( "nevents" ) );
+                }	
+                else {
+			analyzeTree( parser.get<std::string>( "version" ),
+	                             parser.get<std::string>( "input" ),
+	                             parser.get<std::string>( "output" ),
+	                             parser.get<int>( "nevents" ) );
+                }	
+        }
+	else if ( parser.exist( "generate" ) && parser.exist( "analyze" ) ){
+        	genAndAnalyzeTree( parser.get<int>( "harm" ),
+		                   parser.get<std::string>( "system" ),
+                                   parser.get<std::string>( "kindist" ),
+                                   parser.get<std::string>( "vndist" ),
+                                   parser.get<double>( "ptmin" ),
+                                   parser.get<double>( "ptmax" ),
+                                   parser.get<double>( "etamin" ),
+                                   parser.get<double>( "etamax" ),
+                                   parser.get<double>( "multmin" ),
+                                   parser.get<double>( "multmax" ),
+                                   parser.get<int>( "nevents" ),
+                                   parser.get<bool>( "isVnfluct" ),
+                                   parser.get<std::string>( "version" ),
+                                   parser.get<std::string>( "output" ) );
+        }
+	else {
+		cout << parser.usage() << endl;
+	}
+        return 0; 
+
         //analyze(2,"v6","ToyMCTTree_constVn_const_FlowFluct_ntrk200_10k",
         //        "ToyMCREsults_v2_flowfluc");
-        analyze(2,"v5","ToyMCTTree_constVn_const_full",
-                "ToyMCREsults_v5_noflowfluc_full_test2");
+        //analyze(2,"v5","ToyMCTTree_constVn_const_full",
+        //        "ToyMCREsults_v5_noflowfluc_full_test2");
 
-        analyze(2,"v6","ToyMCTTree_constVn_const_FlowFluct_full",
-                "ToyMCREsults_v6_flowfluc_full",10);
+        //analyze(2,"v6","ToyMCTTree_constVn_const_FlowFluct_full",
+        //        "ToyMCREsults_v6_flowfluc_full",10);
 
-        generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 50, 10, true, "v6", "10k_newEvt_vnFluct_1050");
+        //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 50, 10, true, "v6", "10k_newEvt_vnFluct_1050");
         //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 50, 200000, false, "v5", "200k_newEvt_NovnFluct_1050");
         //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 200, 200000, true, "v6", "200k_newEvt_vnFluct_10200");
         //generate("PbPb", "const", "const", 0.3, 3.0, -2.4, 2.4, 10, 200, 200000, false, "v5", "200k_newEvt_NovnFluct_10200");
 
-        genAndAnalyze(2,
-                      "PbPb", "const", "const", 
-                      0.3, 3.0, 
-                      -2.4, 2.4, 
-                      10, 40, 
-                      10000, true, "v6", "10k_test_genAnalyze");
+        //genAndAnalyze(2,
+        //              "PbPb", "const", "const", 
+        //              0.3, 3.0, 
+        //              -2.4, 2.4, 
+        //              10, 40, 
+        //              10000, true, "v6", "10k_test_genAnalyze");
  
         //genAndAnalyzeTree(2,
         //              "PbPb", "const", "const", 
         //              0.3, 3.0, 
         //              -2.4, 2.4, 
         //              10, 40, 
-        //              100000, true, "v6", "100k_test_genAnalyzeTree");
+        //              10, true, "v6", "10k_test_genAnalyzeTree");
  
-        analyzeTree("v6", "100k_test_genAnalyzeTree",
-                    "100k_test_genAnalyzeHist",
-                    -1);
-	return 0;
+        //analyzeTree("v6", "100k_test_genAnalyzeTree",
+        //            "100k_test_genAnalyzeHist",
+        //            -1);
 }
 //
 void checkParam(int argc, char** argv)
@@ -348,13 +424,6 @@ void genAndAnalyze(int harm,
               } //######## end loop particles
 
               hmult->Fill(mult);
-
-              double  CN2, CN4;
-              double wCN2,wCN4;
-              CN2  = rN2.corr();
-              CN4  = rN4.corr();
-              wCN2 = rN2.weight();
-              wCN4 = rN4.weight();
 
               double c22n = (q.getQ()[0][0].getQV()*q.getQ()[0][1].getQV()).real() - q.getQ()[1][0].getQV().real();
               double c22d = (q.getQ()[0][0].getW()*q.getQ()[0][1].getW()).real() - q.getQ()[1][0].getW().real();
@@ -1131,13 +1200,6 @@ void analyze(int harm,
               //q4.generateMask(val);
               q4.fill(val, plc.getphi(), 1.);
            }
-
-           double  CN2, CN4;
-           double wCN2,wCN4;
-           CN2  = rN2.corr();
-           CN4  = rN4.corr();
-           wCN2 = rN2.weight();
-           wCN4 = rN4.weight();
 
            double c22n = (q.getQ()[0][0].getQV()*q.getQ()[0][1].getQV()).real() - q.getQ()[1][0].getQV().real();
            double c22d = (q.getQ()[0][0].getW()*q.getQ()[0][1].getW()).real() - q.getQ()[1][0].getW().real();

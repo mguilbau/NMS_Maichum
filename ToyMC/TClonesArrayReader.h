@@ -30,7 +30,7 @@
 #ifndef FEMTO_TCLONES_ARRAY_READER_H
 #define FEMTO_TCLONES_ARRAY_READER_H
 
-#include "TTRee.h"
+#include "TTree.h"
 #include "TClonesArray.h"
 
 template <class BranchType>

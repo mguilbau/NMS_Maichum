@@ -16,12 +16,14 @@ ROOTLDFLAGS    	= $(shell root-config --ldflags)
 ROOT_ARCH      	= $(shell root-config --arch)
 
 
-CXX             := g++ -c -g 
-CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS)
+CXX             := g++ -c -g -std=c++14
+#CXXFLAGS        := -std=c++0x -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS)
+CXXFLAGS        := -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS)
 CPPFLAGS        := -I. -I./vendor/loguru
 
 LD              := g++
-LDFLAGS         := -Wl $(ROOTCFLAGS)
+LDFLAGS         := $(ROOTCFLAGS)
+#LDFLAGS         := -Wl $(ROOTCFLAGS)
 SOFLAGS         := -shared
 
 #------------------------------------------------------------------------------
