@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IN_DIR=${WORKDIR}
-OUT_DIR=/afs/cern.ch/work/m/mguilbau/cumulant
+IN_DIR="/afs/cern.ch/user/m/mguilbau/cumulantStudy/MultiCumulants/"
+OUT_DIR="/afs/cern.ch/work/m/mguilbau/cumulant"
 
 jobID=$1
 Nevt=$2
@@ -19,6 +19,7 @@ if test -z "$Nevt"; then
 fi
 
 echo "Content of working dir folder: "
+echo $IN_DIR
 ls $IN_DIR
 
 tdir=`mktemp -d`
@@ -38,13 +39,13 @@ echo "Content of tmp dir folder: "
 echo $tdir
 ls $tdir
 
-source env_script.sh
+source $IN_DIR/env_script.sh
 make clean
 make
 fname="output_toymc_${Nevt}evts_jobID${jobID}"
 ./bin/toymc.app --generate --analyze --nevents ${Nevt} --output $fname
 mkdir -p ${OUT_DIR}/${jobID}
-mv output/${fname}.root ${OUT_DIR}/${jobID}/.
+mv $tdir/output/${fname}.root ${OUT_DIR}/${jobID}/.
 
 cd $IN_DIR
 rm -rf $tdir

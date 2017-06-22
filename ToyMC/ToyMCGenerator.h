@@ -277,11 +277,11 @@ public:
                         //Event plane *TO BE IMPLEMENTED CORRECTLY*
                         //unsigned int psi = 0.;
 
-                        std::cout <<
-                        "\rToyMCGenerator::INFO:: ievt = " << ievt
-                        <<
-                        " ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)this->_nevts)*100  << " %"
-                        << std::flush;
+                        //std::cout <<
+                        //"\rToyMCGenerator::INFO:: ievt = " << ievt
+                        //<<
+                        //" ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)this->_nevts)*10000  << " %"
+                        //<< std::flush;
 
 			this->_plcsWriter.reset();
 
@@ -305,7 +305,7 @@ public:
 			//Fill TTree
 			this->_tree->Fill(); 
 		}
-                std::cout << std::endl;
+                //std::cout << std::endl;
 
 		this->_tree->Write();
 		this->_output->Write();

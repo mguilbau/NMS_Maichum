@@ -144,7 +144,7 @@ main(int argc, char** argv) {
                                    parser.get<std::string>( "output" ) );
         }
 	else {
-		cout << parser.usage() << endl;
+		std::cout << parser.usage() << endl;
 	}
         return 0; 
 
@@ -383,11 +383,11 @@ void genAndAnalyze(int harm,
               //Number of particles to define the event class *TO BE IMPLEMENTED CORRECTLY*
               //unsigned int noff = 0.;
         
-              std::cout <<
-              "\rToyMCGenerator::INFO:: ievt = " << ievt
-              <<
-              " ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nEvt)*100  << " %"
-              << std::flush;
+              //std::cout <<
+              //"\rToyMCGenerator::INFO:: ievt = " << ievt
+              //<<
+              //" ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nEvt)*100  << " %"
+              //<< std::flush;
 
               for(size_t iharm = 2; iharm < 3; ++iharm) 
               {
@@ -1166,11 +1166,11 @@ void analyze(int harm,
            plc.reset();
 
            tr->GetEntry(ievt);
-           std::cout <<
-           "\rtoymc.cxx::INFO:: ievt = " << ievt
-           <<
-           " ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nentries)*100  << " %"
-           << std::flush;
+           //std::cout <<
+           //"\rtoymc.cxx::INFO:: ievt = " << ievt
+           //<<
+           //" ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nentries)*100  << " %"
+           //<< std::flush;
 
            event = *eventReader.get();
            int mult = event.getMult();
@@ -1671,11 +1671,11 @@ void analyzeTree(std::string version, std::string inFileName,
         while(ievt < nentries)
         {
            tr->GetEntry(ievt);
-           std::cout <<
-           "\rtoymc.cxx::INFO:: ievt = " << ievt
-           <<
-           " ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nentries)*100  << " %"
-           << std::flush;
+           //std::cout <<
+           //"\rtoymc.cxx::INFO:: ievt = " << ievt
+           //<<
+           //" ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nentries)*100  << " %"
+           //<< std::flush;
 //std::cout << "Nevt = " << ievt << std::endl;
 //std::cout << "Mult = " << mult << std::endl;
 //std::cout << "C2Nstd = " << C2Nstd << std::endl;
