@@ -80,7 +80,7 @@ main(int argc, char** argv) {
 	parser.add("analyze", '\0', "analyze ToyMc output");
 	parser.add("analyzeToyMCout", '\0', "analyze tree ToyMc output");
 	parser.add<int>("nevents", '\0', "number of events to generate/analyze", false, -1);
-	parser.add<int>("harm", '\0', "harmonic to generate/analyze", false, -1);
+	parser.add<int>("harm", '\0', "harmonic to generate/analyze", false, 2);
 	parser.add<double>("ptmin", '\0', "ptmin to generate/analyze", false, 0.3);
 	parser.add<double>("ptmax", '\0', "ptmax to generate/analyze", false, 3.0);
 	parser.add<double>("etamin", '\0', "etamin to generate/analyze", false, -2.4);

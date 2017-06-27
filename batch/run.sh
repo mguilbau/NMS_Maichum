@@ -43,7 +43,7 @@ source $IN_DIR/env_script.sh
 make clean
 make
 fname="output_toymc_${Nevt}evts_jobID${jobID}"
-./bin/toymc.app --generate --analyze --nevents ${Nevt} --output $fname
+./bin/toymc.app --generate --analyze --nevents ${Nevt} --harm 2 --output $fname
 mkdir -p ${OUT_DIR}/${jobID}
 mv $tdir/output/${fname}.root ${OUT_DIR}/${jobID}/.
 
