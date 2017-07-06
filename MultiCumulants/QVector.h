@@ -163,12 +163,16 @@ public:
 		for ( size_t i = 0; i < n; i++ ) {
 			bm[i].reset();
 		}
+		
+		np = 0;
 		// converts [s] to bitmask
 		for ( size_t i = 0; i < n; i++){
 			bm[ s[i]-1 ].set( i );
+			if ( s[i] > np )
+				np = s[i];
 		}
 
-		np = max;
+		// np = max;
 
 		return 1;
 	}
@@ -199,12 +203,20 @@ public:
 		while( next_partition( s, m, n, bm, np ) ){
 			iTerm++;
 			LOG_F( INFO, "np=%d [%d]", np, iTerm );
-			LOG_F( INFO, "%d *\n%s", coeff(np), maskString( bm, np ).c_str() );
+			LOG_F( INFO, "%d *\n%ss=%sm=%s", coeff(np), maskString( bm, np ).c_str(), sString( s, n ).c_str(), sString( m, n ).c_str() );
 		}
 
 
 
 		LOG_F( INFO, "test(%d) complete", n );
+	}
+
+	std::string sString( std::vector<int> &s, size_t np ){
+		std::string m="";
+		for ( size_t i = 0; i < np; i++){
+			m+= "[" + std::to_string(s[i]) + "]";
+		}
+		return m + "\n";
 	}
 
 	std::string maskString( std::vector< std::bitset<MAX_SET_SIZE> > bm, size_t np ){
