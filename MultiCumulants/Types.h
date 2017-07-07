@@ -50,6 +50,8 @@ typedef unsigned short Size;
 typedef unsigned short Power;
 /** Type of Native QMask **/
 typedef unsigned long long NativeMask; 
+/** Type of the NativeMask LUT **/
+typedef std::vector< std::vector< NativeMask > > NativeMaskLUT;
 /** Type of Q Term Coefficient **/
 typedef long int Coefficient;
 /**

@@ -4,6 +4,7 @@
 #include "MultiCumulants/Result.h"
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
+// #include "MultiCumulants/Correlator.h"
 
 #include "vendor/cmdline.h"
 
@@ -105,27 +106,30 @@ void cumulants( size_t order ){
 	// 
 	
 	LOG_S(INFO) << qv.print();
-	qv.reset();
+	// qv.reset();
 
-	cumulant::QVectorMap q = qv.getQ();
+	cumulant::QVectorMap& q = qv.getQ();
 
 	// cumulant::QTerms qt;
 	// qt.generate( order );
 
-	size_t nTerms = sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] );
-	LOG_F( INFO, "computing 8th order correlator" );
-	long int tc = 1;
-	for ( size_t i = 0; i < nTerms; i++ ){
-		tc = cumulant::QTERMS_h8_KCOEFF[i];
-		NativeMask &nm = cumulant::QTERMS_h8[i][0];
-		std::bitset<MAX_SET_SIZE> bs( nm );
-		NativeMask nm2 = bs.to_ullong();
-		if ( nm != nm2 )
-			LOG_F( INFO, "mismatch" );
+	// cumulant::Correlator C( order, q );
 
-		// LOG_F( INFO, "kcoeff=%ld", cumulant::QTERMS_h8_KCOEFF[i] );
-	}
-	LOG_F( INFO, "finished computing 8th order correlator, tc=%ld", tc );
+
+	// size_t nTerms = sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] );
+	// LOG_F( INFO, "computing 8th order correlator" );
+	// long int tc = 1;
+	// for ( size_t i = 0; i < nTerms; i++ ){
+	// 	tc = cumulant::QTERMS_h8_KCOEFF[i];
+	// 	NativeMask &nm = cumulant::QTERMS_h8[i][0];
+	// 	std::bitset<MAX_SET_SIZE> bs( nm );
+	// 	NativeMask nm2 = bs.to_ullong();
+	// 	if ( nm != nm2 )
+	// 		LOG_F( INFO, "mismatch" );
+
+	// 	// LOG_F( INFO, "kcoeff=%ld", cumulant::QTERMS_h8_KCOEFF[i] );
+	// }
+	// LOG_F( INFO, "finished computing 8th order correlator, tc=%ld", tc );
 
 	// LOG_F( INFO, "sizeof(TERMSMAP 8) = %lu", sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] ) );
 	// LOG_F( INFO, "%s", std::bitset<MAX_SET_SIZE>( cumulant::QTERMS_h4[0][0]).to_string().c_str() );

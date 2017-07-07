@@ -17,7 +17,7 @@ ROOT_ARCH      	= $(shell root-config --arch)
 
 
 CXX             := g++ -c 
-CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS) -O3
+CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS) -g
 CPPFLAGS        := -I. -I./vendor/loguru
 
 LD              := g++
@@ -29,6 +29,7 @@ HEADERS 		:= 	MultiCumulants/QVector.h \
 					MultiCumulants/QVectorSet.h \
 					MultiCumulants/QTerms.h \
 		           	MultiCumulants/Subsets.h \
+					MultiCumulants/Correlator.h \
 					MultiCumulants/Algorithm.h \
 					ToyMC/ToyMCEvent.h \
 					ToyMC/ToyMCGenerator.h \
@@ -79,8 +80,10 @@ include .depend_toymc
 # Generic development testing binary
 tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
-
-bin/dev.app: tests/development.o
+MultiCumulants/NativeMaskLUT.o: MultiCumulants/NativeMaskLUT.cxx
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+# MultiCumulants/NativeMaskLUT.o
+bin/dev.app: tests/development.o 
 	@mkdir -p bin
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 

@@ -52,7 +52,7 @@ namespace cumulant{
             //Destructors
             ~QVectorSet() {}
 
-            virtual QVectorMap getQ() { return this->_qvm;}
+            virtual QVectorMap& getQ() { return this->_qvm;}
 
             virtual void generateBitmasks()
             {
@@ -93,9 +93,11 @@ namespace cumulant{
                 Real weight = (!this->_useWeights ? 1 : w);
 
                 std::bitset<MAX_SET_SIZE> setMask = this->_set.setMask(val);
-
+                
                 for ( auto kv : this->_qvm ){
+                    
                     if ( ( kv.first & setMask ) == kv.first ){
+                        // LOG_F( INFO, "Filling  %s (%f, %f)", setMask.to_string().c_str(), phi, w );
                         kv.second.fill( phi, weight );
                     }
                 }
@@ -111,6 +113,11 @@ namespace cumulant{
             virtual std::string print()
             {
                 std::string s = "";
+                for ( auto kv : this->_qvm ){
+                    s += kv.second.toString();
+                    s += "\n";
+                }
+                return s;
                 // for(size_t i = 0; i < this->_q.size(); ++i)
                 // {
                 //     for(size_t j = 0; j < this->_q[i].size(); ++j)
@@ -121,7 +128,7 @@ namespace cumulant{
                 //     }
                 //     s += "\n";
                 // }
-                return s;
+                // return s;
             }
 
             std::string toString(){
