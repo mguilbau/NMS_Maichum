@@ -43,7 +43,7 @@ namespace cumulant{
                 }
 
                 this->_useWeights = useweights;
-                this->generateBitmasks();
+                this->generateBitmasks( h );
 
                 LOG_F( INFO, "# of Qvs=%lu == %lu\n", this->_qvm.size(), this->_masks.size() );
 
@@ -54,7 +54,7 @@ namespace cumulant{
 
             virtual QVectorMap& getQ() { return this->_qvm;}
 
-            virtual void generateBitmasks()
+            virtual void generateBitmasks( const HarmonicVector& h )
             {
                 algo::Combinations c;
 
@@ -73,14 +73,18 @@ namespace cumulant{
                         mask.i=k-1;
                         mask.j=nC;
                         
+                        this->_qvm[ bits ]._i = k-1; // will create the kv pair and set the qv power
+                        this->_qvm[ bits ]._j = nC;
+
                         for (size_t ik = 0; ik < k; ++ik)
                         {
                             mask.bits.set( ints[ik] );
                             bits.set( ints[ik] );
+
+                            this->_qvm[ bits ] *= QVector( h[ints[ik]]);
                         }
                         this->_masks.push_back( mask );
-                        this->_qvm[ bits ]._i = k-1; // will create the kv pair and set the qv power
-                        this->_qvm[ bits ]._j = nC;
+                        
 
                         ++nC;
                     } while(c.next_combination(ints.begin(), ints.begin() + k, ints.end()));
