@@ -41,3 +41,4 @@ bench_*.dat
 #make dependencies 
 .depend_*
 .vscode/
+lldb_shim_os_python.sh
