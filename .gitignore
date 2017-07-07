@@ -40,3 +40,4 @@ bench_*.dat
 
 #make dependencies 
 .depend_*
+.vscode/
