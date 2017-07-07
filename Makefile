@@ -25,22 +25,24 @@ LDFLAGS         := -Wl $(ROOTCFLAGS)
 SOFLAGS         := -shared
 
 #------------------------------------------------------------------------------
-HEADERS 		:= MultiCumulants/QVector.h \
-		           MultiCumulants/Subsets.h \
-                           MultiCumulants/Algorithm.h \
-                           ToyMC/ToyMCEvent.h \
-                           ToyMC/ToyMCGenerator.h \
-                           ToyMC/ToyMCParticle.h \
-                           correlations/Correlator.hh \
-                           correlations/FromQVector.hh \
-                           correlations/NestedLoops.hh \
-                           correlations/QVector.hh \
-                           correlations/Result.hh \
-                           correlations/Types.hh \
-                           correlations/closed/FromQVector.hh \
-                           correlations/recurrence/FromQVector.hh \
-                           correlations/recursive/FromQVector.hh \
-                           correlations/recursive/NestedLoops.hh
+HEADERS 		:= 	MultiCumulants/QVector.h \
+					MultiCumulants/QVectorSet.h \
+					MultiCumulants/QTerms.h \
+		           	MultiCumulants/Subsets.h \
+					MultiCumulants/Algorithm.h \
+					ToyMC/ToyMCEvent.h \
+					ToyMC/ToyMCGenerator.h \
+					ToyMC/ToyMCParticle.h \
+					correlations/Correlator.hh \
+					correlations/FromQVector.hh \
+					correlations/NestedLoops.hh \
+					correlations/QVector.hh \
+					correlations/Result.hh \
+					correlations/Types.hh \
+					correlations/closed/FromQVector.hh \
+					correlations/recurrence/FromQVector.hh \
+					correlations/recursive/FromQVector.hh \
+					correlations/recursive/NestedLoops.hh
 
 
 # Objects to compile into ToyMc binary

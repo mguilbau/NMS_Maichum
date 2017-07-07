@@ -45,7 +45,7 @@ namespace cumulant{
                 this->_useWeights = useweights;
                 this->generateBitmasks();
 
-                LOG_F( INFO, "# of Qvs=%d == %d\n", this->_qvm.size(), this->_masks.size() );
+                LOG_F( INFO, "# of Qvs=%lu == %lu\n", this->_qvm.size(), this->_masks.size() );
 
             }
 

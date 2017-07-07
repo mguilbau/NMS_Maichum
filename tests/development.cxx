@@ -41,7 +41,7 @@ main(int argc, char** argv) {
 }
 
 void cumulants( size_t order ){
-	LOG_F( INFO, "Cumulants( order=%d )", order  );
+	LOG_F( INFO, "Cumulants( order=%zu )", order  );
 
 	cumulant::Set qvset(order);
 	for ( size_t i = 0; i < order; i++ ){
@@ -74,7 +74,7 @@ void cumulants( size_t order ){
 	std::uniform_real_distribution<> distw(0, 1);
 
 	size_t NEvt = 100000;
-	for (int n = 0; n < NEvt; ++n) {
+	for ( size_t n = 0; n < NEvt; ++n) {
 		phi.push_back(distphi(ephi));
 		eta.push_back(disteta(eeta));
 		pt.push_back(distpt(ept));
@@ -82,7 +82,7 @@ void cumulants( size_t order ){
 	}
 
 	std::vector< vector<double> > val(NEvt, std::vector<double>(2,0.));
-	for (int n = 0; n < NEvt; ++n) {
+	for ( size_t n = 0; n < NEvt; ++n) {
 		val[n][0] = pt[n];
 		val[n][1] = eta[n];
 	}
@@ -98,7 +98,7 @@ void cumulants( size_t order ){
 	qv.reset();
 
 	LOG_S(INFO) << "\n" << qv.maskString() << endl;
-	for (int n = 0; n < NEvt; ++n) {
+	for (size_t n = 0; n < NEvt; ++n) {
 	   // qv.generateMask(val[n]);
 	   qv.fill(val[n], phi[n], w[n]);
 	}
@@ -109,8 +109,7 @@ void cumulants( size_t order ){
 
 	cumulant::QVectorMap q = qv.getQ();
 
-	cumulant::QTerms qt;
-
+	// cumulant::QTerms qt;
 	// qt.generate( order );
 
 	size_t nTerms = sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] );
@@ -118,12 +117,23 @@ void cumulants( size_t order ){
 	long int tc = 1;
 	for ( size_t i = 0; i < nTerms; i++ ){
 		tc = cumulant::QTERMS_h8_KCOEFF[i];
+		NativeMask &nm = cumulant::QTERMS_h8[i][0];
+		std::bitset<MAX_SET_SIZE> bs( nm );
+		NativeMask nm2 = bs.to_ullong();
+		if ( nm != nm2 )
+			LOG_F( INFO, "mismatch" );
+
 		// LOG_F( INFO, "kcoeff=%ld", cumulant::QTERMS_h8_KCOEFF[i] );
 	}
 	LOG_F( INFO, "finished computing 8th order correlator, tc=%ld", tc );
 
-	LOG_F( INFO, "sizeof(TERMSMAP 8) = %lu", sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] ) );
-	LOG_F( INFO, "%s", std::bitset<MAX_SET_SIZE>( cumulant::QTERMS_h4[0][0]).to_string().c_str() );
+	// LOG_F( INFO, "sizeof(TERMSMAP 8) = %lu", sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] ) );
+	// LOG_F( INFO, "%s", std::bitset<MAX_SET_SIZE>( cumulant::QTERMS_h4[0][0]).to_string().c_str() );
+
+
+	
+
+
 
 }
 

@@ -2,6 +2,8 @@
 #define MULTICUMULANTS_TYPES_H
 
 #include <vector>
+#include <unordered_map>
+#include <bitset> 
 #include <complex>
 
 #define MAX_SET_SIZE 64
@@ -40,15 +42,16 @@ typedef std::complex<Real> Complex;
 typedef std::vector<Complex> ComplexVector;
 /** Type of harmonics */
 typedef short Harmonic;
-/**
- * Type definition of vector of harmonics
- */
+/** Type definition of vector of harmonics **/
 typedef std::vector<Harmonic> HarmonicVector;
 /** Type of Sizes */
 typedef unsigned short Size;
 /** Type of Powers */
 typedef unsigned short Power;
-
+/** Type of Native QMask **/
+typedef unsigned long long NativeMask; 
+/** Type of Q Term Coefficient **/
+typedef long int Coefficient;
 /**
  *  enum to contain the particle charge
 **/
