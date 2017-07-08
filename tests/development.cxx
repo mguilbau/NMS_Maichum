@@ -4,7 +4,7 @@
 #include "MultiCumulants/Result.h"
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
-// #include "MultiCumulants/Correlator.h"
+#include "MultiCumulants/Correlator.h"
 
 #include "vendor/cmdline.h"
 
@@ -20,6 +20,37 @@ using namespace std;
 
 void checkParam(int argc, char** argv);
 void cumulants( size_t h );
+
+#define LAST(k,n) ((k) & ((1<<(n))-1))
+#define MID(k,m,n) LAST((k)>>(m),((n)-(m)))
+
+NativeMask maskAndCompactify( NativeMask im, NativeMask mm ){
+
+	// LOG_F( INFO, "(im=%s, mm=%s)", std::bitset<8>(im).to_string().c_str(), std::bitset<8>(mm).to_string().c_str() );
+	NativeMask rm = im & mm;
+	// LOG_F( INFO, "(im=%s, mm=%s, rm=%s)", std::bitset<8>(im).to_string().c_str(), std::bitset<8>(mm).to_string().c_str(), std::bitset<8>(rm).to_string().c_str() );
+	NativeMask frm = 0;
+	size_t n = 0;
+	for ( size_t i = 0; i < 8; i++ ){
+		NativeMask ithbit = (1 << i);
+		NativeMask nthbit = (1 << n);
+		// LOG_F( INFO, "Testing ith bit : %s", std::bitset<8>( ithbit ).to_string().c_str() );
+		// LOG_F( INFO, "nth bit : %s", std::bitset<8>( nthbit ).to_string().c_str() );
+		if ( ithbit & mm ){
+			// LOG_F( INFO, "Setting %luth bit", n );
+			if ( rm & ithbit )
+				frm |= (nthbit);
+			n++;
+		}
+	}
+
+	LOG_F( INFO, "%s = (im=%s, mm=%s, rm=%s)", std::bitset<8>( frm ).to_string().c_str(), std::bitset<8>(im).to_string().c_str(), std::bitset<8>(mm).to_string().c_str(), std::bitset<8>(rm).to_string().c_str() );
+	// LOG_F( INFO, "result = %s", std::bitset<8>( frm ).to_string().c_str() );
+	return frm;
+}
+
+
+
 
 int 
 main(int argc, char** argv) {
@@ -51,7 +82,7 @@ void cumulants( size_t order ){
 		ss.set(1, "eta",0,10);
 
 		qvset.setSubsetParams( i, ss );
-		LOG_S(INFO) << ss.toString();
+		// LOG_S(INFO) << ss.toString();
 	}
 
 	LOG_S(INFO) << qvset.toString();
@@ -89,11 +120,14 @@ void cumulants( size_t order ){
 	}
 
 
+	LOG_F( INFO, "Creating HarmonicVector(%zu)", order );
 	HarmonicVector h(order);
 	h[0] = 2;
 	h[1] = 2;
 	h[2] = -2;
 	h[3] = -2;
+	LOG_F( INFO, "HarmonicVector.size()=%zu", h.size() );
+
 
 	cumulant::QVectorSet qv(h,qvset,false);
 	qv.reset();
@@ -111,9 +145,9 @@ void cumulants( size_t order ){
 	cumulant::QVectorMap& q = qv.getQ();
 
 	// cumulant::QTerms qt;
-	// qt.generate( order );
+	// qt.generate( order, true );
 
-	// cumulant::Correlator C( order, q );
+	cumulant::Correlator C( 0b111010, order, q );
 
 
 	// size_t nTerms = sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] );
@@ -135,8 +169,15 @@ void cumulants( size_t order ){
 	// LOG_F( INFO, "%s", std::bitset<MAX_SET_SIZE>( cumulant::QTERMS_h4[0][0]).to_string().c_str() );
 
 
-	
+	// int a = 0xabcdef;
+    // printf("%x\n",  MID(a,4,16));
+	// LOG_F( INFO, "%s ==> %s", std::bitset<16>( a ).to_string().c_str(), std::bitset<16>( MID(a,4,16) ).to_string().c_str() );
 
+
+	// NativeMask rm = maskAndCompactify( 0b10101010, 0b00001010 );
+	// rm = maskAndCompactify( 0b10101010, 0b00001011 );
+	// rm = maskAndCompactify( 0b10101010, 0b00001110 );
+	// rm = maskAndCompactify( 0b10101010, 0b00111010 );
 
 
 }

@@ -17,7 +17,7 @@ ROOT_ARCH      	= $(shell root-config --arch)
 
 
 CXX             := g++ -c 
-CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS) -g
+CXXFLAGS        := -std=c++14 -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS)
 CPPFLAGS        := -I. -I./vendor/loguru
 
 LD              := g++
@@ -79,11 +79,11 @@ include .depend_toymc
 ###########################################################################
 # Generic development testing binary
 tests/development.o: tests/development.cxx $(HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -O3 $< -o $@
 MultiCumulants/NativeMaskLUT.o: MultiCumulants/NativeMaskLUT.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
-# MultiCumulants/NativeMaskLUT.o
-bin/dev.app: tests/development.o 
+
+bin/dev.app: tests/development.o MultiCumulants/NativeMaskLUT.o
 	@mkdir -p bin
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 

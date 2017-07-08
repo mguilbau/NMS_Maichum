@@ -78,7 +78,8 @@ namespace cumulant{
 
 			virtual void fill(double phi, double w )
 			{
-				int &power = this->_i;
+				size_t power = this->_i;
+
 				this->_qvector += Complex(pow(w, power) * cos(static_cast<double>(this->_harm) * phi), 
 										pow(w, power) * sin(static_cast<double>(this->_harm) * phi));
 				this->_weights += Complex(pow(w, power) * cos(0.*phi), 
@@ -105,8 +106,8 @@ namespace cumulant{
 					return s;
 			}
 
-			int _i;
-			int _j;
+			size_t _i;
+			size_t _j;
 	protected:
 			Complex _qvector;
 			Complex _weights;

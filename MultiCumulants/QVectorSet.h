@@ -37,16 +37,15 @@ namespace cumulant{
             QVectorSet(const HarmonicVector& h, Set set, bool useweights)
             {
                 this->_set = set;
+                LOG_F( INFO, "Set.size()=%zu == h.size()=%zu", this->_set.size(), h.size() );
                 if(this->_set.size() != h.size())  
                 {
+                    LOG_F( INFO, "Resizing set to be %zu", h.size() );
                     this->_set.resize(h.size());
                 }
 
                 this->_useWeights = useweights;
                 this->generateBitmasks( h );
-
-                LOG_F( INFO, "# of Qvs=%lu == %lu\n", this->_qvm.size(), this->_masks.size() );
-
             }
 
             //Destructors
@@ -68,28 +67,28 @@ namespace cumulant{
                     size_t nC = 0;
                     do
                     {
-                        std::bitset<MAX_SET_SIZE> bits;
                         QVectorMask mask;
+                        QVector q;
                         mask.i=k-1;
                         mask.j=nC;
                         
-                        this->_qvm[ bits ]._i = k-1; // will create the kv pair and set the qv power
-                        this->_qvm[ bits ]._j = nC;
-
+                        q._i = k-1;
+                        q._j = nC;
                         for (size_t ik = 0; ik < k; ++ik)
                         {
                             mask.bits.set( ints[ik] );
-                            bits.set( ints[ik] );
-
-                            this->_qvm[ bits ] *= QVector( h[ints[ik]]);
+                            q *= QVector( h[ints[ik]] );
                         }
+                        // Now save the mask and the q
                         this->_masks.push_back( mask );
-                        
+                        this->_qvm[ mask.bits ] = q;  
 
                         ++nC;
                     } while(c.next_combination(ints.begin(), ints.begin() + k, ints.end()));
                 }
 
+                LOG_F( INFO, "_masks.size() = %zu", this->_masks.size() );
+                LOG_F( INFO, "_qvm.size() = %zu", this->_qvm.size() );
             }
 
             virtual void fill(std::vector<double> &val, double &phi, double &w)
@@ -98,18 +97,20 @@ namespace cumulant{
 
                 std::bitset<MAX_SET_SIZE> setMask = this->_set.setMask(val);
                 
-                for ( auto kv : this->_qvm ){
+                // loop over the q-vectors
+                // NB loop by reference or we cannot modify the value!
+                for ( auto &kv : this->_qvm ){
                     
+                    // only fill the q-vector if the setMask satisfies
                     if ( ( kv.first & setMask ) == kv.first ){
-                        // LOG_F( INFO, "Filling  %s (%f, %f)", setMask.to_string().c_str(), phi, w );
                         kv.second.fill( phi, weight );
                     }
-                }
+                } // loop on _qvm
             }
 
             virtual void reset()
             {
-                for ( auto kv : this->_qvm ){
+                for ( auto &kv : this->_qvm ){
                     kv.second.reset(); 
                 }
             }
@@ -118,21 +119,11 @@ namespace cumulant{
             {
                 std::string s = "";
                 for ( auto kv : this->_qvm ){
+                    s+= "index( " + std::to_string( kv.second._i ) + ", " + std::to_string( kv.second._j ) + " ):";
                     s += kv.second.toString();
                     s += "\n";
                 }
                 return s;
-                // for(size_t i = 0; i < this->_q.size(); ++i)
-                // {
-                //     for(size_t j = 0; j < this->_q[i].size(); ++j)
-                //     {  
-                //         s += "index (" + std::to_string(i) + ", " + std::to_string(j) + "): \n";
-                //         s += this->_q[i][j].toString();
-                //         s += "\n"; 
-                //     }
-                //     s += "\n";
-                // }
-                // return s;
             }
 
             std::string toString(){

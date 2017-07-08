@@ -6,7 +6,7 @@
 #include <bitset> 
 #include <complex>
 
-#define MAX_SET_SIZE 64
+#define MAX_SET_SIZE 8
 
 /**
  * @file   correlations/Types.hh

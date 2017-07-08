@@ -14,7 +14,7 @@
 using std::vector;
 namespace cumulant{
 
-    extern std::vector<NativeMaskLUT> NativeMaskLUTs;
+    extern std::vector<const NativeMaskLUT> NativeMaskLUTs;
 
     class QTerms {
 
@@ -97,7 +97,7 @@ namespace cumulant{
         }
 
 
-        void generate( size_t n ){
+        void generate( size_t n, bool cpp14 = false ){
             LOG_F( INFO, "test(%zu)", n );
             std::vector<int> s;
             std::vector<int> m;
@@ -106,7 +106,7 @@ namespace cumulant{
             init_partition( s, m, n, bm, np );
 
             size_t iTerm = 0;
-            std::string msg = "{";
+            std::string msg = "\n{";
             std::string kmsg = "{";
             std::string nmsg = "{";
 
@@ -116,7 +116,7 @@ namespace cumulant{
             LOG_F( INFO, "k( %d ) %d *\n%s", kco, coeff(np), maskString( bm, np ).c_str() );
             // LOG_F( INFO, "TERMS_%lu_MAP[%lu] = %s;", n, iTerm, cppString(  s, bm, np ).c_str() );
 
-            msg += cppString( bm, np );
+            msg += "\n\t" + cppString( bm, np, cpp14 );
             kmsg += std::to_string( kcoeff( s, np ) );
             nmsg += std::to_string( coeff( np ) );
 
@@ -125,18 +125,18 @@ namespace cumulant{
                 LOG_F( INFO, "np=%d [%zu]", np, iTerm );
                 LOG_F( INFO, "k( %d ) %d *\n%ss=%sm=%s", kcoeff( s, np ),coeff(np), maskString( bm, np ).c_str(), sString( s, n ).c_str(), sString( m, n ).c_str() );
                 // LOG_F( INFO, "TERMS_%lu_MAP[%lu] = %s;", n, iTerm, cppString( s, bm, np ).c_str() );
-                msg = msg + ",\n" + cppString( bm, np );
+                msg = msg + ",\n\t" + cppString( bm, np, cpp14 );
                 kmsg += ", " + std::to_string( kcoeff( s, np ) );
                 nmsg += ", " + std::to_string( coeff( np ) );
             }
 
-            msg += "};";
+            msg += "\n};";
             kmsg += "};";
             nmsg += "};";
 
-            LOG_F( INFO, "\nunsigned long long QTERMS_h%lu[%lu][%lu] = %s", n, iTerm+1, n, msg.c_str() );
-            LOG_F( INFO, "\nlong int QTERMS_h%lu_KCOEFF[%lu] = %s", n, iTerm+1, kmsg.c_str() );
-            LOG_F( INFO, "\nlong int QTERMS_h%lu_NCOEFF[%lu] = %s", n, iTerm+1, nmsg.c_str() );
+            LOG_F( INFO, "\nNativeMaskLUT QTERMS_h%lu = %s", n, msg.c_str() );
+            LOG_F( INFO, "\nCoefficient QTERMS_h%lu_KCOEFF[%lu] = %s", n, iTerm+1, kmsg.c_str() );
+            LOG_F( INFO, "\nCoefficient QTERMS_h%lu_NCOEFF[%lu] = %s", n, iTerm+1, nmsg.c_str() );
 
             LOG_F( INFO, "test(%zu) complete", n );
         }
@@ -157,7 +157,7 @@ namespace cumulant{
             return s;
         }
 
-        std::string cppString( std::vector< std::bitset<MAX_SET_SIZE> > bm, size_t np ){
+        std::string cppString( std::vector< std::bitset<MAX_SET_SIZE> > bm, size_t np, bool cpp14 = false ){
             std::string msg = "";
             msg += "{";
             // char buff[100];
@@ -165,7 +165,10 @@ namespace cumulant{
             for ( size_t i = 0; i < np; i++){
                 
                 // snprintf( buff, sizeof(buff), "%llu", bm[i].to_ullong() );
-                msg += (delim + std::to_string( bm[i].to_ullong() ) );
+                if ( true == cpp14 )
+                    msg += ( delim + "0b" + bm[i].to_string() );
+                else 
+                    msg += (delim + std::to_string( bm[i].to_ullong() ) );
                 delim = ", ";
             }
             return msg + "}";
