@@ -16,11 +16,11 @@ namespace cumulant{
         Correlator() : v(0, 0) {
 
         }
-        Correlator( NativeMask m, size_t n, QVectorMap &qvm ) : v(0, 0) {
+        Correlator( NativeMask m, size_t n, QVectorMap &qvm, bool weight = false ) : v(0, 0) {
             build( m, n, qvm );
         }
 
-        void build( NativeMask m, size_t n, QVectorMap &qvm ){
+        void build( NativeMask m, size_t n, QVectorMap &qvm, bool weight = false ){
             LOG_F( INFO, "computing correlator for n=%zu", n );
 
             auto lut = NativeMaskLUTs[ n-2 ];    
@@ -47,10 +47,16 @@ namespace cumulant{
 
                     auto q = qvm[ bs ];
                     LOG_IF_F( INFO, DEBUG, "t=%f + i%f", q.getQV().real(), q.getQV().imag() );
-                    if ( 0 == j )
-                        t = q.getQV();
+                    Complex val;
+                    if ( weight )
+                        val = q.getW();
                     else 
-                        t *= q.getQV();
+                        val = q.getQV();
+
+                    if ( 0 == j )
+                        t = val;
+                    else
+                        t *= val;
                 }
                 q += t;
                 LOG_IF_F( INFO, DEBUG, "t=%f + i%f", t.real(), t.imag() );
