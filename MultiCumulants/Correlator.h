@@ -13,14 +13,15 @@ namespace cumulant{
     public:
         bool DEBUG = false;
         Complex v;
+        Complex w;
         Correlator() : v(0, 0) {
 
         }
-        Correlator( NativeMask m, size_t n, QVectorMap &qvm, bool weight = false ) : v(0, 0) {
+        Correlator( NativeMask m, size_t n, QVectorMap &qvm) : v(0, 0) {
             build( m, n, qvm );
         }
 
-        void build( NativeMask m, size_t n, QVectorMap &qvm, bool weight = false ){
+        void build( NativeMask m, size_t n, QVectorMap &qvm){
             LOG_F( INFO, "computing correlator for n=%zu", n );
 
             auto lut = NativeMaskLUTs[ n-2 ];    
@@ -28,10 +29,12 @@ namespace cumulant{
         
             LOG_IF_F( INFO, DEBUG, "nTerms = %zu", nTerms );
 
-            Complex q(0, 0);
+            Complex qv(0, 0);
+            Complex qw(0, 0);
             // Loop over the number of terms in the correlator
             for ( size_t i = 0; i < nTerms; i++ ){
-                Complex t;
+                Complex tv;
+                Complex tw;
                 // loop over the # of products in each term (maximum of n)
                 for ( size_t j = 0; j < lut[ i ].size(); j++ ){
                     NativeMask tm = maskAndCompactify( lut[i][j], m, 0, n );
@@ -47,25 +50,32 @@ namespace cumulant{
 
                     auto q = qvm[ bs ];
                     LOG_IF_F( INFO, DEBUG, "t=%f + i%f", q.getQV().real(), q.getQV().imag() );
-                    Complex val;
-                    if ( weight )
-                        val = q.getW();
-                    else 
-                        val = q.getQV();
 
-                    if ( 0 == j )
-                        t = val;
-                    else
-                        t *= val;
+                    if ( 0 == j ){
+                        tv = q.getQV();
+                        tw = q.getW();
+                    }
+                    else {
+                        tv *= q.getQV();
+                        tw *= q.getW();
+                    }
                 }
-                q += t;
-                LOG_IF_F( INFO, DEBUG, "t=%f + i%f", t.real(), t.imag() );
+                qv += tv;
+                qw += tw;
+                LOG_IF_F( INFO, DEBUG, "tv=%f + i%f", tv.real(), tv.imag() );
+                LOG_IF_F( INFO, DEBUG, "tw=%f + i%f", tw.real(), tw.imag() );
             }
-            this->v = q;
-            LOG_F( INFO, "q=%f + i%f", q.real(), q.imag() );
+            this->v = qv;
+            this->w = qw;
+
+            LOG_F( INFO, "qv=%f + i%f", qv.real(), qv.imag() );
+            LOG_F( INFO, "qw=%f + i%f", qw.real(), qw.imag() );
             LOG_F( INFO, "Finished computing n=%zu correlator", n );
         }
 
+        Complex calculate(  ){
+            return (this->v / this->w);
+        }
 
 
         inline NativeMask maskAndCompactify( NativeMask &im, NativeMask &mm, size_t start = 0, size_t stop = 8 ){
