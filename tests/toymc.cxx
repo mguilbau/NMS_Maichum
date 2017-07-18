@@ -15,8 +15,11 @@
 #include <correlations/recursive/FromQVector.hh>
 #include <correlations/recurrence/FromQVector.hh>
 
+#include "MultiCumulants/Types.h"
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/QVector.h"
+#include "MultiCumulants/QVectorSet.h"
+#include "MultiCumulants/Correlator.h"
 #include "ToyMC/ToyMCGenerator.h"
 #include "ToyMC/BranchReader.h"
 #include "ToyMC/TClonesArrayReader.h"
@@ -265,7 +268,7 @@ void genAndAnalyze(int harm,
         h[1] = -1*harm;
         //cumulant::QVectorSet q(h, set2, false);
         //cumulant::impl1::QVectorSet q(h, set2, false);
-        cumulant::impl2::QVectorSet q(h, set2, false);
+        cumulant::QVectorSet q(h, set2, false);
         //Init 4-p method with subset
         HarmonicVector h4(4);
         h4[0] =  1*harm;
@@ -274,7 +277,7 @@ void genAndAnalyze(int harm,
         h4[3] = -1*harm;
         //cumulant::QVectorSet q4(h4, set4, false);
         //cumulant::impl1::QVectorSet q4(h4, set4, false);
-        cumulant::impl2::QVectorSet q4(h4, set4, false);
+        cumulant::QVectorSet q4(h4, set4, false);
 
         //Histograms
         //Global
@@ -369,6 +372,9 @@ void genAndAnalyze(int harm,
         correlations::Result rN2;
         correlations::Result rN4;
 
+        cumulant::Correlator c2;
+        cumulant::Correlator c4;
+
         //#####################################
         // Loop over events
         //#####################################
@@ -398,6 +404,9 @@ void genAndAnalyze(int harm,
               q.reset();
               q4.reset();
 
+              //Define weights to be always 1
+              double w = 1.;
+
               //#####################################
               // Loop over particles
               //#####################################
@@ -415,55 +424,33 @@ void genAndAnalyze(int harm,
                  hphi->Fill(phi);
 
                  //Cumulant
-                 qN.fill(phi, 1.);
+                 qN.fill(phi, w);
 
                  val[0] = pt;
                  val[1] = eta;
-                 q.fill(val, phi, 1.);
-                 q4.fill(val, phi, 1.);
+                 q.fill(val, phi, w);
+                 q4.fill(val, phi, w);
               } //######## end loop particles
 
               hmult->Fill(mult);
 
-              double c22n = (q.getQ()[0][0].getQV()*q.getQ()[0][1].getQV()).real() - q.getQ()[1][0].getQV().real();
-              double c22d = (q.getQ()[0][0].getW()*q.getQ()[0][1].getW()).real() - q.getQ()[1][0].getW().real();
+              //With gap
+	      cumulant::QVectorMap& qmap = q.getQ();
+              c2 = cumulant::Correlator(3, 2, qmap);
+              double c22n = c2.v.real();
+              double c22d = c2.w.real();
 
-              double c24n = (q4.getQ()[0][0].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][2].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][0].getQV()*q4.getQ()[0][2].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][1].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][2].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][3].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][2].getQV()).real()
-                          - (q4.getQ()[1][4].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][2].getQV()).real()
-                          - (q4.getQ()[1][5].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][1].getQV()).real()
-                          + (q4.getQ()[1][0].getQV()*q4.getQ()[1][5].getQV()).real()
-                          + (q4.getQ()[1][1].getQV()*q4.getQ()[1][4].getQV()).real()
-                          + (q4.getQ()[1][2].getQV()*q4.getQ()[1][3].getQV()).real()
-                          + 2*(q4.getQ()[2][0].getQV()*q4.getQ()[0][3].getQV()).real()
-                          + 2*(q4.getQ()[2][1].getQV()*q4.getQ()[0][2].getQV()).real()
-                          + 2*(q4.getQ()[2][2].getQV()*q4.getQ()[0][1].getQV()).real()
-                          + 2*(q4.getQ()[2][3].getQV()*q4.getQ()[0][0].getQV()).real()
-                          - 6*q4.getQ()[3][0].getQV().real();
-              double c24d = q4.getQ()[0][0].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][2].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][0].getW().real()*q4.getQ()[0][2].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][1].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][2].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][3].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][2].getW().real()
-                          - q4.getQ()[1][4].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][2].getW().real()
-                          - q4.getQ()[1][5].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][1].getW().real()
-                          + q4.getQ()[1][0].getW().real()*q4.getQ()[1][5].getW().real()
-                          + q4.getQ()[1][1].getW().real()*q4.getQ()[1][4].getW().real()
-                          + q4.getQ()[1][2].getW().real()*q4.getQ()[1][3].getW().real()
-                          + 2*q4.getQ()[2][0].getW().real()*q4.getQ()[0][3].getW().real()
-                          + 2*q4.getQ()[2][1].getW().real()*q4.getQ()[0][2].getW().real()
-                          + 2*q4.getQ()[2][2].getW().real()*q4.getQ()[0][1].getW().real()
-                          + 2*q4.getQ()[2][3].getW().real()*q4.getQ()[0][0].getW().real()
-                          - 6*q4.getQ()[3][0].getW().real();
+	      cumulant::QVectorMap& q4map = q4.getQ();
+              c4 = cumulant::Correlator(15, 2, q4map);
+              double c24n = c4.v.real();
+              double c24d = c4.w.real();
 
               c22gap[mult] += c22n;
               w22gap[mult] += c22d;
               c24gap[mult] += c24n;
               w24gap[mult] += c24d;
 
+              //Bilandzic code
               rN2 = cqN->calculate(2, hcN);
               rN4 = cqN->calculate(4, hcN);          
 
@@ -489,7 +476,7 @@ void genAndAnalyze(int harm,
                     w24std_err[itest][mult] += rN4.weight(); 
                  }
               }
-        } //######## end loop eventss
+        } //######## end loop events
 
           //standard method
           for(int ibin = 0; ibin < hV22std->GetNbinsX(); ++ibin)
@@ -826,7 +813,7 @@ void genAndAnalyzeTree(int harm,
         h[1] = -1*harm;
         //cumulant::QVectorSet q(h, set2, false);
         //cumulant::impl1::QVectorSet q(h, set2, false);
-        cumulant::impl2::QVectorSet q(h, set2, false);
+        cumulant::QVectorSet q(h, set2, false);
         //Init 4-p method with subset
         HarmonicVector h4(4);
         h4[0] =  1*harm;
@@ -835,7 +822,7 @@ void genAndAnalyzeTree(int harm,
         h4[3] = -1*harm;
         //cumulant::QVectorSet q4(h4, set4, false);
         //cumulant::impl1::QVectorSet q4(h4, set4, false);
-        cumulant::impl2::QVectorSet q4(h4, set4, false);
+        cumulant::QVectorSet q4(h4, set4, false);
 
         //Histograms
         //Global
@@ -868,6 +855,9 @@ void genAndAnalyzeTree(int harm,
         correlations::Result rN2;
         correlations::Result rN4;
 
+        cumulant::Correlator c2;
+        cumulant::Correlator c4;
+
         //#####################################
         // Loop over events
         //#####################################
@@ -897,6 +887,9 @@ void genAndAnalyzeTree(int harm,
               q.reset();
               q4.reset();
 
+              //Define weights to be always 1
+              double w = 1.;
+
               //#####################################
               // Loop over particles
               //#####################################
@@ -914,17 +907,28 @@ void genAndAnalyzeTree(int harm,
                  hphi->Fill(phi);
 
                  //Cumulant
-                 qN.fill(phi, 1.);
+                 qN.fill(phi, w);
 
                  val[0] = pt;
                  val[1] = eta;
-                 q.fill(val, phi, 1.);
-                 q4.fill(val, phi, 1.);
+                 q.fill(val, phi, w);
+                 q4.fill(val, phi, w);
               } //######## end loop particles
 
               hmult->Fill(mult);
 
+              //With gap
+	      cumulant::QVectorMap& qmap = q.getQ();
+              c2 = cumulant::Correlator(3, 2, qmap);
+              C2Ngap = c2.v.real();
+              wC2Ngap = c2.w.real();
 
+	      cumulant::QVectorMap& q4map = q4.getQ();
+              c4 = cumulant::Correlator(15, 4, q4map);
+              C4Ngap = c4.v.real();
+              wC4Ngap = c4.w.real();
+
+              //Bilandzic code
               rN2 = cqN->calculate(2, hcN);
               rN4 = cqN->calculate(4, hcN);          
 
@@ -933,42 +937,7 @@ void genAndAnalyzeTree(int harm,
               wC2Nstd = rN2.weight();
               wC4Nstd = rN4.weight();
 
-
-              C2Ngap  = (q.getQ()[0][0].getQV()*q.getQ()[0][1].getQV()).real() - q.getQ()[1][0].getQV().real();
-              wC2Ngap = (q.getQ()[0][0].getW()*q.getQ()[0][1].getW()).real() - q.getQ()[1][0].getW().real();
-
-              C4Ngap  = (q4.getQ()[0][0].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][2].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][0].getQV()*q4.getQ()[0][2].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][1].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][2].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][3].getQV()).real()
-                          - (q4.getQ()[1][3].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][2].getQV()).real()
-                          - (q4.getQ()[1][4].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][2].getQV()).real()
-                          - (q4.getQ()[1][5].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][1].getQV()).real()
-                          + (q4.getQ()[1][0].getQV()*q4.getQ()[1][5].getQV()).real()
-                          + (q4.getQ()[1][1].getQV()*q4.getQ()[1][4].getQV()).real()
-                          + (q4.getQ()[1][2].getQV()*q4.getQ()[1][3].getQV()).real()
-                          + 2*(q4.getQ()[2][0].getQV()*q4.getQ()[0][3].getQV()).real()
-                          + 2*(q4.getQ()[2][1].getQV()*q4.getQ()[0][2].getQV()).real()
-                          + 2*(q4.getQ()[2][2].getQV()*q4.getQ()[0][1].getQV()).real()
-                          + 2*(q4.getQ()[2][3].getQV()*q4.getQ()[0][0].getQV()).real()
-                          - 6*q4.getQ()[3][0].getQV().real();
-              wC4Ngap  = q4.getQ()[0][0].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][2].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][0].getW().real()*q4.getQ()[0][2].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][1].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][2].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][3].getW().real()
-                          - q4.getQ()[1][3].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][2].getW().real()
-                          - q4.getQ()[1][4].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][2].getW().real()
-                          - q4.getQ()[1][5].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][1].getW().real()
-                          + q4.getQ()[1][0].getW().real()*q4.getQ()[1][5].getW().real()
-                          + q4.getQ()[1][1].getW().real()*q4.getQ()[1][4].getW().real()
-                          + q4.getQ()[1][2].getW().real()*q4.getQ()[1][3].getW().real()
-                          + 2*q4.getQ()[2][0].getW().real()*q4.getQ()[0][3].getW().real()
-                          + 2*q4.getQ()[2][1].getW().real()*q4.getQ()[0][2].getW().real()
-                          + 2*q4.getQ()[2][2].getW().real()*q4.getQ()[0][1].getW().real()
-                          + 2*q4.getQ()[2][3].getW().real()*q4.getQ()[0][0].getW().real()
-                          - 6*q4.getQ()[3][0].getW().real();
-
-               tree->Fill();
+              tree->Fill();
           } //######## end loop eventss
 
           std::cout << std::endl;
@@ -1038,7 +1007,7 @@ void analyze(int harm,
         h[1] = -1*harm;
         //cumulant::QVectorSet q(h, set2, false);
         //cumulant::impl1::QVectorSet q(h, set2, false);
-        cumulant::impl2::QVectorSet q(h, set2, false);
+        cumulant::QVectorSet q(h, set2, false);
         //Init 4-p method with subset
         HarmonicVector h4(4);
         h4[0] =  1*harm;
@@ -1047,7 +1016,7 @@ void analyze(int harm,
         h4[3] = -1*harm;
         //cumulant::QVectorSet q4(h4, set4, false);
         //cumulant::impl1::QVectorSet q4(h4, set4, false);
-        cumulant::impl2::QVectorSet q4(h4, set4, false);
+        cumulant::QVectorSet q4(h4, set4, false);
 
         //Histograms
         //Global
@@ -1160,6 +1129,12 @@ void analyze(int harm,
         correlations::Result rN2;
         correlations::Result rN4;
 
+        cumulant::Correlator c2;
+        cumulant::Correlator c4;
+
+        //Define weights to be always 1
+        double w = 1.;
+
         //Loop over events
         while(ievt < nentries)
         {
@@ -1185,61 +1160,40 @@ void analyze(int harm,
            for(int ip = 0; ip < npart; ++ip)
            {
               plc = *plcsReader.get(ip);
+              double phi = plc.getphi();
               hpt->Fill(plc.getpt());
               heta->Fill(plc.geteta());
-              hphi->Fill(plc.getphi());
+              hphi->Fill(phi);
 
-              qN.fill(plc.getphi(), 1.);
+              qN.fill(phi, w);
 
               val[0] = plc.getpt();
               val[1] = plc.geteta();
 
               //q.generateMask(val);
-              q.fill(val, plc.getphi(), 1.);
+              q.fill(val, phi, w);
 
               //q4.generateMask(val);
-              q4.fill(val, plc.getphi(), 1.);
+              q4.fill(val, phi, w);
            }
 
-           double c22n = (q.getQ()[0][0].getQV()*q.getQ()[0][1].getQV()).real() - q.getQ()[1][0].getQV().real();
-           double c22d = (q.getQ()[0][0].getW()*q.getQ()[0][1].getW()).real() - q.getQ()[1][0].getW().real();
+           //With gap
+	   cumulant::QVectorMap& qmap = q.getQ();
+           c2 = cumulant::Correlator(3, 2, qmap);
+           double c22n = c2.v.real();
+           double c22d = c2.w.real();
 
-           double c24n = (q4.getQ()[0][0].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][2].getQV()*q4.getQ()[0][3].getQV()).real()
-                       - (q4.getQ()[1][0].getQV()*q4.getQ()[0][2].getQV()*q4.getQ()[0][3].getQV()).real()
-                       - (q4.getQ()[1][1].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][3].getQV()).real()
-                       - (q4.getQ()[1][2].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][3].getQV()).real()
-                       - (q4.getQ()[1][3].getQV()*q4.getQ()[0][1].getQV()*q4.getQ()[0][2].getQV()).real()
-                       - (q4.getQ()[1][4].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][2].getQV()).real()
-                       - (q4.getQ()[1][5].getQV()*q4.getQ()[0][0].getQV()*q4.getQ()[0][1].getQV()).real()
-                       + (q4.getQ()[1][0].getQV()*q4.getQ()[1][5].getQV()).real()
-                       + (q4.getQ()[1][1].getQV()*q4.getQ()[1][4].getQV()).real()
-                       + (q4.getQ()[1][2].getQV()*q4.getQ()[1][3].getQV()).real()
-                       + 2*(q4.getQ()[2][0].getQV()*q4.getQ()[0][3].getQV()).real()
-                       + 2*(q4.getQ()[2][1].getQV()*q4.getQ()[0][2].getQV()).real()
-                       + 2*(q4.getQ()[2][2].getQV()*q4.getQ()[0][1].getQV()).real()
-                       + 2*(q4.getQ()[2][3].getQV()*q4.getQ()[0][0].getQV()).real()
-                       - 6*q4.getQ()[3][0].getQV().real();
-           double c24d = q4.getQ()[0][0].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][2].getW().real()*q4.getQ()[0][3].getW().real()
-                       - q4.getQ()[1][0].getW().real()*q4.getQ()[0][2].getW().real()*q4.getQ()[0][3].getW().real()
-                       - q4.getQ()[1][1].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][3].getW().real()
-                       - q4.getQ()[1][2].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][3].getW().real()
-                       - q4.getQ()[1][3].getW().real()*q4.getQ()[0][1].getW().real()*q4.getQ()[0][2].getW().real()
-                       - q4.getQ()[1][4].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][2].getW().real()
-                       - q4.getQ()[1][5].getW().real()*q4.getQ()[0][0].getW().real()*q4.getQ()[0][1].getW().real()
-                       + q4.getQ()[1][0].getW().real()*q4.getQ()[1][5].getW().real()
-                       + q4.getQ()[1][1].getW().real()*q4.getQ()[1][4].getW().real()
-                       + q4.getQ()[1][2].getW().real()*q4.getQ()[1][3].getW().real()
-                       + 2*q4.getQ()[2][0].getW().real()*q4.getQ()[0][3].getW().real()
-                       + 2*q4.getQ()[2][1].getW().real()*q4.getQ()[0][2].getW().real()
-                       + 2*q4.getQ()[2][2].getW().real()*q4.getQ()[0][1].getW().real()
-                       + 2*q4.getQ()[2][3].getW().real()*q4.getQ()[0][0].getW().real()
-                       - 6*q4.getQ()[3][0].getW().real();
+	   cumulant::QVectorMap& q4map = q4.getQ();
+           c4 = cumulant::Correlator(15, 4, q4map);
+           double c24n = c4.v.real();
+           double c24d = c4.w.real();
 
            c22gap[mult] += c22n;
            w22gap[mult] += c22d;
            c24gap[mult] += c24n;
            w24gap[mult] += c24d;
 
+           //Bilandzic code
            rN2 = cqN->calculate(2, hcN);
            rN4 = cqN->calculate(4, hcN);          
 
@@ -1666,6 +1620,9 @@ void analyzeTree(std::string version, std::string inFileName,
 
         correlations::Result rN2;
         correlations::Result rN4;
+
+        cumulant::Correlator c2;
+        cumulant::Correlator c4;
 
         //Loop over events
         while(ievt < nentries)

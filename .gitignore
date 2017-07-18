@@ -30,7 +30,9 @@
 
 # Log files
 *.log
+*.swp
 
+#ROOT files
 *.root
 
 # ignore ROOT Dictionary creation, because it is ROOT/Platform specific
@@ -43,3 +45,6 @@ bench_*.dat
 
 #batch files
 LSFJOB_*
+
+.vscode/
+lldb_shim_os_python.sh

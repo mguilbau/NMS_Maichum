@@ -1,114 +1,112 @@
 #ifndef MULTICUMULANTS_CORRELATOR_H
 #define MULTICUMULANTS_CORRELATOR_H
 
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-#include <array>
-#include <algorithm>
-#include <math.h>
-#include <set>
-#include <string>
-#include <cstring>
-#include <map>
-#include <stdlib.h>
+#include "MultiCumulants/QVectorSet.h"
+#include "MultiCumulants/QTerms.h"
 
-#include "MultiCumulants/Types.h"
-#include "MultiCumulants/QVector.h"
-
-// logging library
-#define LOGURU_IMPLEMENTATION 1
 #include "vendor/loguru/loguru.hpp"
 
-const int MAX_ORDER = 16;
-
 namespace cumulant{
-class Correlator
-{
-public:
-	virtual const char* name() const { return "Correlator"; }
-	virtual const char* classname() const {  return "Correlator"; }
 
-	//Constructors
-	Correlator()
-	{
-            LOG_S(INFO) << "Creating correlator container" << std::endl;
-	}
+    class Correlator{
 
-	//Destructors
-	~Correlator() {}
+    public:
+        bool DEBUG = false;
+        Complex v;
+        Complex w;
+        Correlator() : v(0, 0), w(0, 0) {
 
-        //Function
-        /*
-            next
-                - given the partitioning scheme represented by s and m, generate the next
-            Returns: 1, if a valid partitioning was found 0, otherwise
-        */
-        int next(std::array<int, MAX_ORDER> &s, std::array<int, MAX_ORDER> &m, int n) {
-            /* Update s: 1 1 1 1 -> 2 1 1 1 -> 1 2 1 1 -> 2 2 1 1 -> 3 2 1 1 -> 1 1 2 1 ... */
-            int i = 0;
-            ++s[i];
-            while ((i < n - 1) && (s[i] > m[i] + 1)) {
-                s[i] = 1;
-                ++i;
-                ++s[i];
-            }
-        
-            /* If i has reached the n-1 element, then the last unique partitiong has been found*/
-            if (i == n - 1)
-                return 0;
-        
-            /* Because all the first i elements are now 1, s[i] (i + 1 element) is the largest. 
-            So we update max by copying it to all the first i positions in m.*/
-            int max = s[i];
-            for (i = i - 1; i >= 0; --i)
-                m[i] = max;
-        
-            return 1;
         }
+        Correlator( NativeMask m, size_t n, QVectorMap &qvm) : v(0, 0), w(0, 0) {
+            build( m, n, qvm );
+        }
+
+        void build( NativeMask m, size_t n, QVectorMap &qvm){
+            LOG_F( INFO, "computing correlator for n=%zu", n );
+
+            auto lut = NativeMaskLUTs[ n-2 ];    
+            size_t nTerms = lut.size();
         
-        void print_as_Qvs( std::array<int, MAX_ORDER> s, int n, int np ){
-        
-            for ( int i = 1; i < np+1; i++ ){
-                printf( "<" );
-                char* space = "";
-                for ( int j =0; j < n; j++ ){
-                    if ( s[j] == i ){
-                        printf( "%sQ_%d", space, j+1 );
-                        space = " ";
+            LOG_IF_F( INFO, DEBUG, "nTerms = %zu", nTerms );
+
+            Complex qv(0, 0);
+            Complex qw(0, 0);
+            // Loop over the number of terms in the correlator
+            for ( size_t i = 0; i < nTerms; i++ ){
+                Complex tv;
+                Complex tw;
+                // loop over the # of products in each term (maximum of n)
+                for ( size_t j = 0; j < lut[ i ].size(); j++ ){
+                    NativeMask tm = maskAndCompactify( lut[i][j], m, 0, n );
+                    
+                    if ( 0 == tm ) continue;
+
+                    std::bitset<MAX_SET_SIZE> bs( tm );
+                    LOG_IF_F( INFO, DEBUG, "bs = %s", bs.to_string().c_str() );
+                    
+                    if ( qvm.count( bs ) == 0 ){
+                        LOG_F( INFO, "NOT FOUND" );
+                    }
+
+                    auto q = qvm[ bs ];
+                    LOG_IF_F( INFO, DEBUG, "t=%f + i%f", q.getQV().real(), q.getQV().imag() );
+
+                    if ( 0 == j ){
+                        tv = q.getQV();
+                        tw = q.getW();
+                    }
+                    else {
+                        tv *= q.getQV();
+                        tw *= q.getW();
                     }
                 }
-                printf( ">" );
+                qv += tv;
+                qw += tw;
+                LOG_IF_F( INFO, DEBUG, "tv=%f + i%f", tv.real(), tv.imag() );
+                LOG_IF_F( INFO, DEBUG, "tw=%f + i%f", tw.real(), tw.imag() );
             }
-            
+            this->v = qv;
+            this->w = qw;
+
+            LOG_F( INFO, "qv=%f + i%f", qv.real(), qv.imag() );
+            LOG_F( INFO, "qw=%f + i%f", qw.real(), qw.imag() );
+            LOG_F( INFO, "Finished computing n=%zu correlator", n );
         }
-        
-        int max_in_map( std::map<int, int> &m ){
-        
-            int v = 0;
-            for ( auto kv : m ){
-                if ( kv.second > v ){
-                    v = kv.second;
+
+        Complex calculate(  ){
+            return (this->v.real() / this->w.real());
+        }
+
+
+        inline NativeMask maskAndCompactify( NativeMask &im, NativeMask &mm, size_t start = 0, size_t stop = 8 ){
+
+            // first do a quick check for validity
+            
+            NativeMask rm = im & mm;
+            // require at least one bit to be 1
+            if ( 0 == rm ) return 0;
+            // then require that bits outside of mask are falsy
+            if ( (im & (!mm)) > 0 ) return 0;
+
+            NativeMask frm = 0;
+            size_t n = 0;
+            for ( size_t i = start; i < stop; i++ ){
+                NativeMask ithbit = (1 << i);
+                NativeMask nthbit = (1 << n);
+                if ( ithbit & mm ){
+                    // LOG_F( INFO, "Setting %luth bit", n );
+                    if ( rm & ithbit )
+                        frm |= (nthbit);
+                    n++;
                 }
             }
-            return v;
-        }
-        
-        int factorial( int n ){
-            if ( n <= 1 ) return 1;
-            return n * factorial( n - 1 );
-        }
-        int coeff( int n ){
-            return pow( -1, n-1 ) * factorial( n - 1 );
-        }
 
-        void calculate(impl2::QVectorSet qvset) {}
+            LOG_IF_F( INFO, DEBUG, "%s = (im=%s, mm=%s, rm=%s)", std::bitset<8>( frm ).to_string().c_str(), std::bitset<8>(im).to_string().c_str(), std::bitset<8>(mm).to_string().c_str(), std::bitset<8>(rm).to_string().c_str() );
+            
+            return frm;
+        } // maskAndCompactify
+    };
+}
 
-protected:
-};	
 
-} // namespace cumulant
 #endif
-// Local Variables:
-//  mode: C++
-// End:
