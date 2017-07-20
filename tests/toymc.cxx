@@ -337,19 +337,19 @@ void genAndAnalyzeTree(int harm,
 	      cumulant::QVectorMap& q6map = q6.getQ();
 	      cumulant::QVectorMap& q8map = q8.getQ();
 
-              c2 = cumulant::Correlator(3, 2, q2map);
+              c2 = cumulant::Correlator(3, q2map);
               C2Ngap = c2.v.real();
               wC2Ngap = c2.w.real();
 
-              c4 = cumulant::Correlator(15, 4, q4map);
+              c4 = cumulant::Correlator(15, q4map);
               C4Ngap = c4.v.real();
               wC4Ngap = c4.w.real();
 
-              c6 = cumulant::Correlator(63, 6, q6map);
+              c6 = cumulant::Correlator(63, q6map);
               C6Ngap = c6.v.real();
               wC6Ngap = c6.w.real();
 
-              c8 = cumulant::Correlator(255, 8, q8map);
+              c8 = cumulant::Correlator(255, q8map);
               C8Ngap = c8.v.real();
               wC8Ngap = c8.w.real();
 
