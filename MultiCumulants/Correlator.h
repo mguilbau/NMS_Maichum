@@ -29,7 +29,7 @@ namespace cumulant{
             // just save for printing
             _m = m;
             _n = n;
-            LOG_IF_F( INFO, DEBUG, "computing correlator for n=%zu", n );
+            LOG_F( INFO, "computing correlator for n=%zu", n );
 
             auto lut = NativeMaskLUTs[ n-2 ];    
             auto coefLut = CoefficientKs[ n - 2 ];
@@ -39,10 +39,13 @@ namespace cumulant{
 
             Complex qv(0, 0);
             Complex qw(0, 0);
+
+            Coefficient totalK;
             // Loop over the number of terms in the correlator
             for ( size_t i = 0; i < nTerms; i++ ){
                 Complex tv;
                 Complex tw;
+                std::string msg = "";
                 // loop over the # of products in each term (maximum of n)
                 for ( size_t j = 0; j < lut[ i ].size(); j++ ){
                     NativeMask tm = maskAndCompactify( lut[i][j], m, 0, n );
@@ -64,22 +67,26 @@ namespace cumulant{
                     LOG_IF_F( INFO, DEBUG, "coeff = %ld", k );
 
                     if ( 0 == j ){
+                        totalK = k;
+                        msg = bs.to_string();
                         tv = q.getQV() * (double)k;
                         tw = q.getW() * (double)k;
                     }
                     else {
+                        totalK *= k;
+                        msg += " * " + bs.to_string();
                         tv *= q.getQV() * (double)k;
                         tw *= q.getW() * (double)k;
                     }
-
-
-
-                    
                 }
                 qv += tv;
                 qw += tw;
                 LOG_IF_F( INFO, DEBUG, "tv=%f + i%f", tv.real(), tv.imag() );
                 LOG_IF_F( INFO, DEBUG, "tw=%f + i%f", tw.real(), tw.imag() );
+
+                LOG_F( INFO, "k=%f * %s", (double)totalK, msg.c_str() );
+
+
             }
             this->v = qv;
             this->w = qw;
