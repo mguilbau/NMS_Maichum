@@ -11,9 +11,13 @@ namespace cumulant{
     class Correlator{
 
     public:
-        bool DEBUG = false;
+        bool DEBUG = true;
         Complex v;
         Complex w;
+
+        NativeMask _m;
+        size_t _n;
+
         Correlator() : v(0, 0), w(0, 0) {
 
         }
@@ -22,6 +26,9 @@ namespace cumulant{
         }
 
         void build( NativeMask m, size_t n, QVectorMap &qvm){
+            // just save for printing
+            _m = m;
+            _n = n;
             LOG_IF_F( INFO, DEBUG, "computing correlator for n=%zu", n );
 
             auto lut = NativeMaskLUTs[ n-2 ];    
@@ -105,6 +112,18 @@ namespace cumulant{
             
             return frm;
         } // maskAndCompactify
+    
+        std::string toString(){
+            std::string s = "";
+            s += "Correlator( m=" + std::bitset<8>( _m ).to_string() + ", n=" + std::to_string(_n) + " )[ ";
+            s += "v=" + std::to_string( v.real() ) + " + " + std::to_string( v.imag() ) + "i, ";
+            s += "w=" + std::to_string( w.real() ) + " + " + std::to_string( w.imag() ) + "i";
+            s += " ]";
+            return s;
+
+        }
+    
+    
     };
 }
 
