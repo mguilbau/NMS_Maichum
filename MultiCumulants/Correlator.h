@@ -63,28 +63,23 @@ namespace cumulant{
                     LOG_IF_F( INFO, DEBUG, "part tv=%f + i%f", q.getQV().real(), q.getQV().imag() );
                     LOG_IF_F( INFO, DEBUG, "part tw=%f + i%f", q.getW().real(), q.getW().imag() );
 
-                    Coefficient k = coefLut[i];
-                    LOG_IF_F( INFO, DEBUG, "coeff = %ld", k );
-
                     if ( 0 == j ){
-                        totalK = k;
-                        msg = bs.to_string();
-                        tv = q.getQV() * (double)k;
-                        tw = q.getW() * (double)k;
+                        tv = q.getQV();
+                        tw = q.getW();
                     }
                     else {
-                        totalK *= k;
-                        msg += " * " + bs.to_string();
-                        tv *= q.getQV() * (double)k;
-                        tw *= q.getW() * (double)k;
+                        tv *= q.getQV();
+                        tw *= q.getW();
                     }
                 }
-                qv += tv;
-                qw += tw;
+                Coefficient k = coefLut[i];
+                LOG_IF_F( INFO, DEBUG, "coeff = %ld", k );
+                qv += tv * (double)k;
+                qw += tw * (double)k;
                 LOG_IF_F( INFO, DEBUG, "tv=%f + i%f", tv.real(), tv.imag() );
                 LOG_IF_F( INFO, DEBUG, "tw=%f + i%f", tw.real(), tw.imag() );
 
-                LOG_F( INFO, "k=%f * %s", (double)totalK, msg.c_str() );
+                // LOG_F( INFO, "k=%f * ", (double)k );
 
 
             }
