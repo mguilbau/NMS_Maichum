@@ -22,7 +22,7 @@ namespace cumulant{
         }
 
         void build( NativeMask m, size_t n, QVectorMap &qvm){
-            LOG_F( INFO, "computing correlator for n=%zu", n );
+            LOG_IF_F( INFO, DEBUG, "computing correlator for n=%zu", n );
 
             auto lut = NativeMaskLUTs[ n-2 ];    
             size_t nTerms = lut.size();
@@ -68,9 +68,9 @@ namespace cumulant{
             this->v = qv;
             this->w = qw;
 
-            LOG_F( INFO, "qv=%f + i%f", qv.real(), qv.imag() );
-            LOG_F( INFO, "qw=%f + i%f", qw.real(), qw.imag() );
-            LOG_F( INFO, "Finished computing n=%zu correlator", n );
+            LOG_IF_F( INFO, DEBUG, "qv=%f + i%f", qv.real(), qv.imag() );
+            LOG_IF_F( INFO, DEBUG, "qw=%f + i%f", qw.real(), qw.imag() );
+            LOG_IF_F( INFO, DEBUG, "Finished computing n=%zu correlator", n );
         }
 
         Complex calculate(  ){
