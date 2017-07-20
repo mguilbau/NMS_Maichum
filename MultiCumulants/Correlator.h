@@ -11,7 +11,7 @@ namespace cumulant{
     class Correlator{
 
     public:
-        bool DEBUG = true;
+        bool DEBUG = false;
         Complex v;
         Complex w;
 
