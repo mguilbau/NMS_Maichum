@@ -54,6 +54,7 @@ typedef unsigned long long NativeMask;
 typedef std::vector< std::vector< NativeMask > > NativeMaskLUT;
 /** Type of Q Term Coefficient **/
 typedef long int Coefficient;
+typedef std::vector< Coefficient > CoefficientLUT;
 /**
  *  enum to contain the particle charge
 **/

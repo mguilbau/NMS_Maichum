@@ -32,6 +32,7 @@ namespace cumulant{
             LOG_IF_F( INFO, DEBUG, "computing correlator for n=%zu", n );
 
             auto lut = NativeMaskLUTs[ n-2 ];    
+            auto coefLut = CoefficientKs[ n - 2 ];
             size_t nTerms = lut.size();
         
             LOG_IF_F( INFO, DEBUG, "nTerms = %zu", nTerms );
@@ -56,16 +57,24 @@ namespace cumulant{
                     }
 
                     auto q = qvm[ bs ];
-                    LOG_IF_F( INFO, DEBUG, "t=%f + i%f", q.getQV().real(), q.getQV().imag() );
+                    LOG_IF_F( INFO, DEBUG, "part tv=%f + i%f", q.getQV().real(), q.getQV().imag() );
+                    LOG_IF_F( INFO, DEBUG, "part tw=%f + i%f", q.getW().real(), q.getW().imag() );
+
+                    Coefficient k = coefLut[i];
+                    LOG_IF_F( INFO, DEBUG, "coeff = %ld", k );
 
                     if ( 0 == j ){
-                        tv = q.getQV();
-                        tw = q.getW();
+                        tv = q.getQV() * (double)k;
+                        tw = q.getW() * (double)k;
                     }
                     else {
-                        tv *= q.getQV();
-                        tw *= q.getW();
+                        tv *= q.getQV() * (double)k;
+                        tw *= q.getW() * (double)k;
                     }
+
+
+
+                    
                 }
                 qv += tv;
                 qw += tw;
@@ -108,7 +117,7 @@ namespace cumulant{
                 }
             }
 
-            LOG_IF_F( INFO, DEBUG, "%s = (im=%s, mm=%s, rm=%s)", std::bitset<8>( frm ).to_string().c_str(), std::bitset<8>(im).to_string().c_str(), std::bitset<8>(mm).to_string().c_str(), std::bitset<8>(rm).to_string().c_str() );
+            // LOG_IF_F( INFO, DEBUG, "%s = (im=%s, mm=%s, rm=%s)", std::bitset<8>( frm ).to_string().c_str(), std::bitset<8>(im).to_string().c_str(), std::bitset<8>(mm).to_string().c_str(), std::bitset<8>(rm).to_string().c_str() );
             
             return frm;
         } // maskAndCompactify
