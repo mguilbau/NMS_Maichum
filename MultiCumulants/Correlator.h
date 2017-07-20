@@ -29,7 +29,7 @@ namespace cumulant{
             // just save for printing
             _m = m;
             _n = n;
-            LOG_F( INFO, "computing correlator for n=%zu", n );
+            LOG_IF_F( INFO, DEBUG, "computing correlator for n=%zu", n );
 
             auto lut = NativeMaskLUTs[ n-2 ];    
             auto coefLut = CoefficientKs[ n - 2 ];

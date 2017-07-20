@@ -137,34 +137,87 @@ void genAndAnalyzeTree(int harm,
         sub4.set(0, "pt", 0.3, 3.0);
         sub4.set(1, "eta", -2.4, 2.4);
 
+        cumulant::Subset sub5(2);
+        sub5.set(0, "pt", 0.3, 3.0);
+        sub5.set(1, "eta", -2.4, 2.4);
+        cumulant::Subset sub6(2);
+        sub6.set(0, "pt", 0.3, 3.0);
+        sub6.set(1, "eta", -2.4, 2.4);
+        cumulant::Subset sub7(2);
+        sub7.set(0, "pt", 0.3, 3.0);
+        sub7.set(1, "eta", -2.4, 2.4);
+        cumulant::Subset sub8(2);
+        sub8.set(0, "pt", 0.3, 3.0);
+        sub8.set(1, "eta", -2.4, 2.4);
+
         //Init 2-p sub-event method
         cumulant::Set set2(2);
         set2.setSubsetParams(0, sub1);
-        set2.setSubsetParams(1, sub3);
+        set2.setSubsetParams(1, sub5);
 
         //Init 4-p sub-event method
         cumulant::Set set4(4);
         set4.setSubsetParams(0, sub1);
         set4.setSubsetParams(1, sub2);
-        set4.setSubsetParams(2, sub3);
-        set4.setSubsetParams(3, sub4);
+        set4.setSubsetParams(2, sub5);
+        set4.setSubsetParams(3, sub6);
+
+        //Init 6-p sub-event method
+        cumulant::Set set6(6);
+        set6.setSubsetParams(0, sub1);
+        set6.setSubsetParams(1, sub2);
+        set6.setSubsetParams(2, sub3);
+        set6.setSubsetParams(3, sub5);
+        set6.setSubsetParams(4, sub6);
+        set6.setSubsetParams(5, sub7);
+
+        //Init 8-p sub-event method
+        cumulant::Set set8(8);
+        set8.setSubsetParams(0, sub1);
+        set8.setSubsetParams(1, sub2);
+        set8.setSubsetParams(2, sub3);
+        set8.setSubsetParams(3, sub4);
+        set8.setSubsetParams(4, sub5);
+        set8.setSubsetParams(5, sub6);
+        set8.setSubsetParams(6, sub7);
+        set8.setSubsetParams(7, sub8);
+
 
         //Init 2-p method with subset
-        HarmonicVector h(2);
-        h[0] =  1*harm;
-        h[1] = -1*harm;
-        //cumulant::QVectorSet q(h, set2, false);
-        //cumulant::impl1::QVectorSet q(h, set2, false);
-        cumulant::QVectorSet q(h, set2, false);
+        HarmonicVector h2(2);
+        h2[0] =  1*harm;
+        h2[1] = -1*harm;
+        cumulant::QVectorSet q2(h2, set2, false);
+
         //Init 4-p method with subset
         HarmonicVector h4(4);
         h4[0] =  1*harm;
         h4[1] =  1*harm;
         h4[2] = -1*harm;
         h4[3] = -1*harm;
-        //cumulant::QVectorSet q4(h4, set4, false);
-        //cumulant::impl1::QVectorSet q4(h4, set4, false);
         cumulant::QVectorSet q4(h4, set4, false);
+
+        //Init 6-p method with subset
+        HarmonicVector h6(6);
+        h6[0] =  1*harm;
+        h6[1] =  1*harm;
+        h6[2] =  1*harm;
+        h6[3] = -1*harm;
+        h6[4] = -1*harm;
+        h6[5] = -1*harm;
+        cumulant::QVectorSet q6(h6, set6, false);
+
+        //Init 8-p method with subset
+        HarmonicVector h8(8);
+        h8[0] =  1*harm;
+        h8[1] =  1*harm;
+        h8[2] =  1*harm;
+        h8[3] =  1*harm;
+        h8[4] = -1*harm;
+        h8[5] = -1*harm;
+        h8[6] = -1*harm;
+        h8[7] = -1*harm;
+        cumulant::QVectorSet q8(h8, set8, false);
 
         //Histograms
         //Global
@@ -178,27 +231,39 @@ void genAndAnalyzeTree(int harm,
         hpt  ->AddDirectory(kFALSE);
         //TTree
         unsigned int mult = 0.;
-        double C2Nstd = 0., C4Nstd = 0., wC2Nstd = 0., wC4Nstd = 0.;
-        double C2Ngap = 0., C4Ngap = 0., wC2Ngap = 0., wC4Ngap = 0.;
+        double C2Nstd = 0., C4Nstd = 0., C6Nstd = 0., C8Nstd = 0., wC2Nstd = 0., wC4Nstd = 0., wC6Nstd = 0., wC8Nstd = 0.;
+        double C2Ngap = 0., C4Ngap = 0., C6Ngap = 0., C8Ngap = 0., wC2Ngap = 0., wC4Ngap = 0., wC6Ngap = 0., wC8Ngap = 0.;
         TTree* tree = new TTree("trFlow", "trFlow");
         tree->Branch("mult", &mult, "mult/s");
         tree->Branch("C2Nstd",  &C2Nstd,  "C2Nstd/D");
         tree->Branch("C4Nstd",  &C4Nstd,  "C4Nstd/D");
+        tree->Branch("C6Nstd",  &C6Nstd,  "C6Nstd/D");
+        tree->Branch("C8Nstd",  &C8Nstd,  "C8Nstd/D");
         tree->Branch("wC2Nstd", &wC2Nstd, "wC2Nstd/D");
         tree->Branch("wC4Nstd", &wC4Nstd, "wC4Nstd/D");
+        tree->Branch("wC6Nstd", &wC6Nstd, "wC6Nstd/D");
+        tree->Branch("wC8Nstd", &wC8Nstd, "wC8Nstd/D");
         tree->Branch("C2Ngap",  &C2Ngap,  "C2Ngap/D");
         tree->Branch("C4Ngap",  &C4Ngap,  "C4Ngap/D");
+        tree->Branch("C6Ngap",  &C6Ngap,  "C6Ngap/D");
+        tree->Branch("C8Ngap",  &C8Ngap,  "C8Ngap/D");
         tree->Branch("wC2Ngap", &wC2Ngap, "wC2Ngap/D");
         tree->Branch("wC4Ngap", &wC4Ngap, "wC4Ngap/D");
+        tree->Branch("wC6Ngap", &wC6Ngap, "wC6Ngap/D");
+        tree->Branch("wC8Ngap", &wC8Ngap, "wC8Ngap/D");
 
         if(nEvt < 1) return;
 
         std::vector< double > val(2, 0.); //std::cout << val[0] << " " << val[1] << std::endl;
         correlations::Result rN2;
         correlations::Result rN4;
+        correlations::Result rN6;
+        correlations::Result rN8;
 
         cumulant::Correlator c2;
         cumulant::Correlator c4;
+        cumulant::Correlator c6;
+        cumulant::Correlator c8;
 
         //#####################################
         // Loop over events
@@ -212,8 +277,10 @@ void genAndAnalyzeTree(int harm,
               << std::flush;
 
               qN.reset();
-              q.reset();
+              q2.reset();
               q4.reset();
+              q6.reset();
+              q8.reset();
 
               //Define weights to be always 1
               double w = 1.;
@@ -244,46 +311,78 @@ void genAndAnalyzeTree(int harm,
 
                  val[0] = pt;
                  val[1] = eta;
-                 q.fill(val, phi, w);
+                 q2.fill(val, phi, w);
                  q4.fill(val, phi, w);
+                 q6.fill(val, phi, w);
+                 q8.fill(val, phi, w);
               } //######## end loop particles
 
               std::cout << std::endl;
-	      LOG_S(INFO) << q.print();
+	      LOG_S(INFO) << "2p QV" << "\n" << q2.print();
               std::cout << std::endl;
-	      LOG_S(INFO) << q4.print();
+	      LOG_S(INFO) << "4p QV" << "\n" << q4.print();
               std::cout << std::endl;
+	      LOG_S(INFO) << "6p QV" << "\n" << q6.print();
+              std::cout << std::endl;
+	      LOG_S(INFO) << "8p QV" << "\n" << q8.print();
+              std::cout << std::endl;
+	      LOG_S(INFO) << "Printing Ante's values";
               qN.print();
 
               hmult->Fill(mult);
 
               //With gap
-	      cumulant::QVectorMap& qmap = q.getQ();
+	      cumulant::QVectorMap& q2map = q2.getQ();
+	      cumulant::QVectorMap& q4map = q4.getQ();
+	      cumulant::QVectorMap& q6map = q6.getQ();
+	      cumulant::QVectorMap& q8map = q8.getQ();
 
-              c2 = cumulant::Correlator(3, 2, qmap);
+              c2 = cumulant::Correlator(3, 2, q2map);
               C2Ngap = c2.v.real();
               wC2Ngap = c2.w.real();
 
-	      cumulant::QVectorMap& q4map = q4.getQ();
               c4 = cumulant::Correlator(15, 4, q4map);
               C4Ngap = c4.v.real();
               wC4Ngap = c4.w.real();
 
+              c6 = cumulant::Correlator(63, 6, q6map);
+              C6Ngap = c6.v.real();
+              wC6Ngap = c6.w.real();
+
+              c8 = cumulant::Correlator(255, 8, q8map);
+              C8Ngap = c8.v.real();
+              wC8Ngap = c8.w.real();
+
               //Bilandzic code
               rN2 = cqN->calculate(2, hcN);
               rN4 = cqN->calculate(4, hcN);          
+              rN6 = cqN->calculate(6, hcN);          
+              rN8 = cqN->calculate(8, hcN);          
 
               C2Nstd  = rN2.corr();
               C4Nstd  = rN4.corr();
+              C6Nstd  = rN6.corr();
+              C8Nstd  = rN8.corr();
               wC2Nstd = rN2.weight();
               wC4Nstd = rN4.weight();
+              wC6Nstd = rN6.weight();
+              wC8Nstd = rN8.weight();
 
 
               LOG_S(INFO) << "###  Our code:   ###";
-              LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2Ngap = " <<  wC2Ngap << std::endl;
+              LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2N = " <<  wC2Ngap << std::endl;
+              LOG_S(INFO) << "C4N = " << C4Ngap << ", wC4N = " <<  wC4Ngap << std::endl;
+              LOG_S(INFO) << "C6N = " << C6Ngap << ", wC6N = " <<  wC6Ngap << std::endl;
+              LOG_S(INFO) << "C8N = " << C8Ngap << ", wC8N = " <<  wC8Ngap << std::endl;
               LOG_S(INFO) << "### Ante's code: ###";
-              LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2Ngap = " <<  wC2Nstd << std::endl;
-
+              LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2N = " <<  wC2Nstd << std::endl;
+              LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
+              LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
+              LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
+              LOG_S(INFO) << c2.toString() << std::endl;
+              LOG_S(INFO) << c4.toString() << std::endl;
+              LOG_S(INFO) << c6.toString() << std::endl;
+              LOG_S(INFO) << c8.toString() << std::endl;
 
               tree->Fill();
           } //######## end loop eventss
@@ -339,14 +438,46 @@ void analyzeTree(std::string inFileName,
         hV24gapx   ->AddDirectory(kFALSE);
         hV24gap_num->AddDirectory(kFALSE);
         hV24gap_den->AddDirectory(kFALSE);
+        TH1D* hV26std     = new TH1D("hV26std",     "", 600, 0., 600.);
+        TH1D* hV26stdx    = new TH1D("hV26stdx",    "", 120, 0., 600.);
+        TH1D* hV26std_num = new TH1D("hV26std_num", "", 600, 0., 600.);
+        TH1D* hV26std_den = new TH1D("hV26std_den", "", 600, 0., 600.);
+        hV26std    ->AddDirectory(kFALSE);
+        hV26stdx   ->AddDirectory(kFALSE);
+        hV26std_num->AddDirectory(kFALSE);
+        hV26std_den->AddDirectory(kFALSE);
+        TH1D* hV26gap     = new TH1D("hV26gap",     "", 600, 0., 600.);
+        TH1D* hV26gapx    = new TH1D("hV26gapx",    "", 120, 0., 600.);
+        TH1D* hV26gap_num = new TH1D("hV26gap_num", "", 600, 0., 600.);
+        TH1D* hV26gap_den = new TH1D("hV26gap_den", "", 600, 0., 600.);
+        hV26gap    ->AddDirectory(kFALSE);
+        hV26gapx   ->AddDirectory(kFALSE);
+        hV26gap_num->AddDirectory(kFALSE);
+        hV26gap_den->AddDirectory(kFALSE);
+        TH1D* hV28std     = new TH1D("hV28std",     "", 600, 0., 600.);
+        TH1D* hV28stdx    = new TH1D("hV28stdx",    "", 120, 0., 600.);
+        TH1D* hV28std_num = new TH1D("hV28std_num", "", 600, 0., 600.);
+        TH1D* hV28std_den = new TH1D("hV28std_den", "", 600, 0., 600.);
+        hV28std    ->AddDirectory(kFALSE);
+        hV28stdx   ->AddDirectory(kFALSE);
+        hV28std_num->AddDirectory(kFALSE);
+        hV28std_den->AddDirectory(kFALSE);
+        TH1D* hV28gap     = new TH1D("hV28gap",     "", 600, 0., 600.);
+        TH1D* hV28gapx    = new TH1D("hV28gapx",    "", 120, 0., 600.);
+        TH1D* hV28gap_num = new TH1D("hV28gap_num", "", 600, 0., 600.);
+        TH1D* hV28gap_den = new TH1D("hV28gap_den", "", 600, 0., 600.);
+        hV28gap    ->AddDirectory(kFALSE);
+        hV28gapx   ->AddDirectory(kFALSE);
+        hV28gap_num->AddDirectory(kFALSE);
+        hV28gap_den->AddDirectory(kFALSE);
 
 
 
         //Open in file and get TTree
         //TFile* fin = TFile::Open(Form("/Volumes/Elements/ToyMCdata/datafiles/cumulant/%s/%s.root",version.c_str(),inFileName.c_str()));
         UShort_t mult = 0;
-        double C2Nstd = 0., C4Nstd = 0., wC2Nstd = 0., wC4Nstd = 0.;
-        double C2Ngap = 0., C4Ngap = 0., wC2Ngap = 0., wC4Ngap = 0.;
+        double C2Nstd = 0., C4Nstd = 0., C6Nstd = 0., C8Nstd = 0., wC2Nstd = 0., wC4Nstd = 0., wC6Nstd = 0., wC8Nstd = 0.;
+        double C2Ngap = 0., C4Ngap = 0., C6Ngap = 0., C8Ngap = 0., wC2Ngap = 0., wC4Ngap = 0., wC6Ngap = 0., wC8Ngap = 0.;
         TFile* fin = TFile::Open(Form("%s/%s.root", getenv("OUTPUTDIR"), inFileName.c_str()));
         //Global
         TH1I* hmult = dynamic_cast<TH1I*>(fin->Get("hmult")->Clone()); 
@@ -362,12 +493,20 @@ void analyzeTree(std::string inFileName,
         tr->SetBranchAddress("mult", &mult);
         tr->SetBranchAddress("C2Nstd",  &C2Nstd);
         tr->SetBranchAddress("C4Nstd",  &C4Nstd);
+        tr->SetBranchAddress("C6Nstd",  &C6Nstd);
+        tr->SetBranchAddress("C8Nstd",  &C8Nstd);
         tr->SetBranchAddress("C2Ngap",  &C2Ngap);
         tr->SetBranchAddress("C4Ngap",  &C4Ngap);
+        tr->SetBranchAddress("C6Ngap",  &C6Ngap);
+        tr->SetBranchAddress("C8Ngap",  &C8Ngap);
         tr->SetBranchAddress("wC2Nstd", &wC2Nstd);
         tr->SetBranchAddress("wC4Nstd", &wC4Nstd);
+        tr->SetBranchAddress("wC6Nstd", &wC6Nstd);
+        tr->SetBranchAddress("wC8Nstd", &wC8Nstd);
         tr->SetBranchAddress("wC2Ngap", &wC2Ngap);
         tr->SetBranchAddress("wC4Ngap", &wC4Ngap);
+        tr->SetBranchAddress("wC6Ngap", &wC6Ngap);
+        tr->SetBranchAddress("wC8Ngap", &wC8Ngap);
 
         int nentries = tr->GetEntries();
         if(nEvt != -1) nentries = nEvt;
@@ -381,74 +520,112 @@ void analyzeTree(std::string inFileName,
         std::vector< double > w22std(600, 0.);
         std::vector< double > c24std(600, 0.);
         std::vector< double > w24std(600, 0.);
+        std::vector< double > c26std(600, 0.);
+        std::vector< double > w26std(600, 0.);
+        std::vector< double > c28std(600, 0.);
+        std::vector< double > w28std(600, 0.);
 
         std::vector< std::vector< double > > c22std_err(10, std::vector<double>(600, 0.));
         std::vector< std::vector< double > > w22std_err(10, std::vector<double>(600, 0.));
         std::vector< std::vector< double > > c24std_err(10, std::vector<double>(600, 0.));
         std::vector< std::vector< double > > w24std_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > c26std_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > w26std_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > c28std_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > w28std_err(10, std::vector<double>(600, 0.));
 
         std::vector< double > c22gap(600, 0.);
         std::vector< double > w22gap(600, 0.);
         std::vector< double > c24gap(600, 0.);
         std::vector< double > w24gap(600, 0.);
+        std::vector< double > c26gap(600, 0.);
+        std::vector< double > w26gap(600, 0.);
+        std::vector< double > c28gap(600, 0.);
+        std::vector< double > w28gap(600, 0.);
 
         std::vector< std::vector< double > > c22gap_err(10, std::vector<double>(600, 0.));
         std::vector< std::vector< double > > w22gap_err(10, std::vector<double>(600, 0.));
         std::vector< std::vector< double > > c24gap_err(10, std::vector<double>(600, 0.));
         std::vector< std::vector< double > > w24gap_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > c26gap_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > w26gap_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > c28gap_err(10, std::vector<double>(600, 0.));
+        std::vector< std::vector< double > > w28gap_err(10, std::vector<double>(600, 0.));
 
 
         std::vector< double > c22stdx(120, 0.);
         std::vector< double > w22stdx(120, 0.);
         std::vector< double > c24stdx(120, 0.);
         std::vector< double > w24stdx(120, 0.);
+        std::vector< double > c26stdx(120, 0.);
+        std::vector< double > w26stdx(120, 0.);
+        std::vector< double > c28stdx(120, 0.);
+        std::vector< double > w28stdx(120, 0.);
 
         std::vector< std::vector< double > > c22std_errx(10, std::vector<double>(120, 0.));
         std::vector< std::vector< double > > w22std_errx(10, std::vector<double>(120, 0.));
         std::vector< std::vector< double > > c24std_errx(10, std::vector<double>(120, 0.));
         std::vector< std::vector< double > > w24std_errx(10, std::vector<double>(120, 0.));
+        std::vector< std::vector< double > > c26std_errx(10, std::vector<double>(120, 0.));
+        std::vector< std::vector< double > > w26std_errx(10, std::vector<double>(120, 0.));
+        std::vector< std::vector< double > > c28std_errx(10, std::vector<double>(120, 0.));
+        std::vector< std::vector< double > > w28std_errx(10, std::vector<double>(120, 0.));
 
         std::vector< double > c22gapx(120, 0.);
         std::vector< double > w22gapx(120, 0.);
         std::vector< double > c24gapx(120, 0.);
         std::vector< double > w24gapx(120, 0.);
+        std::vector< double > c26gapx(120, 0.);
+        std::vector< double > w26gapx(120, 0.);
+        std::vector< double > c28gapx(120, 0.);
+        std::vector< double > w28gapx(120, 0.);
 
         std::vector< std::vector< double > > c22gap_errx(10, std::vector<double>(120, 0.));
         std::vector< std::vector< double > > w22gap_errx(10, std::vector<double>(120, 0.));
         std::vector< std::vector< double > > c24gap_errx(10, std::vector<double>(120, 0.));
         std::vector< std::vector< double > > w24gap_errx(10, std::vector<double>(120, 0.));
-
+        std::vector< std::vector< double > > c26gap_errx(10, std::vector<double>(120, 0.));
+        std::vector< std::vector< double > > w26gap_errx(10, std::vector<double>(120, 0.));
+        std::vector< std::vector< double > > c28gap_errx(10, std::vector<double>(120, 0.));
+        std::vector< std::vector< double > > w28gap_errx(10, std::vector<double>(120, 0.));
 
         correlations::Result rN2;
         correlations::Result rN4;
+        correlations::Result rN6;
+        correlations::Result rN8;
 
         cumulant::Correlator c2;
         cumulant::Correlator c4;
+        cumulant::Correlator c6;
+        cumulant::Correlator c8;
 
         //Loop over events
         while(ievt < nentries)
         {
            tr->GetEntry(ievt);
-           //std::cout <<
-           //"\rtoymc.cxx::INFO:: ievt = " << ievt
-           //<<
-           //" ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nentries)*100  << " %"
-           //<< std::flush;
-//std::cout << "Nevt = " << ievt << std::endl;
-//std::cout << "Mult = " << mult << std::endl;
-//std::cout << "C2Nstd = " << C2Nstd << std::endl;
-//std::cout << "C4Nstd = " << C4Nstd << std::endl;
-//std::cout << "C2Ngap = " << C2Ngap << std::endl;
-//std::cout << "C4Ngap = " << C4Ngap << std::endl;
+           std::cout <<
+           "\rtoymc.cxx::INFO:: ievt = " << ievt
+           <<
+           " ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nentries)*100  << " %"
+           << std::flush;
+
            c22std[mult] += C2Nstd; 
            w22std[mult] += wC2Nstd;  
            c24std[mult] += C4Nstd; 
            w24std[mult] += wC4Nstd;  
+           c26std[mult] += C6Nstd; 
+           w26std[mult] += wC6Nstd;  
+           c28std[mult] += C8Nstd; 
+           w28std[mult] += wC8Nstd;  
 
            c22gap[mult] += C2Ngap; 
            w22gap[mult] += wC2Ngap;
            c24gap[mult] += C4Ngap; 
            w24gap[mult] += wC4Ngap;
+           c26gap[mult] += C6Ngap; 
+           w26gap[mult] += wC6Ngap;
+           c28gap[mult] += C8Ngap; 
+           w28gap[mult] += wC8Ngap;
 
            // --- Variance
            int ntest = rand() % 10;
@@ -460,11 +637,19 @@ void analyzeTree(std::string inFileName,
                  w22std_err[itest][mult] += wC2Nstd;
                  c24std_err[itest][mult] += C4Nstd; 
                  w24std_err[itest][mult] += wC4Nstd;
+                 c26std_err[itest][mult] += C6Nstd; 
+                 w26std_err[itest][mult] += wC6Nstd;
+                 c28std_err[itest][mult] += C8Nstd; 
+                 w28std_err[itest][mult] += wC8Nstd;
 
                  c22gap_err[itest][mult] += C2Ngap; 
                  w22gap_err[itest][mult] += wC2Ngap;
                  c24gap_err[itest][mult] += C4Ngap; 
                  w24gap_err[itest][mult] += wC4Ngap;      
+                 c26gap_err[itest][mult] += C6Ngap; 
+                 w26gap_err[itest][mult] += wC6Ngap;      
+                 c28gap_err[itest][mult] += C8Ngap; 
+                 w28gap_err[itest][mult] += wC8Ngap;      
               }
            }
 
@@ -492,12 +677,35 @@ void analyzeTree(std::string inFileName,
         {
            hV24std_num->SetBinContent(ibin+1, -2*c22std[ibin]*c22std[ibin] + c24std[ibin]);
            hV24std_den->SetBinContent(ibin+1, w24std[ibin]);
-           if(w24std[ibin+1] != 0.) c24std[ibin] = c24std[ibin]/w24std[ibin];
-           else                     c24std[ibin] = 0.;
+           if(w24std[ibin] != 0.) c24std[ibin] = c24std[ibin]/w24std[ibin];
+           else                   c24std[ibin] = 0.;
            if(2*c22std[ibin]*c22std[ibin] - c24std[ibin] >= 0.) hV24std->SetBinContent(ibin+1, pow(2*c22std[ibin]*c22std[ibin] - c24std[ibin],1./4.));
 
            c24stdx[ibin/5] += c24std[ibin] * w24std[ibin];
            w24stdx[ibin/5] += w24std[ibin];
+        }
+        for(int ibin = 0; ibin < hV26std->GetNbinsX(); ++ibin)
+        {
+           hV26std_num->SetBinContent(ibin+1, c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin]);
+           hV26std_den->SetBinContent(ibin+1, w26std[ibin]);
+           if(w26std[ibin] != 0.) c26std[ibin] = c26std[ibin]/w26std[ibin];
+           else                   c26std[ibin] = 0.;
+           if(c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin] >= 0.) hV26std->SetBinContent(ibin+1, pow((c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin])/4., 1./6.));
+
+           c26stdx[ibin/5] += c26std[ibin] * w26std[ibin];
+           w26stdx[ibin/5] += w26std[ibin];
+        }
+        for(int ibin = 0; ibin < hV28std->GetNbinsX(); ++ibin)
+        {
+           hV28std_num->SetBinContent(ibin+1, c28std[ibin] - 16*c26std[ibin]*c22std[ibin] - 18*c24std[ibin]*c24std[ibin] + 144*c24std[ibin]*c22std[ibin]*c22std[ibin] - 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin]);
+           hV28std_den->SetBinContent(ibin+1, w28std[ibin]);
+           if(w28std[ibin] != 0.) c28std[ibin] = c28std[ibin]/w28std[ibin];
+           else                   c28std[ibin] = 0.;
+           if(-1*c28std[ibin] + 16*c26std[ibin]*c22std[ibin] + 18*c24std[ibin]*c24std[ibin] - 144*c24std[ibin]*c22std[ibin]*c22std[ibin] + 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin] >= 0.) 
+              hV28std->SetBinContent(ibin+1, pow((-1*c28std[ibin] + 16*c26std[ibin]*c22std[ibin] + 18*c24std[ibin]*c24std[ibin] - 144*c24std[ibin]*c22std[ibin]*c22std[ibin] + 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin])/33.,1./8.));
+
+           c28stdx[ibin/5] += c28std[ibin] * w28std[ibin];
+           w28stdx[ibin/5] += w28std[ibin];
         }
 
         //gap method
@@ -523,6 +731,30 @@ void analyzeTree(std::string inFileName,
            c24gapx[ibin/5] += c24gap[ibin] * w24gap[ibin];
            w24gapx[ibin/5] += w24gap[ibin];
         }
+        for(int ibin = 0; ibin < hV26gap->GetNbinsX(); ++ibin)
+        {
+           hV26gap_num->SetBinContent(ibin+1, c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]);
+           hV26gap_den->SetBinContent(ibin+1, w26gap[ibin]);
+           if(w26gap[ibin] != 0.) c26gap[ibin] = c26gap[ibin]/w26gap[ibin];
+           else                   c26gap[ibin] = 0.;
+           if(c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin] >= 0.) hV26gap->SetBinContent(ibin+1, pow((c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin])/4., 1./6.));
+
+           c26gapx[ibin/5] += c26gap[ibin] * w26gap[ibin];
+           w26gapx[ibin/5] += w26gap[ibin];
+        }
+        for(int ibin = 0; ibin < hV28gap->GetNbinsX(); ++ibin)
+        {
+           hV28gap_num->SetBinContent(ibin+1, c28gap[ibin] - 16*c26gap[ibin]*c22gap[ibin] - 18*c24gap[ibin]*c24gap[ibin] + 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] - 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]);
+           hV28gap_den->SetBinContent(ibin+1, w28gap[ibin]);
+           if(w28gap[ibin] != 0.) c28gap[ibin] = c28gap[ibin]/w28gap[ibin];
+           else                   c28gap[ibin] = 0.;
+           if(-1*c28gap[ibin] + 16*c26gap[ibin]*c22gap[ibin] + 18*c24gap[ibin]*c24gap[ibin] - 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] + 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin] >= 0.) 
+              hV28gap->SetBinContent(ibin+1, pow((-1*c28gap[ibin] + 16*c26gap[ibin]*c22gap[ibin] + 18*c24gap[ibin]*c24gap[ibin] - 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] + 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin])/33.,1./8.));
+
+           c28gapx[ibin/5] += c28gap[ibin] * w28gap[ibin];
+           w28gapx[ibin/5] += w28gap[ibin];
+        }
+
 
       
 ///////////REBIN
@@ -539,6 +771,19 @@ void analyzeTree(std::string inFileName,
            else                      c24stdx[ibin] = 0.;
            if(2*c22stdx[ibin]*c22stdx[ibin] - c24stdx[ibin] >= 0.) hV24stdx->SetBinContent(ibin+1, pow(2*c22stdx[ibin]*c22stdx[ibin] - c24stdx[ibin],1./4.));
         }
+        for(int ibin = 0; ibin < hV26stdx->GetNbinsX(); ++ibin)
+        {
+           if(w26stdx[ibin+1] != 0.) c26stdx[ibin] = c26stdx[ibin]/w26stdx[ibin];
+           else                      c26stdx[ibin] = 0.;
+           if(c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] >= 0.) hV26stdx->SetBinContent(ibin+1, pow((c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/4.,1./6.));
+        }
+        for(int ibin = 0; ibin < hV28stdx->GetNbinsX(); ++ibin)
+        {
+           if(w28stdx[ibin+1] != 0.) c28stdx[ibin] = c28stdx[ibin]/w28stdx[ibin];
+           else                      c28stdx[ibin] = 0.;
+           if(-1*c28stdx[ibin] + 16*c26stdx[ibin]*c22stdx[ibin] + 18*c24stdx[ibin]*c24stdx[ibin] - 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] + 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] >= 0.) 
+             hV28stdx->SetBinContent(ibin+1, pow((-1*c28stdx[ibin] + 16*c26stdx[ibin]*c22stdx[ibin] + 18*c24stdx[ibin]*c24stdx[ibin] - 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] + 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/33.,1./8.));
+        }
 
         //gap method
         for(int ibin = 0; ibin < hV22gapx->GetNbinsX(); ++ibin)
@@ -553,6 +798,20 @@ void analyzeTree(std::string inFileName,
            else                    c24gapx[ibin] = 0.;
            if(2*c22gapx[ibin]*c22gapx[ibin] - c24gapx[ibin] >= 0.)  hV24gapx->SetBinContent(ibin+1, pow(2*c22gapx[ibin]*c22gapx[ibin] - c24gapx[ibin],1./4.));
         }
+        for(int ibin = 0; ibin < hV26gapx->GetNbinsX(); ++ibin)
+        {
+           if(w26gapx[ibin+1] != 0.) c26gapx[ibin] = c26gapx[ibin]/w26gapx[ibin];
+           else                      c26gapx[ibin] = 0.;
+           if(c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] >= 0.) hV26gapx->SetBinContent(ibin+1, pow((c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/4.,1./6.));
+        }
+        for(int ibin = 0; ibin < hV28gapx->GetNbinsX(); ++ibin)
+        {
+           if(w28gapx[ibin+1] != 0.) c28gapx[ibin] = c28gapx[ibin]/w28gapx[ibin];
+           else                      c28gapx[ibin] = 0.;
+           if(-1*c28gapx[ibin] + 16*c26gapx[ibin]*c22gapx[ibin] + 18*c24gapx[ibin]*c24gapx[ibin] - 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] + 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] >= 0.) 
+             hV28gapx->SetBinContent(ibin+1, pow((-1*c28gapx[ibin] + 16*c26gapx[ibin]*c22gapx[ibin] + 18*c24gapx[ibin]*c24gapx[ibin] - 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] + 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/33.,1./8.));
+        }
+
 ///////////
 
         double varC22std = 0.;
@@ -742,6 +1001,24 @@ void analyzeTree(std::string inFileName,
         hV24gapx   ->Write();
         hV24gap_den->Write();
         hV24gap_num->Write();
+
+        hV26std    ->Write();
+        hV26stdx   ->Write();
+        hV26std_den->Write();
+        hV26std_num->Write();
+        hV26gap    ->Write();
+        hV26gapx   ->Write();
+        hV26gap_den->Write();
+        hV26gap_num->Write();
+
+        hV28std    ->Write();
+        hV28stdx   ->Write();
+        hV28std_den->Write();
+        hV28std_num->Write();
+        hV28gap    ->Write();
+        hV28gapx   ->Write();
+        hV28gap_den->Write();
+        hV28gap_num->Write();
 
         fout->Close();
 
