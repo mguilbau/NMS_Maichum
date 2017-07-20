@@ -19,13 +19,12 @@ namespace cumulant{
         Complex w;
 
         NativeMask _m;
-        size_t _n;
 
         Correlator() : v(0, 0), w(0, 0) {
 
         }
-        Correlator( NativeMask m, size_t n, QVectorMap &qvm) : v(0, 0), w(0, 0) {
-            build( m, n, qvm );
+        Correlator( NativeMask m, QVectorMap &qvm) : v(0, 0), w(0, 0) {
+            build( m, qvm );
         }
 
         int factorial( int n ){
@@ -33,127 +32,96 @@ namespace cumulant{
             return n * factorial( n - 1 );
         }
 
-        void build( NativeMask m, size_t n, QVectorMap &qvm){
+        size_t countSetBits(NativeMask m){
+            size_t count = 0;
+            while (m){
+                m &= (m-1) ;
+                count++;
+            }
+            return count;
+        }
+
+        // im is the one in the compressed space
+        // mm is the mask in the full space
+        // example :
+        // given im=0101, and mm=00110101
+        // returns rm = 00010001, ie 1st and 3rd set bits in mask
+        NativeMask expandMask( NativeMask im, NativeMask mm, size_t start = 0, size_t stop = 8 ){
+
+            vector<size_t> mlut;
+            size_t n = 0;
+            NativeMask rm = 0;
+            for ( size_t i = start; i <stop; i++ ){
+                NativeMask ithbit = (1 << i);
+                NativeMask nthbit = (1 << n);
+                if ( ithbit & mm ){
+                    if ( nthbit & im )
+                        rm |= ithbit;
+                    n++; 
+                }
+            }
+            return rm;
+        }
+
+
+        void build( NativeMask m, QVectorMap &qvm){
             // just save for printing
             _m = m;
-            _n = n;
-            LOG_F( INFO, "computing correlator for n=%zu", n );
 
-            for ( auto qqq : qvm ){
-                LOG_S(INFO) << qqq.first.to_string() << " : " << qqq.second.toString();
-            }
-            
+            auto bm = std::bitset<8>( m );
+            size_t maskBitsSet = countSetBits( m );
+            LOG_IF_F( INFO, DEBUG, "nSetBits(mask) = %lu", maskBitsSet );
 
-            LOG_F( INFO, "m=%s", std::bitset<8>(m).to_string().c_str() );;
+            auto lut = NativeMaskLUTs[ maskBitsSet-2 ];    
 
-            auto lut = NativeMaskLUTs[ n-2 ];    
-            auto coefLut = CoefficientKs[ n-2 ];
             size_t nTerms = lut.size();
-
-            std::set< std::set< NativeMask > > visited;
-        
-            LOG_IF_F( INFO, DEBUG, "nTerms = %zu", nTerms );
-
             Complex qv(0, 0);
             Complex qw(0, 0);
-
-            double totalK;
-            // Loop over the number of terms in the correlator
             for ( size_t i = 0; i < nTerms; i++ ){
-                LOG_F( INFO, "TERM %lu\n", i );
-                Complex tv;
-                Complex tw;
+                LOG_IF_F( INFO, DEBUG, "\n\nTERM %lu", i );
+                
+                double totalK = 1.0;
+                Complex tv(0,0);
+                Complex tw(0,0);
                 std::string msg = "";
-                std::string qmsg = "";
-                // loop over the # of products in each term (maximum of n)
-                size_t nVisited = 0;
-                size_t nTest = 0;
-                std::set<NativeMask> uTerms;
                 for ( size_t j = 0; j < lut[ i ].size(); j++ ){
+                    NativeMask tm = lut[ i ][ j ];
+                    NativeMask em = expandMask( tm, m );
                     
-                    NativeMask tm = maskAndCompactify( lut[i][j], m, 0, n );
+                    auto btm = std::bitset<8>( tm );
+                    auto bem = std::bitset<8>( em );
+                    
+                    LOG_IF_F( INFO, DEBUG, "NativeMask=%s", std::bitset<8>( tm ).to_string().c_str() );
+                    LOG_IF_F( INFO, DEBUG, "expandMask( im=%s, mm=%s ) = %s", btm.to_string().c_str(), bm.to_string().c_str(), bem.to_string().c_str() );
 
-                    if ( 0 == tm ) continue;
-                    uTerms.insert( tm );
-                    // nTest++;
-                    // auto testPair = std::make_pair( lut[ i ].size(), tm );
-                    std::bitset<MAX_SET_SIZE> bs( tm );
-                    //     // LOG_F( INFO, " lut[ i ].size()=%lu, tm=%s", lut[ i ].size(), bs.to_string().c_str() );;
-                    
-                    // if (visited.count( testPair ) > 0 ) {
-                    //     // LOG_F( INFO, "Visited"  );;
-                        
-                    //     // continue;
-                    //     nVisited++;
-                    // }
-                    
-                    
-                    
-
-
-                    
-
-                    
-                    // LOG_F( INFO, "bs = %s", bs.to_string().c_str() );
-                    
-                    if ( qvm.count( bs ) == 0 ){
-                        LOG_F( INFO, "NOT FOUND" );
-                    }
-
-                    auto q = qvm[ bs ];
-                    LOG_IF_F( INFO, DEBUG, "part tv=%f + i%f", q.getQV().real(), q.getQV().imag() );
-                    LOG_IF_F( INFO, DEBUG, "part tw=%f + i%f", q.getW().real(), q.getW().imag() );
-
+                    auto q = qvm[ bem ];
                     double ck = (pow(-1, q._i) * factorial(q._i));
-                    // LOG_F( INFO, "nTerms=%lu, k=%zu, (-1)^k(k-1)! = %f * %s", nTerms, q._i+1, ck, bs.to_string().c_str() );
-
-
+                    totalK *= ck;
+                    msg += " " + bem.to_string();
+                    
                     if ( 0 == j ){
-                        totalK = ck;
-                        msg = bs.to_string();
-                        // qmsg = "(" + std::to_string( q.getQV().real() ) + ", " + std::to_string( q.getQV().imag() ) + ")";
-                        qmsg = q.toString();
-                        tv = q.getQV() ;
-                        tw = q.getW() ;
+                        tv = q.getQV();
+                        tw = q.getW();
+                    } else {
+                        tv *= q.getQV();
+                        tw *= q.getW();
                     }
-                    else {
-                        totalK *=ck;
-                        msg += " " + bs.to_string();
-                        // qmsg += "*(" + std::to_string( q.getQV().real() ) + ", " + std::to_string( q.getQV().imag() ) + ")";
-                        qmsg += "* " + q.toString();
-                        tv *= q.getQV() ;
-                        tw *= q.getW() ;
-                    }
-                }
-                
-                
-                if ( visited.count( uTerms ) > 0 ){
-                    LOG_F( INFO, "should skip : %s", msg.c_str() );
-                    continue;
-                }
-                visited.insert( uTerms );
-                // LOG_IF_F( INFO, DEBUG, "coeff = %ld", k );
-                // LOG_F( INFO, "visited? %lu == %s", visited.count( msg ), msg.c_str() );
-                // visited.insert( msg );
+                    
+
+                } // loop on j
+
+                LOG_IF_F( INFO, DEBUG, "%f * %s", totalK, msg.c_str() );
 
                 qv += tv * totalK;
-                qw += tw  * totalK;
+                qw += tw * totalK;
 
-                // LOG_IF_F( INFO, DEBUG, "tv=%f + i%f", tv.real(), tv.imag() );
-                // LOG_IF_F( INFO, DEBUG, "tw=%f + i%f", tw.real(), tw.imag() );
-
-                LOG_F( INFO, "%f * %s", totalK, msg.c_str() );
-                LOG_F( INFO, "%f * %s", totalK, qmsg.c_str() );
-                
-
-
-            }
+            } // loop on i terms
+    
             this->v = qv;
             this->w = qw;
 
-            LOG_IF_F( INFO, DEBUG, "qv=%f + i%f", qv.real(), qv.imag() );
-            LOG_IF_F( INFO, DEBUG, "qw=%f + i%f", qw.real(), qw.imag() );
-            LOG_IF_F( INFO, DEBUG, "Finished computing n=%zu correlator", n );
+            return;
+
         }
 
         Complex calculate(  ){
@@ -191,7 +159,7 @@ namespace cumulant{
     
         std::string toString(){
             std::string s = "";
-            s += "Correlator( m=" + std::bitset<8>( _m ).to_string() + ", n=" + std::to_string(_n) + " )[ ";
+            s += "Correlator( m=" + std::bitset<8>( _m ).to_string() + " )[ ";
             s += "v=" + std::to_string( v.real() ) + " + " + std::to_string( v.imag() ) + "i, ";
             s += "w=" + std::to_string( w.real() ) + " + " + std::to_string( w.imag() ) + "i";
             s += " ]";
