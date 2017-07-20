@@ -251,6 +251,8 @@ void genAndAnalyzeTree(int harm,
               std::cout << std::endl;
 	      LOG_S(INFO) << q.print();
               std::cout << std::endl;
+	      LOG_S(INFO) << q4.print();
+              std::cout << std::endl;
               qN.print();
 
               hmult->Fill(mult);
@@ -275,6 +277,13 @@ void genAndAnalyzeTree(int harm,
               C4Nstd  = rN4.corr();
               wC2Nstd = rN2.weight();
               wC4Nstd = rN4.weight();
+
+
+              LOG_S(INFO) << "###  Our code:   ###";
+              LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2Ngap = " <<  wC2Ngap << std::endl;
+              LOG_S(INFO) << "### Ante's code: ###";
+              LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2Ngap = " <<  wC2Nstd << std::endl;
+
 
               tree->Fill();
           } //######## end loop eventss
