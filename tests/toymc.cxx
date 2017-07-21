@@ -261,7 +261,10 @@ void genAndAnalyzeTree(int harm,
         correlations::Result rN8;
 
         cumulant::Correlator c2;
+        cumulant::Correlator c2of4;
         cumulant::Correlator c4;
+        cumulant::Correlator c4of6;
+        cumulant::Correlator c4of8;
         cumulant::Correlator c6;
         cumulant::Correlator c8;
 
@@ -341,9 +344,14 @@ void genAndAnalyzeTree(int harm,
               C2Ngap = c2.v.real();
               wC2Ngap = c2.w.real();
 
+              c2of4 = cumulant::Correlator(5, q4map);
+
               c4 = cumulant::Correlator(15, q4map);
               C4Ngap = c4.v.real();
               wC4Ngap = c4.w.real();
+
+              c4of6 = cumulant::Correlator(29, q6map);
+              c4of8 = cumulant::Correlator(29, q8map);
 
               c6 = cumulant::Correlator(63, q6map);
               C6Ngap = c6.v.real();
@@ -380,7 +388,10 @@ void genAndAnalyzeTree(int harm,
               LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
               LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
               LOG_S(INFO) << c2.toString() << std::endl;
+              LOG_S(INFO) << c2of4.toString() << std::endl;
               LOG_S(INFO) << c4.toString() << std::endl;
+              LOG_S(INFO) << c4of6.toString() << std::endl;
+              LOG_S(INFO) << c4of8.toString() << std::endl;
               LOG_S(INFO) << c6.toString() << std::endl;
               LOG_S(INFO) << c8.toString() << std::endl;
 
