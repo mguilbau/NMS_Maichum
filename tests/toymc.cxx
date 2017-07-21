@@ -317,17 +317,17 @@ void genAndAnalyzeTree(int harm,
                  q8.fill(val, phi, w);
               } //######## end loop particles
 
-              std::cout << std::endl;
-	      LOG_S(INFO) << "2p QV" << "\n" << q2.print();
-              std::cout << std::endl;
-	      LOG_S(INFO) << "4p QV" << "\n" << q4.print();
-              std::cout << std::endl;
-	      LOG_S(INFO) << "6p QV" << "\n" << q6.print();
-              std::cout << std::endl;
-	      LOG_S(INFO) << "8p QV" << "\n" << q8.print();
-              std::cout << std::endl;
-	      LOG_S(INFO) << "Printing Ante's values";
-              qN.print();
+              //std::cout << std::endl;
+	      //LOG_S(INFO) << "2p QV" << "\n" << q2.print();
+              //std::cout << std::endl;
+	      //LOG_S(INFO) << "4p QV" << "\n" << q4.print();
+              //std::cout << std::endl;
+	      //LOG_S(INFO) << "6p QV" << "\n" << q6.print();
+              //std::cout << std::endl;
+	      //LOG_S(INFO) << "8p QV" << "\n" << q8.print();
+              //std::cout << std::endl;
+	      //LOG_S(INFO) << "Printing Ante's values";
+              //qN.print();
 
               hmult->Fill(mult);
 
@@ -369,20 +369,20 @@ void genAndAnalyzeTree(int harm,
               wC8Nstd = rN8.weight();
 
 
-              LOG_S(INFO) << "###  Our code:   ###";
-              LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2N = " <<  wC2Ngap << std::endl;
-              LOG_S(INFO) << "C4N = " << C4Ngap << ", wC4N = " <<  wC4Ngap << std::endl;
-              LOG_S(INFO) << "C6N = " << C6Ngap << ", wC6N = " <<  wC6Ngap << std::endl;
-              LOG_S(INFO) << "C8N = " << C8Ngap << ", wC8N = " <<  wC8Ngap << std::endl;
-              LOG_S(INFO) << "### Ante's code: ###";
-              LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2N = " <<  wC2Nstd << std::endl;
-              LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
-              LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
-              LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
-              LOG_S(INFO) << c2.toString() << std::endl;
-              LOG_S(INFO) << c4.toString() << std::endl;
-              LOG_S(INFO) << c6.toString() << std::endl;
-              LOG_S(INFO) << c8.toString() << std::endl;
+              //LOG_S(INFO) << "###  Our code:   ###";
+              //LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2N = " <<  wC2Ngap << std::endl;
+              //LOG_S(INFO) << "C4N = " << C4Ngap << ", wC4N = " <<  wC4Ngap << std::endl;
+              //LOG_S(INFO) << "C6N = " << C6Ngap << ", wC6N = " <<  wC6Ngap << std::endl;
+              //LOG_S(INFO) << "C8N = " << C8Ngap << ", wC8N = " <<  wC8Ngap << std::endl;
+              //LOG_S(INFO) << "### Ante's code: ###";
+              //LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2N = " <<  wC2Nstd << std::endl;
+              //LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
+              //LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
+              //LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
+              //LOG_S(INFO) << c2.toString() << std::endl;
+              //LOG_S(INFO) << c4.toString() << std::endl;
+              //LOG_S(INFO) << c6.toString() << std::endl;
+              //LOG_S(INFO) << c8.toString() << std::endl;
 
               tree->Fill();
           } //######## end loop eventss
@@ -405,6 +405,39 @@ void analyzeTree(std::string inFileName,
                  int nEvt)
 {
         //Histograms
+        //Vn plots
+        TH1D* hC22std     = new TH1D("hC22std",     "", 600, 0., 600.);
+        TH1D* hC22stdx    = new TH1D("hC22stdx",    "", 120, 0., 600.);
+        hC22std    ->AddDirectory(kFALSE);
+        hC22stdx   ->AddDirectory(kFALSE);
+        TH1D* hC22gap     = new TH1D("hC22gap",     "", 600, 0., 600.);
+        TH1D* hC22gapx    = new TH1D("hC22gapx",    "", 120, 0., 600.);
+        hC22gap    ->AddDirectory(kFALSE);
+        hC22gapx   ->AddDirectory(kFALSE);
+        TH1D* hC24std     = new TH1D("hC24std",     "", 600, 0., 600.);
+        TH1D* hC24stdx    = new TH1D("hC24stdx",    "", 120, 0., 600.);
+        hC24std    ->AddDirectory(kFALSE);
+        hC24stdx   ->AddDirectory(kFALSE);
+        TH1D* hC24gap     = new TH1D("hC24gap",     "", 600, 0., 600.);
+        TH1D* hC24gapx    = new TH1D("hC24gapx",    "", 120, 0., 600.);
+        hC24gap    ->AddDirectory(kFALSE);
+        hC24gapx   ->AddDirectory(kFALSE);
+        TH1D* hC26std     = new TH1D("hC26std",     "", 600, 0., 600.);
+        TH1D* hC26stdx    = new TH1D("hC26stdx",    "", 120, 0., 600.);
+        hC26std    ->AddDirectory(kFALSE);
+        hC26stdx   ->AddDirectory(kFALSE);
+        TH1D* hC26gap     = new TH1D("hC26gap",     "", 600, 0., 600.);
+        TH1D* hC26gapx    = new TH1D("hC26gapx",    "", 120, 0., 600.);
+        hC26gap    ->AddDirectory(kFALSE);
+        hC26gapx   ->AddDirectory(kFALSE);
+        TH1D* hC28std     = new TH1D("hC28std",     "", 600, 0., 600.);
+        TH1D* hC28stdx    = new TH1D("hC28stdx",    "", 120, 0., 600.);
+        hC28std    ->AddDirectory(kFALSE);
+        hC28stdx   ->AddDirectory(kFALSE);
+        TH1D* hC28gap     = new TH1D("hC28gap",     "", 600, 0., 600.);
+        TH1D* hC28gapx    = new TH1D("hC28gapx",    "", 120, 0., 600.);
+        hC28gap    ->AddDirectory(kFALSE);
+        hC28gapx   ->AddDirectory(kFALSE);
         //Vn plots
         TH1D* hV22std     = new TH1D("hV22std",     "", 600, 0., 600.);
         TH1D* hV22stdx    = new TH1D("hV22stdx",    "", 120, 0., 600.);
@@ -668,7 +701,10 @@ void analyzeTree(std::string inFileName,
            hV22std_den->SetBinContent(ibin+1, w22std[ibin]);
            if(w22std[ibin] != 0.) c22std[ibin] = c22std[ibin]/w22std[ibin];
            else                   c22std[ibin] = 0.;
-           if(c22std[ibin] >= 0.) hV22std->SetBinContent(ibin+1, TMath::Sqrt(c22std[ibin]));
+           
+           hC22std->SetBinContent(ibin+1, c22std[ibin]);
+           if(c22std[ibin] >= 0.) 
+              hV22std->SetBinContent(ibin+1, TMath::Sqrt(c22std[ibin]));
 
            c22stdx[ibin/5] += c22std[ibin] * w22std[ibin];
            w22stdx[ibin/5] += w22std[ibin];
@@ -679,7 +715,10 @@ void analyzeTree(std::string inFileName,
            hV24std_den->SetBinContent(ibin+1, w24std[ibin]);
            if(w24std[ibin] != 0.) c24std[ibin] = c24std[ibin]/w24std[ibin];
            else                   c24std[ibin] = 0.;
-           if(2*c22std[ibin]*c22std[ibin] - c24std[ibin] >= 0.) hV24std->SetBinContent(ibin+1, pow(2*c22std[ibin]*c22std[ibin] - c24std[ibin],1./4.));
+           
+           hC24std->SetBinContent(ibin+1, -2*c22std[ibin]*c22std[ibin] + c24std[ibin]);
+           if(2*c22std[ibin]*c22std[ibin] - c24std[ibin] >= 0.) 
+              hV24std->SetBinContent(ibin+1, pow(2*c22std[ibin]*c22std[ibin] - c24std[ibin],1./4.));
 
            c24stdx[ibin/5] += c24std[ibin] * w24std[ibin];
            w24stdx[ibin/5] += w24std[ibin];
@@ -690,7 +729,10 @@ void analyzeTree(std::string inFileName,
            hV26std_den->SetBinContent(ibin+1, w26std[ibin]);
            if(w26std[ibin] != 0.) c26std[ibin] = c26std[ibin]/w26std[ibin];
            else                   c26std[ibin] = 0.;
-           if(c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin] >= 0.) hV26std->SetBinContent(ibin+1, pow((c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin])/4., 1./6.));
+ 
+           hC26std->SetBinContent(ibin+1, c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin]);
+           if(c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin] >= 0.) 
+              hV26std->SetBinContent(ibin+1, pow((c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin])/4., 1./6.));
 
            c26stdx[ibin/5] += c26std[ibin] * w26std[ibin];
            w26stdx[ibin/5] += w26std[ibin];
@@ -701,6 +743,8 @@ void analyzeTree(std::string inFileName,
            hV28std_den->SetBinContent(ibin+1, w28std[ibin]);
            if(w28std[ibin] != 0.) c28std[ibin] = c28std[ibin]/w28std[ibin];
            else                   c28std[ibin] = 0.;
+             
+           hC28std->SetBinContent(ibin+1, c28std[ibin] - 16*c26std[ibin]*c22std[ibin] - 18*c24std[ibin]*c24std[ibin] + 144*c24std[ibin]*c22std[ibin]*c22std[ibin] - 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin]);
            if(-1*c28std[ibin] + 16*c26std[ibin]*c22std[ibin] + 18*c24std[ibin]*c24std[ibin] - 144*c24std[ibin]*c22std[ibin]*c22std[ibin] + 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin] >= 0.) 
               hV28std->SetBinContent(ibin+1, pow((-1*c28std[ibin] + 16*c26std[ibin]*c22std[ibin] + 18*c24std[ibin]*c24std[ibin] - 144*c24std[ibin]*c22std[ibin]*c22std[ibin] + 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin])/33.,1./8.));
 
@@ -715,6 +759,8 @@ void analyzeTree(std::string inFileName,
            hV22gap_den->SetBinContent(ibin+1, w22gap[ibin]);
            if(w22gap[ibin] != 0.) c22gap[ibin] = c22gap[ibin]/w22gap[ibin];
            else                   c22gap[ibin] = 0.;
+
+           hC22gap->SetBinContent(ibin+1, c22gap[ibin]);
            if(c22gap[ibin] >= 0.) hV22gap->SetBinContent(ibin+1, TMath::Sqrt(c22gap[ibin]));
 
            c22gapx[ibin/5] += c22gap[ibin] * w22gap[ibin];
@@ -726,6 +772,7 @@ void analyzeTree(std::string inFileName,
            hV24gap_den->SetBinContent(ibin+1, w24gap[ibin]);
            if(w24gap[ibin] != 0.) c24gap[ibin] = c24gap[ibin]/w24gap[ibin];
            else                   c24gap[ibin] = 0.;
+           hC24gap->SetBinContent(ibin+1, -2*c22gap[ibin]*c22gap[ibin] + c24gap[ibin]);
            if(2*c22gap[ibin]*c22gap[ibin] - c24gap[ibin] >= 0.)  hV24gap->SetBinContent(ibin+1, pow(2*c22gap[ibin]*c22gap[ibin] - c24gap[ibin],1./4.));
 
            c24gapx[ibin/5] += c24gap[ibin] * w24gap[ibin];
@@ -737,6 +784,8 @@ void analyzeTree(std::string inFileName,
            hV26gap_den->SetBinContent(ibin+1, w26gap[ibin]);
            if(w26gap[ibin] != 0.) c26gap[ibin] = c26gap[ibin]/w26gap[ibin];
            else                   c26gap[ibin] = 0.;
+
+           hC26gap->SetBinContent(ibin+1, c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]);
            if(c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin] >= 0.) hV26gap->SetBinContent(ibin+1, pow((c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin])/4., 1./6.));
 
            c26gapx[ibin/5] += c26gap[ibin] * w26gap[ibin];
@@ -748,6 +797,8 @@ void analyzeTree(std::string inFileName,
            hV28gap_den->SetBinContent(ibin+1, w28gap[ibin]);
            if(w28gap[ibin] != 0.) c28gap[ibin] = c28gap[ibin]/w28gap[ibin];
            else                   c28gap[ibin] = 0.;
+
+           hC28gap->SetBinContent(ibin+1, c28gap[ibin] - 16*c26gap[ibin]*c22gap[ibin] - 18*c24gap[ibin]*c24gap[ibin] + 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] - 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]);
            if(-1*c28gap[ibin] + 16*c26gap[ibin]*c22gap[ibin] + 18*c24gap[ibin]*c24gap[ibin] - 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] + 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin] >= 0.) 
               hV28gap->SetBinContent(ibin+1, pow((-1*c28gap[ibin] + 16*c26gap[ibin]*c22gap[ibin] + 18*c24gap[ibin]*c24gap[ibin] - 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] + 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin])/33.,1./8.));
 
@@ -763,26 +814,37 @@ void analyzeTree(std::string inFileName,
         {
            if(w22stdx[ibin] != 0.) c22stdx[ibin] = c22stdx[ibin]/w22stdx[ibin];
            else                    c22stdx[ibin] = 0.;
-           if(c22stdx[ibin] >= 0.) hV22stdx->SetBinContent(ibin+1, TMath::Sqrt(c22stdx[ibin]));
+
+           hC22stdx->SetBinContent(ibin+1, c22stdx[ibin]);
+           if(c22stdx[ibin] >= 0.) 
+              hV22stdx->SetBinContent(ibin+1, TMath::Sqrt(c22stdx[ibin]));
         }
         for(int ibin = 0; ibin < hV24stdx->GetNbinsX(); ++ibin)
         {
-           if(w24stdx[ibin+1] != 0.) c24stdx[ibin] = c24stdx[ibin]/w24stdx[ibin];
-           else                      c24stdx[ibin] = 0.;
-           if(2*c22stdx[ibin]*c22stdx[ibin] - c24stdx[ibin] >= 0.) hV24stdx->SetBinContent(ibin+1, pow(2*c22stdx[ibin]*c22stdx[ibin] - c24stdx[ibin],1./4.));
+           if(w24stdx[ibin] != 0.) c24stdx[ibin] = c24stdx[ibin]/w24stdx[ibin];
+           else                    c24stdx[ibin] = 0.;
+
+           hC24stdx->SetBinContent(ibin+1, -2*c22stdx[ibin]*c22stdx[ibin] + c24stdx[ibin]);
+           if(2*c22stdx[ibin]*c22stdx[ibin] - c24stdx[ibin] >= 0.) 
+              hV24stdx->SetBinContent(ibin+1, pow(2*c22stdx[ibin]*c22stdx[ibin] - c24stdx[ibin],1./4.));
         }
         for(int ibin = 0; ibin < hV26stdx->GetNbinsX(); ++ibin)
         {
-           if(w26stdx[ibin+1] != 0.) c26stdx[ibin] = c26stdx[ibin]/w26stdx[ibin];
-           else                      c26stdx[ibin] = 0.;
-           if(c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] >= 0.) hV26stdx->SetBinContent(ibin+1, pow((c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/4.,1./6.));
+           if(w26stdx[ibin] != 0.) c26stdx[ibin] = c26stdx[ibin]/w26stdx[ibin];
+           else                    c26stdx[ibin] = 0.;
+
+           hC26stdx->SetBinContent(ibin+1, c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]);
+           if(c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] >= 0.) 
+              hV26stdx->SetBinContent(ibin+1, pow((c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/4.,1./6.));
         }
         for(int ibin = 0; ibin < hV28stdx->GetNbinsX(); ++ibin)
         {
-           if(w28stdx[ibin+1] != 0.) c28stdx[ibin] = c28stdx[ibin]/w28stdx[ibin];
-           else                      c28stdx[ibin] = 0.;
+           if(w28stdx[ibin] != 0.) c28stdx[ibin] = c28stdx[ibin]/w28stdx[ibin];
+           else                    c28stdx[ibin] = 0.;
+
+           hC28stdx->SetBinContent(ibin+1, c28stdx[ibin] - 16*c26stdx[ibin]*c22stdx[ibin] - 18*c24stdx[ibin]*c24stdx[ibin] + 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] - 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]);
            if(-1*c28stdx[ibin] + 16*c26stdx[ibin]*c22stdx[ibin] + 18*c24stdx[ibin]*c24stdx[ibin] - 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] + 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] >= 0.) 
-             hV28stdx->SetBinContent(ibin+1, pow((-1*c28stdx[ibin] + 16*c26stdx[ibin]*c22stdx[ibin] + 18*c24stdx[ibin]*c24stdx[ibin] - 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] + 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/33.,1./8.));
+              hV28stdx->SetBinContent(ibin+1, pow((-1*c28stdx[ibin] + 16*c26stdx[ibin]*c22stdx[ibin] + 18*c24stdx[ibin]*c24stdx[ibin] - 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] + 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/33.,1./8.));
         }
 
         //gap method
@@ -790,47 +852,74 @@ void analyzeTree(std::string inFileName,
         {
            if(w22gapx[ibin] != 0.) c22gapx[ibin] = c22gapx[ibin]/w22gapx[ibin];
            else                    c22gapx[ibin] = 0.;
-           if(c22gapx[ibin] >= 0.) hV22gapx->SetBinContent(ibin+1, TMath::Sqrt(c22gapx[ibin]));
+
+           hC22gapx->SetBinContent(ibin+1, c22gapx[ibin]);
+           if(c22gapx[ibin] >= 0.) 
+              hV22gapx->SetBinContent(ibin+1, TMath::Sqrt(c22gapx[ibin]));
         }
         for(int ibin = 0; ibin < hV24gapx->GetNbinsX(); ++ibin)
         {
            if(w24gapx[ibin] != 0.) c24gapx[ibin] = c24gapx[ibin]/w24gapx[ibin];
            else                    c24gapx[ibin] = 0.;
-           if(2*c22gapx[ibin]*c22gapx[ibin] - c24gapx[ibin] >= 0.)  hV24gapx->SetBinContent(ibin+1, pow(2*c22gapx[ibin]*c22gapx[ibin] - c24gapx[ibin],1./4.));
+
+           hC24gapx->SetBinContent(ibin+1, -2*c22gapx[ibin]*c22gapx[ibin] + c24gapx[ibin]);
+           if(2*c22gapx[ibin]*c22gapx[ibin] - c24gapx[ibin] >= 0.)  
+              hV24gapx->SetBinContent(ibin+1, pow(2*c22gapx[ibin]*c22gapx[ibin] - c24gapx[ibin],1./4.));
         }
         for(int ibin = 0; ibin < hV26gapx->GetNbinsX(); ++ibin)
         {
-           if(w26gapx[ibin+1] != 0.) c26gapx[ibin] = c26gapx[ibin]/w26gapx[ibin];
-           else                      c26gapx[ibin] = 0.;
-           if(c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] >= 0.) hV26gapx->SetBinContent(ibin+1, pow((c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/4.,1./6.));
+           if(w26gapx[ibin] != 0.) c26gapx[ibin] = c26gapx[ibin]/w26gapx[ibin];
+           else                    c26gapx[ibin] = 0.;
+
+           hC26gapx->SetBinContent(ibin+1, c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]);
+           if(c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] >= 0.) 
+              hV26gapx->SetBinContent(ibin+1, pow((c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/4.,1./6.));
         }
         for(int ibin = 0; ibin < hV28gapx->GetNbinsX(); ++ibin)
         {
-           if(w28gapx[ibin+1] != 0.) c28gapx[ibin] = c28gapx[ibin]/w28gapx[ibin];
-           else                      c28gapx[ibin] = 0.;
+           if(w28gapx[ibin] != 0.) c28gapx[ibin] = c28gapx[ibin]/w28gapx[ibin];
+           else                    c28gapx[ibin] = 0.;
+
+           hC28gapx->SetBinContent(ibin+1, c28gapx[ibin] - 16*c26gapx[ibin]*c22gapx[ibin] - 18*c24gapx[ibin]*c24gapx[ibin] + 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] - 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]);
            if(-1*c28gapx[ibin] + 16*c26gapx[ibin]*c22gapx[ibin] + 18*c24gapx[ibin]*c24gapx[ibin] - 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] + 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] >= 0.) 
-             hV28gapx->SetBinContent(ibin+1, pow((-1*c28gapx[ibin] + 16*c26gapx[ibin]*c22gapx[ibin] + 18*c24gapx[ibin]*c24gapx[ibin] - 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] + 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/33.,1./8.));
+              hV28gapx->SetBinContent(ibin+1, pow((-1*c28gapx[ibin] + 16*c26gapx[ibin]*c22gapx[ibin] + 18*c24gapx[ibin]*c24gapx[ibin] - 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] + 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/33.,1./8.));
         }
 
 ///////////
 
         double varC22std = 0.;
         double varC24std = 0.;
+        double varC26std = 0.;
+        double varC28std = 0.;
         double varC22gap = 0.;
         double varC24gap = 0.;
+        double varC26gap = 0.;
+        double varC28gap = 0.;
         double varV22std = 0.;
         double varV24std = 0.;
+        double varV26std = 0.;
+        double varV28std = 0.;
         double varV22gap = 0.;
         double varV24gap = 0.;
+        double varV26gap = 0.;
+        double varV28gap = 0.;
 
         double varC22stdx = 0.;
         double varC24stdx = 0.;
+        double varC26stdx = 0.;
+        double varC28stdx = 0.;
         double varC22gapx = 0.;
         double varC24gapx = 0.;
+        double varC26gapx = 0.;
+        double varC28gapx = 0.;
         double varV22stdx = 0.;
         double varV24stdx = 0.;
+        double varV26stdx = 0.;
+        double varV28stdx = 0.;
         double varV22gapx = 0.;
         double varV24gapx = 0.;
+        double varV26gapx = 0.;
+        double varV28gapx = 0.;
 
         for(int itest = 0; itest < 10; ++itest)
         {
@@ -844,12 +933,32 @@ void analyzeTree(std::string inFileName,
            }
            for(int ibin = 0; ibin < hV24std->GetNbinsX(); ++ibin)
            {
-              if(w24std_err[itest][ibin+1] != 0.) c24std_err[itest][ibin] = c24std_err[itest][ibin]/w24std_err[itest][ibin];
-              else                                c24std_err[itest][ibin] = 0.;
+              if(w24std_err[itest][ibin] != 0.) c24std_err[itest][ibin] = c24std_err[itest][ibin]/w24std_err[itest][ibin];
+              else                              c24std_err[itest][ibin] = 0.;
               c24std_err[itest][ibin] -= 2*c22std_err[itest][ibin]*c22std_err[itest][ibin];
 
               c24std_errx[itest][ibin/5] += c24std_err[itest][ibin] * w24std_err[itest][ibin];
               w24std_errx[itest][ibin/5] += w24std_err[itest][ibin];
+           }
+           for(int ibin = 0; ibin < hV26std->GetNbinsX(); ++ibin)
+           {
+              if(w26std_err[itest][ibin] != 0.) c26std_err[itest][ibin] = c26std_err[itest][ibin]/w26std_err[itest][ibin];
+              else                              c26std_err[itest][ibin] = 0.;
+              c26std_err[itest][ibin] = c26std_err[itest][ibin] - 9*c24std_err[itest][ibin]*c22std_err[itest][ibin] + 12*c22std_err[itest][ibin]*c22std_err[itest][ibin]*c22std_err[itest][ibin];
+
+              c26std_errx[itest][ibin/5] += c26std_err[itest][ibin] * w26std_err[itest][ibin];
+              w26std_errx[itest][ibin/5] += w26std_err[itest][ibin];
+           }
+           for(int ibin = 0; ibin < hV28std->GetNbinsX(); ++ibin)
+           {
+              if(w28std_err[itest][ibin] != 0.) c28std_err[itest][ibin] = c28std_err[itest][ibin]/w28std_err[itest][ibin];
+              else                              c28std_err[itest][ibin] = 0.;
+              c28std_err[itest][ibin] = c28std_err[itest][ibin] - 16*c26std_err[itest][ibin]*c22std_err[itest][ibin] 
+                                      - 18*c24std_err[itest][ibin]*c24std_err[itest][ibin] + 144*c24std_err[itest][ibin]*c22std_err[itest][ibin]*c22std_err[itest][ibin] 
+                                      - 144*c22std_err[itest][ibin]*c22std_err[itest][ibin]*c22std_err[itest][ibin]*c22std_err[itest][ibin];
+
+              c28std_errx[itest][ibin/5] += c28std_err[itest][ibin] * w28std_err[itest][ibin];
+              w28std_errx[itest][ibin/5] += w28std_err[itest][ibin];
            }
 
            for(int ibin = 0; ibin < hV22gap->GetNbinsX(); ++ibin)
@@ -860,7 +969,6 @@ void analyzeTree(std::string inFileName,
               c22gap_errx[itest][ibin/5] += c22gap_err[itest][ibin] * w22gap_err[itest][ibin];
               w22gap_errx[itest][ibin/5] += w22gap_err[itest][ibin];
            }
-   
            for(int ibin = 0; ibin < hV24gap->GetNbinsX(); ++ibin)
            {
               if(w24gap_err[itest][ibin] != 0.) c24gap_err[itest][ibin] = c24gap_err[itest][ibin]/w24gap_err[itest][ibin];
@@ -870,6 +978,26 @@ void analyzeTree(std::string inFileName,
               c24gap_errx[itest][ibin/5] += c24gap_err[itest][ibin] * w24gap_err[itest][ibin];
               w24gap_errx[itest][ibin/5] += w24gap_err[itest][ibin];
            }
+           for(int ibin = 0; ibin < hV26gap->GetNbinsX(); ++ibin)
+           {
+              if(w26gap_err[itest][ibin] != 0.) c26gap_err[itest][ibin] = c26gap_err[itest][ibin]/w26gap_err[itest][ibin];
+              else                              c26gap_err[itest][ibin] = 0.;
+              c26gap_err[itest][ibin] = c26gap_err[itest][ibin] - 9*c24gap_err[itest][ibin]*c22gap_err[itest][ibin] + 12*c22gap_err[itest][ibin]*c22gap_err[itest][ibin]*c22gap_err[itest][ibin];
+
+              c26gap_errx[itest][ibin/5] += c26gap_err[itest][ibin] * w26gap_err[itest][ibin];
+              w26gap_errx[itest][ibin/5] += w26gap_err[itest][ibin];
+           }
+           for(int ibin = 0; ibin < hV28gap->GetNbinsX(); ++ibin)
+           {
+              if(w28gap_err[itest][ibin] != 0.) c28gap_err[itest][ibin] = c28gap_err[itest][ibin]/w28gap_err[itest][ibin];
+              else                              c28gap_err[itest][ibin] = 0.;
+              c28gap_err[itest][ibin] = c28gap_err[itest][ibin] - 16*c26gap_err[itest][ibin]*c22gap_err[itest][ibin] 
+                                      - 18*c24gap_err[itest][ibin]*c24gap_err[itest][ibin] + 144*c24gap_err[itest][ibin]*c22gap_err[itest][ibin]*c22gap_err[itest][ibin] 
+                                      - 144*c22gap_err[itest][ibin]*c22gap_err[itest][ibin]*c22gap_err[itest][ibin]*c22gap_err[itest][ibin];
+
+              c28gap_errx[itest][ibin/5] += c28gap_err[itest][ibin] * w28gap_err[itest][ibin];
+              w28gap_errx[itest][ibin/5] += w28gap_err[itest][ibin];
+           }
         }
 
         for(int itest = 0; itest < 10; ++itest)
@@ -878,8 +1006,13 @@ void analyzeTree(std::string inFileName,
            {
                if(w22std_errx[itest][ibin] != 0.) c22std_errx[itest][ibin] /= w22std_errx[itest][ibin];
                if(w24std_errx[itest][ibin] != 0.) c24std_errx[itest][ibin] /= w24std_errx[itest][ibin];
+               if(w26std_errx[itest][ibin] != 0.) c26std_errx[itest][ibin] /= w26std_errx[itest][ibin];
+               if(w28std_errx[itest][ibin] != 0.) c28std_errx[itest][ibin] /= w28std_errx[itest][ibin];
+
                if(w22gap_errx[itest][ibin] != 0.) c22gap_errx[itest][ibin] /= w22gap_errx[itest][ibin];
                if(w24gap_errx[itest][ibin] != 0.) c24gap_errx[itest][ibin] /= w24gap_errx[itest][ibin];
+               if(w26gap_errx[itest][ibin] != 0.) c26gap_errx[itest][ibin] /= w26gap_errx[itest][ibin];
+               if(w28gap_errx[itest][ibin] != 0.) c28gap_errx[itest][ibin] /= w28gap_errx[itest][ibin];
            }
         }
 
@@ -887,93 +1020,203 @@ void analyzeTree(std::string inFileName,
         {
            varC22std = 0.;
            varC24std = 0.;
+           varC26std = 0.;
+           varC28std = 0.;
            varC22gap = 0.;
            varC24gap = 0.;
+           varC26gap = 0.;
+           varC28gap = 0.;
            varV22std = 0.;
            varV24std = 0.;
+           varV26std = 0.;
+           varV28std = 0.;
            varV22gap = 0.;
            varV24gap = 0.;
+           varV26gap = 0.;
+           varV28gap = 0.;
            for(int itest = 0; itest < 10; ++itest)
            {
               varC22std += TMath::Power(c22std_err[itest][ibin] - c22std[ibin],2);   
               varC24std += TMath::Power(c24std_err[itest][ibin] - (c24std[ibin] - 2*c22std[ibin]*c22std[ibin]), 2); 
+              varC26std += TMath::Power(c26std_err[itest][ibin] - (c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin]), 2); 
+              varC28std += TMath::Power(c28std_err[itest][ibin] - (c28std[ibin] - 18*c24std[ibin]*c24std[ibin] + 144*c24std[ibin]*c22std[ibin]*c22std[ibin] - 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin]), 2);
+ 
               varC22gap += TMath::Power(c22gap_err[itest][ibin] - c22gap[ibin],2); 
               varC24gap += TMath::Power(c24gap_err[itest][ibin] - (c24gap[ibin] - 2*c22gap[ibin]*c22gap[ibin]), 2);
+              varC26gap += TMath::Power(c26gap_err[itest][ibin] - (c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin] ), 2); 
+              varC28gap += TMath::Power(c28gap_err[itest][ibin] - (c28gap[ibin] - 18*c24gap[ibin]*c24gap[ibin] + 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] - 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]), 2);
+
 
               if(c22std_err[itest][ibin] >= 0. && c22std[ibin] >= 0.) 
                  varV22std += TMath::Power(TMath::Sqrt(c22std_err[itest][ibin]) - TMath::Sqrt(c22std[ibin]),2);   
               if(c24std_err[itest][ibin] <= 0. && c24std[ibin] - 2*c22std[ibin]*c22std[ibin] <= 0.) 
                  varV24std += TMath::Power(TMath::Power(-1*c24std_err[itest][ibin],1./4.) 
-                                          -TMath::Power(-1*c24std[ibin] + 2*c22std[ibin]*c22std[ibin],1./4.), 2); 
+                                          -TMath::Power(-1*c24std[ibin] + 2*c22std[ibin]*c22std[ibin],1./4.), 2);
+              if(c26std_err[itest][ibin] >= 0. && c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin] >= 0.) 
+                 varV26std += TMath::Power(TMath::Power(c26std_err[itest][ibin]/4.,1./6.) 
+                                          -TMath::Power((c26std[ibin] - 9*c24std[ibin]*c22std[ibin] + 12*c22std[ibin]*c22std[ibin]*c22std[ibin])/4.,1./6.), 2);
+              if(c28std_err[itest][ibin] <= 0. && c28std[ibin] - 18*c24std[ibin]*c24std[ibin] + 144*c24std[ibin]*c22std[ibin]*c22std[ibin] - 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin] <= 0.) 
+                 varV28std += TMath::Power(TMath::Power(-1*c28std_err[itest][ibin]/33.,1./8.) 
+                                          -TMath::Power(-1*(c28std[ibin] - 18*c24std[ibin]*c24std[ibin] + 144*c24std[ibin]*c22std[ibin]*c22std[ibin] - 144*c22std[ibin]*c22std[ibin]*c22std[ibin]*c22std[ibin])/33.,1./8.), 2);
+ 
               if(c22gap_err[itest][ibin] >= 0. && c22gap[ibin] >= 0.) 
                  varV22gap += TMath::Power(TMath::Sqrt(c22gap_err[itest][ibin]) - TMath::Sqrt(c22gap[ibin]),2); 
               if(c24gap_err[itest][ibin] <= 0. && c24gap[ibin] - 2*c22gap[ibin]*c22gap[ibin] <= 0.) 
                  varV24gap += TMath::Power(TMath::Power(-1*c24gap_err[itest][ibin],1./4.)
                                           -TMath::Power(-1*c24gap[ibin] + 2*c22gap[ibin]*c22gap[ibin], 1./4.), 2);
+              if(c26gap_err[itest][ibin] >= 0. && c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin] >= 0.) 
+                 varV26gap += TMath::Power(TMath::Power(c26gap_err[itest][ibin]/4.,1./6.) 
+                                          -TMath::Power((c26gap[ibin] - 9*c24gap[ibin]*c22gap[ibin] + 12*c22gap[ibin]*c22gap[ibin]*c22gap[ibin])/4.,1./6.), 2);
+              if(c28gap_err[itest][ibin] <= 0. && c28gap[ibin] - 18*c24gap[ibin]*c24gap[ibin] + 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] - 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin] <= 0.) 
+                 varV28gap += TMath::Power(TMath::Power(-1*c28gap_err[itest][ibin]/33.,1./8.) 
+                                          -TMath::Power(-1*(c28gap[ibin] - 18*c24gap[ibin]*c24gap[ibin] + 144*c24gap[ibin]*c22gap[ibin]*c22gap[ibin] - 144*c22gap[ibin]*c22gap[ibin]*c22gap[ibin]*c22gap[ibin])/33.,1./8.), 2);
            }
 
            varC22std *= (10.-1.)/10.;
            varC24std *= (10.-1.)/10.;
+           varC26std *= (10.-1.)/10.;
+           varC28std *= (10.-1.)/10.;
            varC22gap *= (10.-1.)/10.;
            varC24gap *= (10.-1.)/10.;
+           varC26gap *= (10.-1.)/10.;
+           varC28gap *= (10.-1.)/10.;
            varV22std *= (10.-1.)/10.;
            varV24std *= (10.-1.)/10.;
+           varV26std *= (10.-1.)/10.;
+           varV28std *= (10.-1.)/10.;
            varV22gap *= (10.-1.)/10.;
            varV24gap *= (10.-1.)/10.;
+           varV26gap *= (10.-1.)/10.;
+           varV28gap *= (10.-1.)/10.;
 
 
            hV22std->SetBinError(ibin+1,TMath::Sqrt(varV22std)); 
            hV24std->SetBinError(ibin+1,TMath::Sqrt(varV24std));
+           hV26std->SetBinError(ibin+1,TMath::Sqrt(varV26std));
+           hV28std->SetBinError(ibin+1,TMath::Sqrt(varV28std));
            hV22gap->SetBinError(ibin+1,TMath::Sqrt(varV22gap));
            hV24gap->SetBinError(ibin+1,TMath::Sqrt(varV24gap));
+           hV26gap->SetBinError(ibin+1,TMath::Sqrt(varV26gap));
+           hV28gap->SetBinError(ibin+1,TMath::Sqrt(varV28gap));
+
+           hC22std->SetBinError(ibin+1,TMath::Sqrt(varC22std)); 
+           hC24std->SetBinError(ibin+1,TMath::Sqrt(varC24std));
+           hC26std->SetBinError(ibin+1,TMath::Sqrt(varC26std));
+           hC28std->SetBinError(ibin+1,TMath::Sqrt(varC28std));
+           hC22gap->SetBinError(ibin+1,TMath::Sqrt(varC22gap));
+           hC24gap->SetBinError(ibin+1,TMath::Sqrt(varC24gap));
+           hC26gap->SetBinError(ibin+1,TMath::Sqrt(varC26gap));
+           hC28gap->SetBinError(ibin+1,TMath::Sqrt(varC28gap));
+
            hV22std_num->SetBinError(ibin+1,TMath::Sqrt(varC22std)); 
            hV24std_num->SetBinError(ibin+1,TMath::Sqrt(varC24std));
+           hV26std_num->SetBinError(ibin+1,TMath::Sqrt(varC26std));
+           hV28std_num->SetBinError(ibin+1,TMath::Sqrt(varC28std));
            hV22gap_num->SetBinError(ibin+1,TMath::Sqrt(varC22gap));
            hV24gap_num->SetBinError(ibin+1,TMath::Sqrt(varC24gap));
+           hV26gap_num->SetBinError(ibin+1,TMath::Sqrt(varC26gap));
+           hV28gap_num->SetBinError(ibin+1,TMath::Sqrt(varC28gap));
+
+           hV22std_den->SetBinError(ibin+1,TMath::Sqrt(w22std[ibin])); 
+           hV24std_den->SetBinError(ibin+1,TMath::Sqrt(w24std[ibin]));
+           hV26std_den->SetBinError(ibin+1,TMath::Sqrt(w26std[ibin]));
+           hV28std_den->SetBinError(ibin+1,TMath::Sqrt(w28std[ibin]));
+           hV22gap_den->SetBinError(ibin+1,TMath::Sqrt(w22gap[ibin]));
+           hV24gap_den->SetBinError(ibin+1,TMath::Sqrt(w24gap[ibin]));
+           hV26gap_den->SetBinError(ibin+1,TMath::Sqrt(w26gap[ibin]));
+           hV28gap_den->SetBinError(ibin+1,TMath::Sqrt(w28gap[ibin]));
         }
         for(int ibin = 0; ibin < hV24gapx->GetNbinsX(); ++ibin)
         {
            varC22stdx = 0.;
            varC24stdx = 0.;
+           varC26stdx = 0.;
+           varC28stdx = 0.;
            varC22gapx = 0.;
            varC24gapx = 0.;
+           varC26gapx = 0.;
+           varC28gapx = 0.;
            varV22stdx = 0.;
            varV24stdx = 0.;
+           varV26stdx = 0.;
+           varV28stdx = 0.;
            varV22gapx = 0.;
            varV24gapx = 0.;
+           varV26gapx = 0.;
+           varV28gapx = 0.;
            for(int itest = 0; itest < 10; ++itest)
            {
-              varC22stdx += TMath::Power(c22std_errx[itest][ibin]/w22std_errx[itest][ibin] - c22stdx[ibin],2);   
-              varC24stdx += TMath::Power(c24std_errx[itest][ibin]/w24std_errx[itest][ibin] - (c24stdx[ibin] - 2*c22stdx[ibin]*c22stdx[ibin]), 2); 
-              varC22gapx += TMath::Power(c22gap_errx[itest][ibin]/w22gap_errx[itest][ibin] - c22gapx[ibin],2); 
-              varC24gapx += TMath::Power(c24gap_errx[itest][ibin]/w24gap_errx[itest][ibin] - (c24gapx[ibin] - 2*c22gapx[ibin]*c22gapx[ibin]), 2);
+              varC22stdx += TMath::Power(c22std_errx[itest][ibin] - c22stdx[ibin],2);   
+              varC24stdx += TMath::Power(c24std_errx[itest][ibin] - (c24stdx[ibin] - 2*c22stdx[ibin]*c22stdx[ibin]), 2);
+              varC26stdx += TMath::Power(c26std_errx[itest][ibin] - (c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]), 2); 
+              varC28stdx += TMath::Power(c28std_errx[itest][ibin] - (c28stdx[ibin] - 18*c24stdx[ibin]*c24stdx[ibin] + 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] - 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]), 2);
+ 
+              varC22gapx += TMath::Power(c22gap_errx[itest][ibin] - c22gapx[ibin],2); 
+              varC24gapx += TMath::Power(c24gap_errx[itest][ibin] - (c24gapx[ibin] - 2*c22gapx[ibin]*c22gapx[ibin]), 2);
+              varC26gapx += TMath::Power(c26gap_errx[itest][ibin] - (c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] ), 2); 
+              varC28gapx += TMath::Power(c28gap_errx[itest][ibin] - (c28gapx[ibin] - 18*c24gapx[ibin]*c24gapx[ibin] + 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] - 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]), 2);
 
 
               if(c22std_errx[itest][ibin] >= 0. && c22stdx[ibin] >= 0.) 
                  varV22stdx += TMath::Power(TMath::Sqrt(c22std_errx[itest][ibin]) - TMath::Sqrt(c22stdx[ibin]),2);   
               if(c24std_errx[itest][ibin] <= 0. && c24stdx[ibin] - 2*c22stdx[ibin]*c22stdx[ibin] <= 0.) 
                  varV24stdx += TMath::Power(TMath::Power(-1*c24std_errx[itest][ibin],1./4.) 
-                                           -TMath::Power(-1*c24stdx[ibin] + 2*c22stdx[ibin]*c22stdx[ibin],1./4.), 2); 
+                                           -TMath::Power(-1*c24stdx[ibin] + 2*c22stdx[ibin]*c22stdx[ibin],1./4.), 2);
+              if(c26std_errx[itest][ibin] >= 0. && c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] >= 0.) 
+                 varV26stdx += TMath::Power(TMath::Power(c26std_errx[itest][ibin]/4.,1./6.) 
+                                          -TMath::Power((c26stdx[ibin] - 9*c24stdx[ibin]*c22stdx[ibin] + 12*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/4.,1./6.), 2);
+              if(c28std_errx[itest][ibin] <= 0. && c28stdx[ibin] - 18*c24stdx[ibin]*c24stdx[ibin] + 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] - 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] <= 0.) 
+                 varV28stdx += TMath::Power(TMath::Power(-1*c28std_errx[itest][ibin]/33.,1./8.) 
+                                          -TMath::Power(-1*(c28stdx[ibin] - 18*c24stdx[ibin]*c24stdx[ibin] + 144*c24stdx[ibin]*c22stdx[ibin]*c22stdx[ibin] - 144*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin]*c22stdx[ibin])/33.,1./8.), 2);
+ 
               if(c22gap_errx[itest][ibin] >= 0. && c22gapx[ibin] >= 0.) 
                  varV22gapx += TMath::Power(TMath::Sqrt(c22gap_errx[itest][ibin]) - TMath::Sqrt(c22gapx[ibin]),2); 
               if(c24gap_errx[itest][ibin] <= 0. && c24gapx[ibin] - 2*c22gapx[ibin]*c22gapx[ibin] <= 0.) 
                  varV24gapx += TMath::Power(TMath::Power(-1*c24gap_errx[itest][ibin],1./4.)
                                            -TMath::Power(-1*c24gapx[ibin] + 2*c22gapx[ibin]*c22gapx[ibin], 1./4.), 2);
+              if(c26gap_errx[itest][ibin] >= 0. && c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] >= 0.) 
+                 varV26gapx += TMath::Power(TMath::Power(c26gap_errx[itest][ibin]/4.,1./6.) 
+                                          -TMath::Power((c26gapx[ibin] - 9*c24gapx[ibin]*c22gapx[ibin] + 12*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/4.,1./6.), 2);
+              if(c28gap_errx[itest][ibin] <= 0. && c28gapx[ibin] - 18*c24gapx[ibin]*c24gapx[ibin] + 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] - 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] <= 0.) 
+                 varV28gapx += TMath::Power(TMath::Power(-1*c28gap_errx[itest][ibin]/33.,1./8.) 
+                                          -TMath::Power(-1*(c28gapx[ibin] - 18*c24gapx[ibin]*c24gapx[ibin] + 144*c24gapx[ibin]*c22gapx[ibin]*c22gapx[ibin] - 144*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin]*c22gapx[ibin])/33.,1./8.), 2);
            }
 
            varC22stdx *= (10.-1.)/10.;
            varC24stdx *= (10.-1.)/10.;
+           varC26stdx *= (10.-1.)/10.;
+           varC28stdx *= (10.-1.)/10.;
            varC22gapx *= (10.-1.)/10.;
            varC24gapx *= (10.-1.)/10.;
+           varC26gapx *= (10.-1.)/10.;
+           varC28gapx *= (10.-1.)/10.;
            varV22stdx *= (10.-1.)/10.;
            varV24stdx *= (10.-1.)/10.;
+           varV26stdx *= (10.-1.)/10.;
+           varV28stdx *= (10.-1.)/10.;
            varV22gapx *= (10.-1.)/10.;
            varV24gapx *= (10.-1.)/10.;
+           varV26gapx *= (10.-1.)/10.;
+           varV28gapx *= (10.-1.)/10.;
+
+
+           hC22stdx->SetBinError(ibin+1,TMath::Sqrt(varC22stdx)); 
+           hC24stdx->SetBinError(ibin+1,TMath::Sqrt(varC24stdx));
+           hC26stdx->SetBinError(ibin+1,TMath::Sqrt(varC26stdx));
+           hC28stdx->SetBinError(ibin+1,TMath::Sqrt(varC28stdx));
+           hC22gapx->SetBinError(ibin+1,TMath::Sqrt(varC22gapx));
+           hC24gapx->SetBinError(ibin+1,TMath::Sqrt(varC24gapx));
+           hC26gapx->SetBinError(ibin+1,TMath::Sqrt(varC26gapx));
+           hC28gapx->SetBinError(ibin+1,TMath::Sqrt(varC28gapx));
 
            hV22stdx->SetBinError(ibin+1,TMath::Sqrt(varV22stdx)); 
            hV24stdx->SetBinError(ibin+1,TMath::Sqrt(varV24stdx));
+           hV26stdx->SetBinError(ibin+1,TMath::Sqrt(varV26stdx));
+           hV28stdx->SetBinError(ibin+1,TMath::Sqrt(varV28stdx));
            hV22gapx->SetBinError(ibin+1,TMath::Sqrt(varV22gapx));
            hV24gapx->SetBinError(ibin+1,TMath::Sqrt(varV24gapx));
+           hV26gapx->SetBinError(ibin+1,TMath::Sqrt(varV26gapx));
+           hV28gapx->SetBinError(ibin+1,TMath::Sqrt(varV28gapx));
         }
 
         std::cout << "Writting..." << std::endl;
@@ -984,37 +1227,53 @@ void analyzeTree(std::string inFileName,
         heta ->Write();
         hphi ->Write();
 
+        hC22std    ->Write();
+        hC22stdx   ->Write();
         hV22std    ->Write();
         hV22stdx   ->Write();
         hV22std_den->Write();
         hV22std_num->Write();
+        hC22gap    ->Write();
+        hC22gapx   ->Write();
         hV22gap    ->Write();
         hV22gapx   ->Write();
         hV22gap_den->Write();
         hV22gap_num->Write();
 
+        hC24std    ->Write();
+        hC24stdx   ->Write();
         hV24std    ->Write();
         hV24stdx   ->Write();
         hV24std_den->Write();
         hV24std_num->Write();
+        hC24gap    ->Write();
+        hC24gapx   ->Write();
         hV24gap    ->Write();
         hV24gapx   ->Write();
         hV24gap_den->Write();
         hV24gap_num->Write();
 
+        hC26std    ->Write();
+        hC26stdx   ->Write();
         hV26std    ->Write();
         hV26stdx   ->Write();
         hV26std_den->Write();
         hV26std_num->Write();
+        hC26gap    ->Write();
+        hC26gapx   ->Write();
         hV26gap    ->Write();
         hV26gapx   ->Write();
         hV26gap_den->Write();
         hV26gap_num->Write();
 
+        hC28std    ->Write();
+        hC28stdx   ->Write();
         hV28std    ->Write();
         hV28stdx   ->Write();
         hV28std_den->Write();
         hV28std_num->Write();
+        hC28gap    ->Write();
+        hC28gapx   ->Write();
         hV28gap    ->Write();
         hV28gapx   ->Write();
         hV28gap_den->Write();
