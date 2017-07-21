@@ -261,7 +261,10 @@ void genAndAnalyzeTree(int harm,
         correlations::Result rN8;
 
         cumulant::Correlator c2;
+        cumulant::Correlator c2of4;
         cumulant::Correlator c4;
+        cumulant::Correlator c4of6;
+        cumulant::Correlator c4of8;
         cumulant::Correlator c6;
         cumulant::Correlator c8;
 
@@ -341,9 +344,14 @@ void genAndAnalyzeTree(int harm,
               C2Ngap = c2.v.real();
               wC2Ngap = c2.w.real();
 
+              c2of4 = cumulant::Correlator(5, q4map);
+
               c4 = cumulant::Correlator(15, q4map);
               C4Ngap = c4.v.real();
               wC4Ngap = c4.w.real();
+
+              c4of6 = cumulant::Correlator(29, q6map);
+              c4of8 = cumulant::Correlator(29, q8map);
 
               c6 = cumulant::Correlator(63, q6map);
               C6Ngap = c6.v.real();
@@ -368,21 +376,23 @@ void genAndAnalyzeTree(int harm,
               wC6Nstd = rN6.weight();
               wC8Nstd = rN8.weight();
 
-
-              //LOG_S(INFO) << "###  Our code:   ###";
-              //LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2N = " <<  wC2Ngap << std::endl;
-              //LOG_S(INFO) << "C4N = " << C4Ngap << ", wC4N = " <<  wC4Ngap << std::endl;
-              //LOG_S(INFO) << "C6N = " << C6Ngap << ", wC6N = " <<  wC6Ngap << std::endl;
-              //LOG_S(INFO) << "C8N = " << C8Ngap << ", wC8N = " <<  wC8Ngap << std::endl;
-              //LOG_S(INFO) << "### Ante's code: ###";
-              //LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2N = " <<  wC2Nstd << std::endl;
-              //LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
-              //LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
-              //LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
-              //LOG_S(INFO) << c2.toString() << std::endl;
-              //LOG_S(INFO) << c4.toString() << std::endl;
-              //LOG_S(INFO) << c6.toString() << std::endl;
-              //LOG_S(INFO) << c8.toString() << std::endl;
+              LOG_S(INFO) << "###  Our code:   ###";
+              LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2N = " <<  wC2Ngap << std::endl;
+              LOG_S(INFO) << "C4N = " << C4Ngap << ", wC4N = " <<  wC4Ngap << std::endl;
+              LOG_S(INFO) << "C6N = " << C6Ngap << ", wC6N = " <<  wC6Ngap << std::endl;
+              LOG_S(INFO) << "C8N = " << C8Ngap << ", wC8N = " <<  wC8Ngap << std::endl;
+              LOG_S(INFO) << "### Ante's code: ###";
+              LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2N = " <<  wC2Nstd << std::endl;
+              LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
+              LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
+              LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
+              LOG_S(INFO) << c2.toString() << std::endl;
+              LOG_S(INFO) << c2of4.toString() << std::endl;
+              LOG_S(INFO) << c4.toString() << std::endl;
+              LOG_S(INFO) << c4of6.toString() << std::endl;
+              LOG_S(INFO) << c4of8.toString() << std::endl;
+              LOG_S(INFO) << c6.toString() << std::endl;
+              LOG_S(INFO) << c8.toString() << std::endl;
 
               tree->Fill();
           } //######## end loop eventss
