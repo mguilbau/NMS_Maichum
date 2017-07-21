@@ -33,10 +33,11 @@
 using namespace std;
 
 void genAndAnalyzeTree(int harm,
-                       double ptMin,        double ptMax,
-                       double etaMin,       double etaMax,
-                       double multMin,      double multMax,
-                       int    nEvt,         std::string outFileName);
+                       double ptMin,   double ptMax,
+                       double etaMin,  double etaMax,
+                       double multMin, double multMax,
+                       int    nEvt,    bool isVnFluct,
+                       std::string outFileName);
 
 void analyzeTree(std::string inFileName,
                  std::string outFileName,
@@ -79,6 +80,7 @@ main(int argc, char** argv) {
                                    parser.get<double>( "etamin" ),
                                    parser.get<double>( "etamax" ),
                                    parser.get<int>( "nevents" ),
+                                   parser.get<bool>( "isVnfluct" ),
                                    parser.get<std::string>( "output" ) );
         }
 	else if ( parser.exist( "analyze" ) && !parser.exist( "generate" ) ){
@@ -96,15 +98,18 @@ main(int argc, char** argv) {
 //
 
 void genAndAnalyzeTree(int harm,
-                       double multMin,      double multMax,
-                       double ptMin,        double ptMax,
-                       double etaMin,       double etaMax,
-                       int    nEvt,         std::string outFileName)
+                       double multMin, double multMax,
+                       double ptMin,   double ptMax,
+                       double etaMin,  double etaMax,
+                       int    nEvt,    bool isVnFluct,    
+                       std::string outFileName)
 {
 
 	toymc::ToyMCGenerator g(toymc::PartDist::kConst, multMin, multMax, ptMin, ptMax, etaMin, etaMax);
-	LOG_S(INFO) << g.toString();
         TF1* fvn = new TF1("fvn", g._sPDF.c_str(), 0., 2*TMath::Pi());
+        if(isVnFluct) g.isVnFluct(true);
+	LOG_S(INFO) << g.toString();
+	LOG_S(INFO) << "Flow fluctuations? " << isVnFluct;
 
         //Init standard method
         correlations::QVector qN(0, 0, false);
@@ -290,9 +295,22 @@ void genAndAnalyzeTree(int harm,
 
               mult = (unsigned int) g._fpartMult->GetRandom();
               fvn->SetParameter(0, static_cast<double>(mult));
-              fvn->SetParameter(1, 0.1);
-              fvn->SetParameter(2, 0.0);
-              fvn->SetParameter(3, 0.0);
+              if(g._isvnfluct)
+              {
+                 g._fvn[0]->SetParameter(1,0.1);
+                 g._fvn[0]->SetParameter(0,0.046);
+
+                 double vn = g._fvn[0]->GetRandom();
+                 fvn->SetParameter(1, vn);
+                 fvn->SetParameter(2, 0.0);
+                 fvn->SetParameter(3, 0.0);
+              }
+              else
+              {
+                 fvn->SetParameter(1, 0.1);
+                 fvn->SetParameter(2, 0.0);
+                 fvn->SetParameter(3, 0.0);
+              }
 
               //#####################################
               // Loop over particles
@@ -376,23 +394,23 @@ void genAndAnalyzeTree(int harm,
               wC6Nstd = rN6.weight();
               wC8Nstd = rN8.weight();
 
-              LOG_S(INFO) << "###  Our code:   ###";
-              LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2N = " <<  wC2Ngap << std::endl;
-              LOG_S(INFO) << "C4N = " << C4Ngap << ", wC4N = " <<  wC4Ngap << std::endl;
-              LOG_S(INFO) << "C6N = " << C6Ngap << ", wC6N = " <<  wC6Ngap << std::endl;
-              LOG_S(INFO) << "C8N = " << C8Ngap << ", wC8N = " <<  wC8Ngap << std::endl;
-              LOG_S(INFO) << "### Ante's code: ###";
-              LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2N = " <<  wC2Nstd << std::endl;
-              LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
-              LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
-              LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
-              LOG_S(INFO) << c2.toString() << std::endl;
-              LOG_S(INFO) << c2of4.toString() << std::endl;
-              LOG_S(INFO) << c4.toString() << std::endl;
-              LOG_S(INFO) << c4of6.toString() << std::endl;
-              LOG_S(INFO) << c4of8.toString() << std::endl;
-              LOG_S(INFO) << c6.toString() << std::endl;
-              LOG_S(INFO) << c8.toString() << std::endl;
+              //LOG_S(INFO) << "###  Our code:   ###";
+              //LOG_S(INFO) << "C2N = " << C2Ngap << ", wC2N = " <<  wC2Ngap << std::endl;
+              //LOG_S(INFO) << "C4N = " << C4Ngap << ", wC4N = " <<  wC4Ngap << std::endl;
+              //LOG_S(INFO) << "C6N = " << C6Ngap << ", wC6N = " <<  wC6Ngap << std::endl;
+              //LOG_S(INFO) << "C8N = " << C8Ngap << ", wC8N = " <<  wC8Ngap << std::endl;
+              //LOG_S(INFO) << "### Ante's code: ###";
+              //LOG_S(INFO) << "C2N = " << C2Nstd << ", wC2N = " <<  wC2Nstd << std::endl;
+              //LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
+              //LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
+              //LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
+              //LOG_S(INFO) << c2.toString() << std::endl;
+              //LOG_S(INFO) << c2of4.toString() << std::endl;
+              //LOG_S(INFO) << c4.toString() << std::endl;
+              //LOG_S(INFO) << c4of6.toString() << std::endl;
+              //LOG_S(INFO) << c4of8.toString() << std::endl;
+              //LOG_S(INFO) << c6.toString() << std::endl;
+              //LOG_S(INFO) << c8.toString() << std::endl;
 
               tree->Fill();
           } //######## end loop eventss

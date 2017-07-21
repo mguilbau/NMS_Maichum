@@ -118,10 +118,17 @@ public:
 	~ToyMCGenerator()
 	{
 		LOG_SCOPE_FUNCTION( 9 );
-                delete this->_fpartMult;
-                delete this->_fpartPhi ;
-                delete this->_fpartPt  ;
-                delete this->_fpartEta ;
+                if( this->_fpartMult ) delete this->_fpartMult;
+                if( this->_fpartPhi )  delete this->_fpartPhi ;
+                if( this->_fpartPt )   delete this->_fpartPt  ;
+                if( this->_fpartEta )  delete this->_fpartEta ;
+
+                for(size_t ivn = 0; ivn < this->_fvn.size(); ++ivn )
+                   if( this->_fvn[ivn] ) 
+                      delete this->_fvn[ivn];
+
+                this->_fvn.clear();
+                std::vector<TF1*>().swap(this->_fvn);
 	}
 
 	void commonPartDistSetup( PartDist partdist, 
@@ -148,6 +155,15 @@ public:
         {
                 double pi = TMath::Pi();
                 this->_sPDF = Form("[0]/2./%f*( 1 + 2*[1]*cos(2*x) + 2*[2]*cos(3*x) + 2*[3]*cos(4*x) )", pi);
+
+                this->_fvn.resize(3);
+                for(size_t ivn = 0; ivn < _fvn.size(); ++ivn)
+                {  
+                          _fvn[ivn] = new TF1("fvn", "x/TMath::Power([0],2)*TMath::Exp(-1.*(x*x + [1]*[1])/2./TMath::Power([0],2))*TMath::BesselI0(x*[1]/TMath::Power([0],2))", 0., 1.);
+                          this->_fvn[ivn]->SetNpx(1000);
+                }
+
+                this->_isvnfluct = false;
         }
 
         double generatePDF()
@@ -179,17 +195,33 @@ public:
 		{
                     int mult = (int) this->_fpartMult->GetRandom();
                     fvn->SetParameter(0, static_cast<double>(mult));
-                    fvn->SetParameter(1, 0.1);
-                    fvn->SetParameter(2, 0.0);
-                    fvn->SetParameter(3, 0.0);
+                    if(this->_isvnfluct)
+                    {
+                       this->_fvn[0]->SetParameter(1,0.01);
+                       this->_fvn[0]->SetParameter(0,0.046);
 
+                       fvn->SetParameter(1, this->_fvn[0]->GetRandom());
+                       fvn->SetParameter(2, 0.0);
+                       fvn->SetParameter(3, 0.0);
+                    }
+                    else
+                    {
+                       fvn->SetParameter(1, 0.1);
+                       fvn->SetParameter(2, 0.0);
+                       fvn->SetParameter(3, 0.0);
+                    }
 		    for(int ipart = 0; ipart < mult; ++ipart)
 		    {
                             generatePart(fvn);
 		    }
                 }
+                delete fvn;
          }
 
+         void isVnFluct( bool answer )
+         {
+            this->_isvnfluct = answer;         
+         }
 
 	/**
 	 * builds the string representation of the object
@@ -206,10 +238,14 @@ public:
 //protected:
 	ToyMCParticle _plc;
 
+        bool _isvnfluct;
+
         TF1* _fpartMult;
         TF1* _fpartPhi;
         TF1* _fpartPt;
         TF1* _fpartEta;
+
+        std::vector<TF1*> _fvn;
 
         std::string _sPDF;
 
