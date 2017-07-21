@@ -78,8 +78,6 @@ namespace cumulant{
             size_t maskBitsSet = countSetBits( m );
             LOG_IF_F( INFO, DEBUG, "nSetBits(mask) = %lu", maskBitsSet );
 
-            LOG_F( INFO, "maskString( 0b00100 ) = %s", maskString( 0b00100 ).c_str() );
-
             auto lut = NativeMaskLUTs[ maskBitsSet-2 ];    
 
             size_t nTerms = lut.size();
@@ -104,7 +102,7 @@ namespace cumulant{
                     LOG_IF_F( INFO, DEBUG, "NativeMask=%s", std::bitset<8>( tm ).to_string().c_str() );
                     LOG_IF_F( INFO, DEBUG, "expandMask( im=%s, mm=%s ) = %s", btm.to_string().c_str(), bm.to_string().c_str(), bem.to_string().c_str() );
 
-                    if ( qvm.count( bem ) < 0 ){
+                    if ( qvm.count( bem ) == 0 ){
                         LOG_F( WARNING, "QVector not found! mask=%s", bem.to_string().c_str() );
                     }
                     auto q = qvm[ bem ];
