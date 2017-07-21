@@ -381,7 +381,7 @@ void genAndAnalyzeTree(int harm,
               C6Ngap = c6.v.real();
               wC6Ngap = c6.w.real();
 
-        //       c8 = cumulant::Correlator(255, q8map);
+              c8 = cumulant::Correlator(255, q8map);
               C8Ngap = c8.v.real();
               wC8Ngap = c8.w.real();
 
@@ -410,12 +410,13 @@ void genAndAnalyzeTree(int harm,
               LOG_S(INFO) << "C4N = " << C4Nstd << ", wC4N = " <<  wC4Nstd << std::endl;
               LOG_S(INFO) << "C6N = " << C6Nstd << ", wC6N = " <<  wC6Nstd << std::endl;
               LOG_S(INFO) << "C8N = " << C8Nstd << ", wC8N = " <<  wC8Nstd << std::endl;
-              LOG_S(INFO) << "c2     : " << c2.toString() << "\n" << c2.repr;
-              LOG_S(INFO) << "c2of4  : " << c2of4.toString()<< "\n" << c2of4.repr;
-              LOG_S(INFO) << "c4     : " << c4.toString()<< "\n" << c4.repr;
-              LOG_S(INFO) << "c4of6  : " << c4of6.toString()<< "\n" << c4of6.repr;
-              LOG_S(INFO) << "c4of8  : " << c4of8.toString()<< "\n" << c4of8.repr;
+              //LOG_S(INFO) << "c2     : " << c2.toString() << "\n" << c2.repr;
+              //LOG_S(INFO) << "c2of4  : " << c2of4.toString()<< "\n" << c2of4.repr;
+              //LOG_S(INFO) << "c4     : " << c4.toString()<< "\n" << c4.repr;
+              //LOG_S(INFO) << "c4of6  : " << c4of6.toString()<< "\n" << c4of6.repr;
+              //LOG_S(INFO) << "c4of8  : " << c4of8.toString()<< "\n" << c4of8.repr;
               LOG_S(INFO) << "c6     : " << c6.toString()<< "\n" << c6.repr;
+              qN.print();
         //       LOG_S(INFO) << c8.toString() << std::endl;
 
               tree->Fill();
