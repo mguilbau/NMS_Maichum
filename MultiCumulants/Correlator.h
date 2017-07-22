@@ -68,7 +68,7 @@ namespace cumulant{
 
 
         void build( NativeMask m, QVectorMap &qvm){
-            LOG_SCOPE_FUNCTION(INFO);
+            //LOG_SCOPE_FUNCTION(INFO);
             // just save for printing
             _m = m;
             std::string cmsg = "";
