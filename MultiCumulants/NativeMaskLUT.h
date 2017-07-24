@@ -5335,7 +5335,7 @@ namespace cumulant{
 
 
 
-    std::vector<const NativeMaskLUT> NativeMaskLUTs = {
+    const std::vector<NativeMaskLUT> NativeMaskLUTs = {
         QTERMS_h2,
         QTERMS_h3,
         QTERMS_h4,

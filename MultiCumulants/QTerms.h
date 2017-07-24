@@ -10,12 +10,10 @@
 #include "MultiCumulants/Types.h"
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
+#include "MultiCumulants/NativeMaskLUT.h"
 
 using std::vector;
 namespace cumulant{
-
-    extern std::vector<const NativeMaskLUT> NativeMaskLUTs;
-    extern std::vector<CoefficientLUT> CoefficientKs;
 
     class QTerms {
 

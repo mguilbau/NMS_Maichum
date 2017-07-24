@@ -29,6 +29,7 @@ SOFLAGS         := -shared
 #------------------------------------------------------------------------------
 HEADERS 		:= MultiCumulants/QVector.h \
                            MultiCumulants/QVectorSet.h \
+                           MultiCumulants/NativeMaskLUT.h \
                            MultiCumulants/QTerms.h \
 		           MultiCumulants/Subsets.h \
                            MultiCumulants/Algorithm.h \
@@ -59,7 +60,7 @@ TOYMC 			:= tests/toymc.o
 $(TOYMC) : %.o: %.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
-bin/toymc.app: $(TOYMC) ToyMC/cint_dictionary.o MultiCumulants/NativeMaskLUT.o
+bin/toymc.app: $(TOYMC) ToyMC/cint_dictionary.o
 	@mkdir -p bin
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 
@@ -82,7 +83,7 @@ include .depend_toymc
 tests/development.o: tests/development.cxx $(HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -O3 $< -o $@
 
-bin/dev.app: tests/development.o MultiCumulants/NativeMaskLUT.o
+bin/dev.app: tests/development.o
 	@mkdir -p bin
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 
@@ -124,11 +125,8 @@ ToyMC/cint_dictionary.cxx: ToyMC/LinkDef.h
 ToyMC/cint_dictionary.o: ToyMC/cint_dictionary.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(ROOTCFLAGS) $< -o $@
 
-MultiCumulants/NativeMaskLUT.o: MultiCumulants/NativeMaskLUT.cxx
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
-
 # include the toymc.o because it has the implementation of the logger
-lib/ToyMC.so: ToyMC/cint_dictionary.o  MultiCumulants/NativeMaskLUT.o $(TOYMC)
+lib/ToyMC.so: ToyMC/cint_dictionary.o $(TOYMC)
 	@mkdir -p lib
 	$(LD) $(SOFLAGS) $(LDFLAGS) $(ROOTLIBS) $^ -o $@
 

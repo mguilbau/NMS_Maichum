@@ -155,26 +155,26 @@ void genAndAnalyzeTree(int harm,
         sub8.set(0, "pt", 0.3, 3.0);
         sub8.set(1, "eta", 0., 2.4);
 
-        //Init 2-p sub-event method
-        cumulant::Set set2(2);
-        set2.setSubsetParams(0, sub1);
-        set2.setSubsetParams(1, sub5);
+        ////Init 2-p sub-event method
+        //cumulant::Set set2(2);
+        //set2.setSubsetParams(0, sub1);
+        //set2.setSubsetParams(1, sub5);
 
-        //Init 4-p sub-event method
-        cumulant::Set set4(4);
-        set4.setSubsetParams(0, sub1);
-        set4.setSubsetParams(1, sub2);
-        set4.setSubsetParams(2, sub5);
-        set4.setSubsetParams(3, sub6);
+        ////Init 4-p sub-event method
+        //cumulant::Set set4(4);
+        //set4.setSubsetParams(0, sub1);
+        //set4.setSubsetParams(1, sub2);
+        //set4.setSubsetParams(2, sub5);
+        //set4.setSubsetParams(3, sub6);
 
-        //Init 6-p sub-event method
-        cumulant::Set set6(6);
-        set6.setSubsetParams(0, sub1);
-        set6.setSubsetParams(1, sub2);
-        set6.setSubsetParams(2, sub3);
-        set6.setSubsetParams(3, sub5);
-        set6.setSubsetParams(4, sub6);
-        set6.setSubsetParams(5, sub7);
+        ////Init 6-p sub-event method
+        //cumulant::Set set6(6);
+        //set6.setSubsetParams(0, sub1);
+        //set6.setSubsetParams(1, sub2);
+        //set6.setSubsetParams(2, sub3);
+        //set6.setSubsetParams(3, sub5);
+        //set6.setSubsetParams(4, sub6);
+        //set6.setSubsetParams(5, sub7);
 
         //Init 8-p sub-event method
         cumulant::Set set8(8);
@@ -188,29 +188,29 @@ void genAndAnalyzeTree(int harm,
         set8.setSubsetParams(7, sub8);
 
 
-        //Init 2-p method with subset
-        HarmonicVector h2(2);
-        h2[0] =  1*harm;
-        h2[1] = -1*harm;
-        cumulant::QVectorSet q2(h2, set2, false);
+        ////Init 2-p method with subset
+        //HarmonicVector h2(2);
+        //h2[0] =  1*harm;
+        //h2[1] = -1*harm;
+        //cumulant::QVectorSet q2(h2, set2, false);
 
-        //Init 4-p method with subset
-        HarmonicVector h4(4);
-        h4[0] =  1*harm;
-        h4[1] =  1*harm;
-        h4[2] = -1*harm;
-        h4[3] = -1*harm;
-        cumulant::QVectorSet q4(h4, set4, false);
+        ////Init 4-p method with subset
+        //HarmonicVector h4(4);
+        //h4[0] =  1*harm;
+        //h4[1] =  1*harm;
+        //h4[2] = -1*harm;
+        //h4[3] = -1*harm;
+        //cumulant::QVectorSet q4(h4, set4, false);
 
-        //Init 6-p method with subset
-        HarmonicVector h6(6);
-        h6[0] =  1*harm;
-        h6[1] =  1*harm;
-        h6[2] =  1*harm;
-        h6[3] = -1*harm;
-        h6[4] = -1*harm;
-        h6[5] = -1*harm;
-        cumulant::QVectorSet q6(h6, set6, false);
+        ////Init 6-p method with subset
+        //HarmonicVector h6(6);
+        //h6[0] =  1*harm;
+        //h6[1] =  1*harm;
+        //h6[2] =  1*harm;
+        //h6[3] = -1*harm;
+        //h6[4] = -1*harm;
+        //h6[5] = -1*harm;
+        //cumulant::QVectorSet q6(h6, set6, false);
 
         //Init 8-p method with subset
         HarmonicVector h8(8);
@@ -266,10 +266,10 @@ void genAndAnalyzeTree(int harm,
         correlations::Result rN8;
 
         cumulant::Correlator c2;
-        cumulant::Correlator c2of4;
+        //cumulant::Correlator c2of4;
         cumulant::Correlator c4;
-        cumulant::Correlator c4of6;
-        cumulant::Correlator c4of8;
+        //cumulant::Correlator c4of6;
+        //cumulant::Correlator c4of8;
         cumulant::Correlator c6;
         cumulant::Correlator c8;
 
@@ -285,9 +285,9 @@ void genAndAnalyzeTree(int harm,
               << std::flush;
 
               qN.reset();
-              q2.reset();
-              q4.reset();
-              q6.reset();
+              //q2.reset();
+              //q4.reset();
+              //q6.reset();
               q8.reset();
 
               //Define weights to be always 1
@@ -332,9 +332,9 @@ void genAndAnalyzeTree(int harm,
 
                  val[0] = pt;
                  val[1] = eta;
-                 q2.fill(val, phi, w);
-                 q4.fill(val, phi, w);
-                 q6.fill(val, phi, w);
+                 //q2.fill(val, phi, w);
+                 //q4.fill(val, phi, w);
+                 //q6.fill(val, phi, w);
                  q8.fill(val, phi, w);
               } //######## end loop particles
 
@@ -353,31 +353,31 @@ void genAndAnalyzeTree(int harm,
               hmult->Fill(mult);
 
               //With gap
-	      cumulant::QVectorMap& q2map = q2.getQ();
-	      cumulant::QVectorMap& q4map = q4.getQ();
-	      cumulant::QVectorMap& q6map = q6.getQ();
+	      //cumulant::QVectorMap& q2map = q2.getQ();
+	      //cumulant::QVectorMap& q4map = q4.getQ();
+	      //cumulant::QVectorMap& q6map = q6.getQ();
 	      cumulant::QVectorMap& q8map = q8.getQ();
 
               //LOG_S(INFO) << "c2";
-              c2 = cumulant::Correlator(3, q2map);
+              c2 = cumulant::Correlator(17, q8map);
               C2Ngap = c2.v.real();
               wC2Ngap = c2.w.real();
 
               //LOG_S(INFO) << "c2of4";
-              c2of4 = cumulant::Correlator(5, q4map);
+              //c2of4 = cumulant::Correlator(5, q4map);
 
               //LOG_S(INFO) << "c4";
-              c4 = cumulant::Correlator(15, q4map);
+              c4 = cumulant::Correlator(51, q8map);
               C4Ngap = c4.v.real();
               wC4Ngap = c4.w.real();
 
               //LOG_S(INFO) << "c4of6";
-              c4of6 = cumulant::Correlator(29, q6map);
+              //c4of6 = cumulant::Correlator(29, q6map);
               //LOG_S(INFO) << "c4of8";
-              c4of8 = cumulant::Correlator(101, q8map);
+              //c4of8 = cumulant::Correlator(101, q8map);
 
               //LOG_S(INFO) << "c6";
-              c6 = cumulant::Correlator(63, q6map);
+              c6 = cumulant::Correlator(119, q8map);
               C6Ngap = c6.v.real();
               wC6Ngap = c6.w.real();
 
