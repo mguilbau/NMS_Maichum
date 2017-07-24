@@ -144,7 +144,7 @@ void cumulants( size_t order ){
 	// cumulant::QTerms qt;
 	// qt.generate( order, true );
 
-	cumulant::Correlator C( 0b111010, q );
+	cumulant::Correlator C( 58, q );
 
 
 	// size_t nTerms = sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] );
