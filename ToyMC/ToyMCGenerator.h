@@ -29,7 +29,7 @@
 namespace toymc
 {
 //Particle distribution enum
-enum class PartDist
+enum PartDist
 {
    kConst = 0,
    kPtDep
