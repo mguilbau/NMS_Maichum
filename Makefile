@@ -118,7 +118,7 @@ clean:
 
 
 ToyMC/cint_dictionary.cxx: ToyMC/LinkDef.h
-	rootcint -v4 -f $@ -c ToyMC/ToyMCEvent.h ToyMC/ToyMCParticle.h ToyMC/ToyMCGenerator.h $<
+	rootcint -v4 -f $@ -c ToyMC/ToyMCEvent.h ToyMC/ToyMCGenerator.h $<
 	-@[ -e "ToyMC/cint_dictionary_rdict.pcm" ] && mv -f ToyMC/cint_dictionary_rdict.pcm bin/		# ROOT 6
 
 ToyMC/cint_dictionary.o: ToyMC/cint_dictionary.cxx

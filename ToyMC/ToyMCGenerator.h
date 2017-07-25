@@ -185,7 +185,7 @@ public:
 		this->_plc.set(pt, eta, phi);
         }
 
-	void generate( int nevts = -1, std::string filename = "ToyMC.root" )
+	void generate( int nevts = -1)
 	{
 		LOG_SCOPE_FUNCTION( INFO );
 
