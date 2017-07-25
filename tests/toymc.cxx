@@ -278,11 +278,11 @@ void genAndAnalyzeTree(int harm,
         //#####################################
 	for(int ievt = 0; ievt < nEvt; ievt++)
 	{
-              std::cout <<
-              "\rToyMCGenerator::INFO:: ievt = " << ievt
-              <<
-              " ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nEvt)*100  << " %"
-              << std::flush;
+              //std::cout <<
+              //"\rToyMCGenerator::INFO:: ievt = " << ievt
+              //<<
+              //" ~~~> " << std::setprecision(3) << (double)((double)ievt / (double)nEvt)*100  << " %"
+              //<< std::flush;
 
               qN.reset();
               //q2.reset();
