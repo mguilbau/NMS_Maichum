@@ -17,8 +17,6 @@ ROOT_ARCH      	= $(shell root-config --arch)
 
 
 CXX             := g++ -c -g -std=c++11
-#CXX             := g++ -c -g -std=c++14
-#CXXFLAGS        := -std=c++0x -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS)
 CXXFLAGS        := -fPIC -Wall -Wextra -pedantic $(ROOTCFLAGS)
 CPPFLAGS        := -I. -I./vendor/loguru
 
