@@ -1,20 +1,31 @@
 #!/bin/bash
 
 IN_DIR="/afs/cern.ch/user/m/mguilbau/cumulantStudy/MultiCumulants/"
-OUT_DIR="/afs/cern.ch/work/m/mguilbau/cumulant"
+#OUT_DIR="/afs/cern.ch/work/m/mguilbau/cumulant"
+OUT_DIR="/eos/cms/store/user/mguilbau/ToyMC"
 
 jobID=$1
 Nevt=$2
+Njobs=$3
 if test -z "$jobID"; then
   echo "Usage as: "
   echo "  - 1st argument: JobID [jobnumbers]"
   echo "  - 2nd argument: N events [nevents]"
+  echo "  - 3rd argument: N jobs [njobs]"
  exit 123;
 fi
 if test -z "$Nevt"; then
   echo "Usage as: "
   echo "  - 1st argument: JobID [jobnumbers]"
   echo "  - 2nd argument: N events [nevents]"
+  echo "  - 3rd argument: N jobs [njobs]"
+ exit 123;
+fi
+if test -z "$Njobs"; then
+  echo "Usage as: "
+  echo "  - 1st argument: JobID [jobnumbers]"
+  echo "  - 2nd argument: N events [nevents]"
+  echo "  - 3rd argument: N jobs [njobs]"
  exit 123;
 fi
 
@@ -42,10 +53,13 @@ ls $tdir
 source $IN_DIR/env_script.sh
 make clean
 make
-fname="output_toymc_${Nevt}evts_jobID${jobID}"
-./bin/toymc.app --generate --analyze --nevents ${Nevt} --harm 2 --output $fname
+for ijob in `seq 1 ${Njobs}`; do
+   fname="output_toymc_${Nevt}evts_jobID${jobID}_mult${4}_${5}_vnfluct_${6}_${ijob}"
+   ./bin/toymc.app --generate --nevents ${Nevt} --harm 2 --output $fname --multmin $4 --multmax $5 --isVnfluct $6
+done
+
 mkdir -p ${OUT_DIR}/${jobID}
-mv $tdir/output/${fname}.root ${OUT_DIR}/${jobID}/.
+mv $tdir/output/*.root ${OUT_DIR}/${jobID}/.
 
 cd $IN_DIR
 rm -rf $tdir

@@ -546,7 +546,8 @@ void analyzeTree(std::string inFileName,
         UShort_t mult = 0;
         double C2Nstd = 0., C4Nstd = 0., C6Nstd = 0., C8Nstd = 0., wC2Nstd = 0., wC4Nstd = 0., wC6Nstd = 0., wC8Nstd = 0.;
         double C2Ngap = 0., C4Ngap = 0., C6Ngap = 0., C8Ngap = 0., wC2Ngap = 0., wC4Ngap = 0., wC6Ngap = 0., wC8Ngap = 0.;
-        TFile* fin = TFile::Open(Form("%s/%s.root", getenv("OUTPUTDIR"), inFileName.c_str()));
+        //TFile* fin = TFile::Open(Form("%s/%s.root", getenv("OUTPUTDIR"), inFileName.c_str()));
+        TFile* fin = TFile::Open(Form("%s.root", inFileName.c_str()));
         //Global
         TH1I* hmult = dynamic_cast<TH1I*>(fin->Get("hmult")->Clone()); 
         TH1D* hpt   = dynamic_cast<TH1D*>(fin->Get("hpt")->Clone()); 
