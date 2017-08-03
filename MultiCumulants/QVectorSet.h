@@ -49,7 +49,11 @@ namespace cumulant{
             }
 
             //Destructors
-            ~QVectorSet() {}
+            ~QVectorSet() 
+            {
+               this->_masks.clear();
+               std::vector<QVectorMask>().swap(this->_masks);
+            }
 
             virtual QVectorMap& getQ() { return this->_qvm;}
 

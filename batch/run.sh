@@ -98,10 +98,9 @@ make
 for ijob in `seq 1 ${Njobs}`; do
    fname="output_toymc_${Nevt}evts_jobID${jobID}_mult${multmin}_${multmax}_vnfluct_${vnfluct}_${ijob}"
    ./bin/toymc.app --generate --nevents ${Nevt} --harm 2 --output $fname --multmin ${multmin} --multmax ${multmax} --isVnfluct ${vnfluct}
+   mkdir -p ${OUT_DIR}/${jobID}
+   mv $tdir/output/${fname}.root ${OUT_DIR}/${jobID}/.
 done
-
-mkdir -p ${OUT_DIR}/${jobID}
-mv $tdir/output/*.root ${OUT_DIR}/${jobID}/.
 
 cd $IN_DIR
 rm -rf $tdir

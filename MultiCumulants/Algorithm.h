@@ -50,7 +50,7 @@ public:
 
         ~Combinations()
         {
-
+           std::vector< std::vector<unsigned short> >().swap( this->_combi );
         }
 
         void algo(int N, int K)

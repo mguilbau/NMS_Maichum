@@ -20,6 +20,7 @@
 ./bsub.sh 180 190 0
 ./bsub.sh 190 200 0
 ./bsub.sh 200 300 0
+./bsub.sh 300 500 0
 
 ./bsub.sh 10 20 1
 ./bsub.sh 20 30 1
@@ -41,4 +42,5 @@
 ./bsub.sh 180 190 1
 ./bsub.sh 190 200 1
 ./bsub.sh 200 300 1
+./bsub.sh 300 500 1
 

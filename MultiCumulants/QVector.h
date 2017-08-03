@@ -34,7 +34,10 @@ namespace cumulant{
 			}
 
 			//Destructors
-			~QVector() {}
+			~QVector()
+                        {
+                            
+                        }
 		
 			virtual const Complex& operator()(int index) const
 			{

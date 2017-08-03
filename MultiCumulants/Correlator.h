@@ -26,8 +26,14 @@ namespace cumulant{
         Correlator() : v(0, 0), w(0, 0) {
 
         }
+
         Correlator( NativeMask m, QVectorMap &qvm) : v(0, 0), w(0, 0) {
             build( m, qvm );
+        }
+
+        ~Correlator()
+        {
+
         }
 
         int factorial( int n ){

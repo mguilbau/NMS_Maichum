@@ -45,6 +45,7 @@ bench_*.dat
 
 #batch files
 LSFJOB_*
+core.*
 
 .vscode/
 lldb_shim_os_python.sh
