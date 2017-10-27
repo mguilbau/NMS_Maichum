@@ -100,17 +100,21 @@ public:
 	 */
 	ToyMCGenerator()
 	{
-		LOG_SCOPE_FUNCTION( INFO );
+                LOG_SCOPE_FUNCTION( INFO );
+                LOG_F( WARNING, "NO RANDOM SEED GIVEN!" );
 		commonPartDistSetup( PartDist::kConst, 0, 1000, 0., 10., -10., 10.);
                 commonVnSetup();
 	}
 
-	ToyMCGenerator( PartDist partdist, 
+        ToyMCGenerator( size_t seed,
+                        PartDist partdist, 
                         int multmin, int multmax,
                         double ptmin,  double ptmax,
                         double etamin, double etamax )
 	{
-		LOG_SCOPE_FUNCTION( INFO );
+                LOG_SCOPE_FUNCTION( INFO );
+                LOG_F( INFO, "RANDOM SEED=%lu", seed );
+                gRandom->SetSeed( seed );
 		commonPartDistSetup( partdist, multmin, multmax, ptmin, ptmax, etamin, etamax );
                 commonVnSetup();
 	}

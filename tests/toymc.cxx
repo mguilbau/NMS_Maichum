@@ -32,7 +32,8 @@
 
 using namespace std;
 
-void genAndAnalyzeTree(int harm,
+void genAndAnalyzeTree(size_t seed,
+                       int harm,
                        double ptMin,   double ptMax,
                        double etaMin,  double etaMax,
                        double multMin, double multMax,
@@ -57,7 +58,8 @@ main(int argc, char** argv) {
 
 	parser.add("generate", '\0', "generate ToyMc");
 	parser.add("analyze", '\0', "analyze ToyMc output");
-	parser.add<int>("nevents", '\0', "number of events to generate/analyze", false, -1);
+        parser.add<size_t>("seed", '\0', "seed for all random number generators", true );
+        parser.add<int>("nevents", '\0', "number of events to generate/analyze", false, -1);
 	parser.add<int>("harm", '\0', "harmonic to generate/analyze", false, 2);
 	parser.add<double>("ptmin", '\0', "ptmin to generate/analyze", false, 0.3);
 	parser.add<double>("ptmax", '\0', "ptmax to generate/analyze", false, 3.0);
@@ -72,7 +74,8 @@ main(int argc, char** argv) {
 	parser.parse_check( argc, argv );
 
 	if ( parser.exist( "generate" ) && !parser.exist( "analyze" )  ){
-        	genAndAnalyzeTree( parser.get<int>( "harm" ),
+        	genAndAnalyzeTree( parser.get<size_t>( "seed" ),
+                                   parser.get<int>( "harm" ),
                                    parser.get<double>( "multmin" ),
                                    parser.get<double>( "multmax" ),
                                    parser.get<double>( "ptmin" ),
@@ -97,7 +100,8 @@ main(int argc, char** argv) {
 }
 //
 
-void genAndAnalyzeTree(int harm,
+void genAndAnalyzeTree(size_t seed,
+                       int harm,
                        double multMin, double multMax,
                        double ptMin,   double ptMax,
                        double etaMin,  double etaMax,
@@ -105,7 +109,7 @@ void genAndAnalyzeTree(int harm,
                        std::string outFileName)
 {
 
-	toymc::ToyMCGenerator g(toymc::PartDist::kConst, multMin, multMax, ptMin, ptMax, etaMin, etaMax);
+	toymc::ToyMCGenerator g(seed, toymc::PartDist::kConst, multMin, multMax, ptMin, ptMax, etaMin, etaMax);
         TF1* fvn = new TF1("fvn", g._sPDF.c_str(), 0., 2*TMath::Pi());
         if(isVnFluct) g.isVnFluct(true);
 	LOG_S(INFO) << g.toString();

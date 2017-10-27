@@ -76,10 +76,12 @@ namespace cumulant{
         void build( NativeMask m, QVectorMap &qvm){
             //LOG_SCOPE_FUNCTION(INFO);
             // just save for printing
+            // these are needed only for verbose printing
             _m = m;
             std::string cmsg = "";
             std::string cdelim = "";
             std::stringstream sstr;
+
             auto bm = std::bitset<8>( m );
             size_t maskBitsSet = countSetBits( m );
             LOG_IF_F( INFO, DEBUG, "nSetBits(mask) = %lu", maskBitsSet );
@@ -87,17 +89,23 @@ namespace cumulant{
             auto lut = NativeMaskLUTs[ maskBitsSet-2 ];    
 
             size_t nTerms = lut.size();
+            
             Complex qv(0, 0);
             Complex qw(0, 0);
+
             for ( size_t i = 0; i < nTerms; i++ ){
                 LOG_IF_F( INFO, DEBUG, "\n\nTERM %lu", i );
                 
                 double totalK = 1.0;
                 Complex tv(0,0);
                 Complex tw(0,0);
+
+                // only used for DEBUG printout
                 std::string msg = "";
                 std::string qmsg = "";
                 std::string qvmsg = "";
+
+
                 for ( size_t j = 0; j < lut[ i ].size(); j++ ){
                     NativeMask tm = lut[ i ][ j ];
                     NativeMask em = expandMask( tm, m );
@@ -111,15 +119,18 @@ namespace cumulant{
                     if ( qvm.count( bem ) == 0 ){
                         LOG_F( WARNING, "QVector not found! mask=%s", bem.to_string().c_str() );
                     }
+                    
                     auto q = qvm[ bem ];
                     double ck = (pow(-1, q._i) * factorial(q._i));
                     totalK *= ck;
-                    qmsg += "" + maskString( em );
-                    msg += "*" + bem.to_string();
-
-                    sstr.str("");
-                    sstr << std::setprecision(3) << "Q(" <<q.getQV().real() << "+" << q.getQV().imag() << "i)";
-                    qvmsg += sstr.str();
+                    if ( true == DEBUG ){
+                        qmsg += "" + maskString( em );
+                        msg += "*" + bem.to_string();
+    
+                        sstr.str("");
+                        sstr << std::setprecision(3) << "Q(" <<q.getQV().real() << "+" << q.getQV().imag() << "i)";
+                        qvmsg += sstr.str();
+                    }
 
 
                     if ( 0 == j ){
@@ -133,18 +144,22 @@ namespace cumulant{
 
                 } // loop on j
 
-                LOG_IF_F( INFO, DEBUG, "%ld * %s", (Coefficient)totalK, qmsg.c_str() );
-                if ( i == 0 || ( i > 0 && totalK < 0 ) )
-                    cmsg += "\n" + std::to_string( (Coefficient)totalK ) + "*" + qmsg + "\t\t = " + qvmsg;
-                else if ( i > 0 && totalK > 0)
-                    cmsg += "\n+" + std::to_string( (Coefficient)totalK ) + "*" + qmsg + "\t\t = " + qvmsg;
+                if ( true == DEBUG ){
+                    LOG_IF_F( INFO, DEBUG, "%ld * %s", (Coefficient)totalK, qmsg.c_str() );
+                    if ( i == 0 || ( i > 0 && totalK < 0 ) )
+                        cmsg += "\n" + std::to_string( (Coefficient)totalK ) + "*" + qmsg + "\t\t = " + qvmsg;
+                    else if ( i > 0 && totalK > 0)
+                        cmsg += "\n+" + std::to_string( (Coefficient)totalK ) + "*" + qmsg + "\t\t = " + qvmsg;
+                }
+                
 
                 qv += tv * totalK;
                 qw += tw * totalK;
 
             } // loop on i terms
     
-            // LOG_F( INFO, "Correlator = %s", cmsg.c_str() );
+            LOG_IF_F( INFO, DEBUG, "Correlator = %s", cmsg.c_str() );
+
             this->repr = cmsg;
 
             this->v = qv;
