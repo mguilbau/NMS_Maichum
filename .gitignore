@@ -49,4 +49,7 @@ core.*
 
 .vscode/
 lldb_shim_os_python.sh
-profiles/
+profiles/partitions/log
+profile/
+run.sh
+partitions/log

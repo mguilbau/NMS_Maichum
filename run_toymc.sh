@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /Users/jdb/bnl/vendor/root-5.34.36/root/bin/thisroot.sh
+source ~/bnl/vendor/root-5.34.36/root/bin/thisroot.sh
 source ./env_script.sh
 
 # Generate a random seed for the job
