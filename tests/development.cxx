@@ -5,6 +5,7 @@
 #include "MultiCumulants/Subsets.h"
 #include "MultiCumulants/Algorithm.h"
 #include "MultiCumulants/Correlator.h"
+#include "MultiCumulants/Cumulant.h"
 
 #include "vendor/cmdline.h"
 
@@ -145,6 +146,11 @@ void cumulants( size_t order ){
 	// qt.generate( order, true );
 
 	cumulant::Correlator C( 58, q );
+
+	cumulant::Cumulant cum( 7 );
+	cum.buildCorrelators( q );
+
+	cum.buildCumulant();
 
 
 	// size_t nTerms = sizeof( cumulant::QTERMS_h8 ) / sizeof( cumulant::QTERMS_h8[0] );

@@ -2,6 +2,13 @@
 
 namespace cumulant{
 
+    CoefficientLUT QTERMS_h1_KCOEFF = {1};
+    CoefficientLUT QTERMS_h1_NCOEFF = {1};
+    NativeMaskLUT QTERMS_h1 = 
+    {
+        {1}
+    };
+
     CoefficientLUT QTERMS_h2_KCOEFF = {-1, 1};
     CoefficientLUT QTERMS_h2_NCOEFF = {1, -1};
     NativeMaskLUT QTERMS_h2 = 
@@ -5336,6 +5343,7 @@ namespace cumulant{
 
 
     const std::vector<NativeMaskLUT> NativeMaskLUTs = {
+        QTERMS_h1,
         QTERMS_h2,
         QTERMS_h3,
         QTERMS_h4,
@@ -5347,6 +5355,7 @@ namespace cumulant{
 
 
     std::vector<CoefficientLUT> CoefficientKs = {
+        QTERMS_h1_KCOEFF,
         QTERMS_h2_KCOEFF,
         QTERMS_h3_KCOEFF,
         QTERMS_h4_KCOEFF,

@@ -34,6 +34,7 @@ HEADERS         :=          MultiCumulants/QVector.h \
 							MultiCumulants/Subsets.h \
 							MultiCumulants/Algorithm.h \
 							MultiCumulants/Correlator.h \
+							MultiCumulants/Cumulant.h \
 							ToyMC/ToyMCEvent.h \
 							ToyMC/ToyMCGenerator.h \
 							ToyMC/ToyMCParticle.h \
@@ -59,7 +60,7 @@ include ToyMC/Makefile
 ###########################################################################
 # Generic development testing binary
 tests/development.o: tests/development.cxx $(HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -O3 $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/dev.app: tests/development.o
 	@mkdir -p bin

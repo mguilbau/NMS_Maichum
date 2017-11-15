@@ -36,12 +36,28 @@ namespace cumulant{
 
         }
 
-        int factorial( int n ){
-            if ( n <= 1 ) return 1;
-            return n * factorial( n - 1 );
+        Correlator& operator+=(const Correlator& rhs){
+            assert( this->_m == rhs._m && "Cannot add Correlators of different terms" );
+            this->v += rhs.v;
+            this->w += rhs.w;
+
+            return *this;
         }
 
-        size_t countSetBits(NativeMask m){
+        Correlator& operator*=(const Correlator& rhs){
+            assert( this->_m == rhs._m && "Cannot operate on Correlators of different terms" );
+            this->v *= rhs.v;
+            this->w *= rhs.w;
+
+            return *this;
+        }
+
+        static int factorial( int n ){
+            if ( n <= 1 ) return 1;
+            return n * Correlator::factorial( n - 1 );
+        }
+
+        static size_t countSetBits(NativeMask m){
             size_t count = 0;
             while (m){
                 m &= (m-1) ;
@@ -55,7 +71,7 @@ namespace cumulant{
         // example :
         // given im=0101, and mm=00110101
         // returns rm = 00010001, ie 1st and 3rd set bits in mask
-        NativeMask expandMask( NativeMask im, NativeMask mm, size_t start = 0, size_t stop = 8 ){
+        static NativeMask expandMask( NativeMask im, NativeMask mm, size_t start = 0, size_t stop = 8 ){
 
             vector<size_t> mlut;
             size_t n = 0;
@@ -77,16 +93,16 @@ namespace cumulant{
             //LOG_SCOPE_FUNCTION(INFO);
             // just save for printing
             // these are needed only for verbose printing
-            _m = m;
+            this->_m = m;
             std::string cmsg = "";
             std::string cdelim = "";
             std::stringstream sstr;
 
-            auto bm = std::bitset<8>( m );
-            size_t maskBitsSet = countSetBits( m );
+            auto bm = std::bitset<MAX_SET_SIZE>( m );
+            size_t maskBitsSet = Correlator::countSetBits( m );
             LOG_IF_F( INFO, DEBUG, "nSetBits(mask) = %lu", maskBitsSet );
 
-            auto lut = NativeMaskLUTs[ maskBitsSet-2 ];    
+            auto lut = NativeMaskLUTs[ maskBitsSet-1 ];    
 
             size_t nTerms = lut.size();
             
@@ -108,10 +124,10 @@ namespace cumulant{
 
                 for ( size_t j = 0; j < lut[ i ].size(); j++ ){
                     NativeMask tm = lut[ i ][ j ];
-                    NativeMask em = expandMask( tm, m );
+                    NativeMask em = Correlator::expandMask( tm, m );
                     
-                    auto btm = std::bitset<8>( tm );
-                    auto bem = std::bitset<8>( em );
+                    auto btm = std::bitset<MAX_SET_SIZE>( tm );
+                    auto bem = std::bitset<MAX_SET_SIZE>( em );
                     
                     LOG_IF_F( INFO, DEBUG, "NativeMask=%s", std::bitset<8>( tm ).to_string().c_str() );
                     LOG_IF_F( INFO, DEBUG, "expandMask( im=%s, mm=%s ) = %s", btm.to_string().c_str(), bm.to_string().c_str(), bem.to_string().c_str() );
@@ -151,7 +167,6 @@ namespace cumulant{
                     else if ( i > 0 && totalK > 0)
                         cmsg += "\n+" + std::to_string( (Coefficient)totalK ) + "*" + qmsg + "\t\t = " + qvmsg;
                 }
-                
 
                 qv += tv * totalK;
                 qw += tw * totalK;
