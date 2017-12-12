@@ -13,7 +13,7 @@ bin/toymc.app: $(TOYMC) ToyMC/cint_dictionary.o
 	$(LD) $(LDFLAGS) ${ROOTGLIBS} ${ROOTLIBS} -o $@ $^
 
 # Produces .o files for ToyMC
-$(TOYMC) : %.o: %.cxx
+$(TOYMC) : %.o: %.cxx check_gcc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 -include .depend_toymc

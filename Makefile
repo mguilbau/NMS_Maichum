@@ -26,6 +26,11 @@ LDFLAGS         := $(ROOTCFLAGS)
 #LDFLAGS         := -Wl $(ROOTCFLAGS)
 SOFLAGS         := -shared
 
+MINGXXVERSION := 4.1
+GXXVERSION := $(shell g++ -dumpversion | cut -f1,2,3 -d.)
+GXXVERSIONGTEQ4 := $(shell expr `g++ -dumpversion | cut -f1,2 -d.` \>= $(MINGXXVERSION))
+
+
 #------------------------------------------------------------------------------
 HEADERS         :=          MultiCumulants/QVector.h \
 							MultiCumulants/QVectorSet.h \
@@ -52,14 +57,27 @@ HEADERS         :=          MultiCumulants/QVector.h \
 # Objects to compile into ToyMc binary
 TOYMC           := tests/toymc.o
 
+
+
 # this works for make v 3.8 and newer
 .DEFAULT_GOAL := toymc
 
+# 
+check_gcc:
+ifeq "$(GXXVERSIONGTEQ4)" "1"
+	@echo "Using g++ version: $(GXXVERSION)"
+else 
+	$(error ERROR: must use g++ version $(MINGXXVERSION) or newer)
+endif
+
+
 include ToyMC/Makefile
+
+
 
 ###########################################################################
 # Generic development testing binary
-tests/development.o: tests/development.cxx $(HEADERS)
+tests/development.o: tests/development.cxx $(HEADERS) check_gcc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/dev.app: tests/development.o
@@ -74,7 +92,7 @@ dev:bin/dev.app
 
 ############################################################################
 # Generic partition testing binary
-tests/partition.o: tests/partition.cxx $(HEADERS)
+tests/partition.o: tests/partition.cxx $(HEADERS) check_gcc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/part.app: tests/partition.o
