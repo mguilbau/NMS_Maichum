@@ -18,16 +18,16 @@ namespace cumulant{
     public:
         bool DEBUG = false;
         Complex v;
-        Complex w;
+        Real w;
 
         std::string repr;
         NativeMask _m;
 
-        Correlator() : v(0, 0), w(0, 0) {
+        Correlator() : v(0, 0), w(0) {
 
         }
 
-        Correlator( NativeMask m, QVectorMap &qvm) : v(0, 0), w(0, 0) {
+        Correlator( NativeMask m, QVectorMap &qvm) : v(0, 0), w(0) {
             build( m, qvm );
         }
 
@@ -107,14 +107,14 @@ namespace cumulant{
             size_t nTerms = lut.size();
             
             Complex qv(0, 0);
-            Complex qw(0, 0);
+            Real qw(0);
 
             for ( size_t i = 0; i < nTerms; i++ ){
                 LOG_IF_F( INFO, DEBUG, "\n\nTERM %lu", i );
                 
                 double totalK = 1.0;
                 Complex tv(0,0);
-                Complex tw(0,0);
+                Real tw(0);
 
                 // only used for DEBUG printout
                 std::string msg = "";
@@ -185,7 +185,10 @@ namespace cumulant{
         }
 
         Complex calculate(  ){
-            return (this->v.real() / this->w.real());
+            if(this->w != 0. ) 
+               return (this->v / this->w);
+            else
+               return 0;
         }
 
 
@@ -221,7 +224,7 @@ namespace cumulant{
             std::string s = "";
             s += "Correlator( m=" + std::bitset<8>( _m ).to_string() + " )[ ";
             s += "v=" + std::to_string( v.real() ) + " + " + std::to_string( v.imag() ) + "i, ";
-            s += "w=" + std::to_string( w.real() ) + " + " + std::to_string( w.imag() ) + "i";
+            s += "w=" + std::to_string( w );
             s += " ]";
             return s;
 

@@ -1,6 +1,6 @@
 #!/bin/bash
-echo "source /afs/cern.ch/sw/lcg/contrib/gcc/4.9.2/x86_64-slc6/setup.sh"
-source /afs/cern.ch/sw/lcg/contrib/gcc/4.9.2/x86_64-slc6/setup.sh
+#echo "source /afs/cern.ch/sw/lcg/contrib/gcc/4.9.2/x86_64-slc6/setup.sh"
+#source /afs/cern.ch/sw/lcg/contrib/gcc/4.9.2/x86_64-slc6/setup.sh
 export WORKDIR=$PWD
 echo $WORKDIR
 export MULTICUMUDIR="$WORKDIR/MultiCumulants"

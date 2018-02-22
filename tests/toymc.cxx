@@ -135,29 +135,29 @@ void genAndAnalyzeTree(size_t seed,
         //Init subset for subevent method
         cumulant::Subset sub1(2);
         sub1.set(0, "pt", 0.3, 3.0);
-        sub1.set(1, "eta", -2.4, 0.);
+        sub1.set(1, "eta", -2.4, 2.4);
         cumulant::Subset sub2(2);
         sub2.set(0, "pt", 0.3, 3.0);
-        sub2.set(1, "eta", -2.4, 0.);
+        sub2.set(1, "eta", -2.4, 2.4);
         cumulant::Subset sub3(2);
         sub3.set(0, "pt", 0.3, 3.0);
-        sub3.set(1, "eta", -2.4, 0.);
+        sub3.set(1, "eta", -2.4, 2.4);
         cumulant::Subset sub4(2);
         sub4.set(0, "pt", 0.3, 3.0);
-        sub4.set(1, "eta", -2.4, 0.);
+        sub4.set(1, "eta", -2.4, 2.4);
 
         cumulant::Subset sub5(2);
         sub5.set(0, "pt", 0.3, 3.0);
-        sub5.set(1, "eta", 0., 2.4);
+        sub5.set(1, "eta", -2.4, 2.4);
         cumulant::Subset sub6(2);
         sub6.set(0, "pt", 0.3, 3.0);
-        sub6.set(1, "eta", 0., 2.4);
+        sub6.set(1, "eta", -2.4, 2.4);
         cumulant::Subset sub7(2);
         sub7.set(0, "pt", 0.3, 3.0);
-        sub7.set(1, "eta", 0., 2.4);
+        sub7.set(1, "eta", -2.4, 2.4);
         cumulant::Subset sub8(2);
         sub8.set(0, "pt", 0.3, 3.0);
-        sub8.set(1, "eta", 0., 2.4);
+        sub8.set(1, "eta", -2.4, 2.4);
 
         ////Init 2-p sub-event method
         //cumulant::Set set2(2);
@@ -365,7 +365,7 @@ void genAndAnalyzeTree(size_t seed,
               //LOG_S(INFO) << "c2";
               c2 = cumulant::Correlator(17, q8map);
               C2Ngap = c2.v.real();
-              wC2Ngap = c2.w.real();
+              wC2Ngap = c2.w;
 
               //LOG_S(INFO) << "c2of4";
               //c2of4 = cumulant::Correlator(5, q4map);
@@ -373,7 +373,7 @@ void genAndAnalyzeTree(size_t seed,
               //LOG_S(INFO) << "c4";
               c4 = cumulant::Correlator(51, q8map);
               C4Ngap = c4.v.real();
-              wC4Ngap = c4.w.real();
+              wC4Ngap = c4.w;
 
               //LOG_S(INFO) << "c4of6";
               //c4of6 = cumulant::Correlator(29, q6map);
@@ -383,11 +383,11 @@ void genAndAnalyzeTree(size_t seed,
               //LOG_S(INFO) << "c6";
               c6 = cumulant::Correlator(119, q8map);
               C6Ngap = c6.v.real();
-              wC6Ngap = c6.w.real();
+              wC6Ngap = c6.w;
 
               c8 = cumulant::Correlator(255, q8map);
               C8Ngap = c8.v.real();
-              wC8Ngap = c8.w.real();
+              wC8Ngap = c8.w;
 
               //Bilandzic code
               rN2 = cqN->calculate(2, hcN);
