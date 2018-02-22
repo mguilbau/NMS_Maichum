@@ -75,7 +75,7 @@ class Events {
 
 void checkParam(int argc, char** argv);
 void randomfunction( size_t h );
-void cumulants( size_t order, size_t nset, size_t nevents, size_t mult, int harm );
+void cumulants( size_t nevents, size_t mult );
 
 #define LAST(k,n) ((k) & ((1<<(n))-1))
 #define MID(k,m,n) LAST((k)>>(m),((n)-(m)))
@@ -110,11 +110,8 @@ int
 main(int argc, char** argv) {
 
 	cmdline::parser parser;
-	parser.add<size_t>("order", '\0', "cumulant order (benchmarks)", false, 4);
-	parser.add<size_t>("nset", '\0', "number of subsets", false, 4);
 	parser.add<size_t>("nevents", '\0', "number of events", false, 1);
 	parser.add<size_t>("multmax", '\0', "event multiplicity", false, 1);
-	parser.add<int>("harm", '\0', "harmonic order", false, 2);
 	parser.parse_check( argc, argv );
 	
 	loguru::set_thread_name("MAIN");
@@ -123,17 +120,18 @@ main(int argc, char** argv) {
 	// logs everything to the debug.log file every run
 	loguru::add_file("bin/debug.log", loguru::Truncate, loguru::Verbosity_MAX);
 	
-	cumulants( parser.get<size_t>( "order" ),
-                   parser.get<size_t>( "nset" ),
-                   parser.get<size_t>( "nevents" ),
-                   parser.get<size_t>( "multmax" ),
-                   parser.get<int>( "harm" ) );
+	cumulants( parser.get<size_t>( "nevents" ),
+                   parser.get<size_t>( "multmax" ));
 	
 	return 0;
 }
 
-void cumulants( const size_t order, size_t nset, size_t nevents,  size_t mult, int harm ) 
+void cumulants( size_t nevents,  size_t mult ) 
 {
+        size_t order = 8;
+        size_t nset  = 8;
+        int harm = 2; 
+
 	LOG_F( INFO, "Cumulants( order=%zu )", order  );
 	cumulant::Set set(nset);
 	for ( size_t i = 0; i < nset; i++ ) {
@@ -144,6 +142,16 @@ void cumulants( const size_t order, size_t nset, size_t nevents,  size_t mult, i
 		set.setSubsetParams( i, ss );
 		LOG_S(INFO) << ss.toString();
 	}
+
+        cumulant::Set set_c2(set);
+        set_c2.resize(2);
+        //set_c2.getSet()[0].set(1, "eta", -2.4, 0);
+        //set_c2.getSet()[1].set(1, "eta",  0, 2.4);
+        cumulant::Set set_c4(set);
+        set_c4.resize(4);
+        cumulant::Set set_c6(set);
+        set_c6.resize(6);
+
 	LOG_S(INFO) << set.toString();
 
         //Get random distributions
@@ -190,9 +198,27 @@ void cumulants( const size_t order, size_t nset, size_t nevents,  size_t mult, i
            else               h[hh] = -1*harm;
         }
 	LOG_F( INFO, "HarmonicVector.size()=%zu", h.size() );
+	HarmonicVector h2(2);
+        h2[0] =  1*harm;
+        h2[1] = -1*harm;
+	HarmonicVector h4(4);
+        h4[0] =  1*harm;
+        h4[1] =  1*harm;
+        h4[2] = -1*harm;
+        h4[3] = -1*harm;
+	HarmonicVector h6(6);
+        h6[0] =  1*harm;
+        h6[1] =  1*harm;
+        h6[2] =  1*harm;
+        h6[3] = -1*harm;
+        h6[4] = -1*harm;
+        h6[5] = -1*harm;
 
 	std::vector<double> val(2,0.);
         std::bitset<8> bitset;
+        std::bitset<2> bitset2;
+        std::bitset<4> bitset4;
+        std::bitset<6> bitset6;
 
         //Init standard method
         correlations::QVector qstd(0, 0, true);
@@ -216,11 +242,17 @@ void cumulants( const size_t order, size_t nset, size_t nevents,  size_t mult, i
 
         //cumulant building
 	cumulant::QVectorSet qv(h, set, true);
+	cumulant::QVectorSet qv2(h2, set_c2, true);
+	cumulant::QVectorSet qv4(h4, set_c4, true);
+	cumulant::QVectorSet qv6(h6, set_c6, true);
 
 	for (size_t n = 0; n < nEvt; ++n) {
 	   //LOG_S(INFO) << "\n" << qv.maskString() << endl;
 	   qstd.reset();
 	   qv.reset();
+	   qv2.reset();
+	   qv4.reset();
+	   qv6.reset();
 
            LOG_S(INFO) << "Event number = " << n+1;
 	   for (size_t m = 0; m < nMult; ++m) {
@@ -235,31 +267,45 @@ void cumulants( const size_t order, size_t nset, size_t nevents,  size_t mult, i
                //Cumulate
                qstd.fill( evtvec[n].getPhi()[m], evtvec[n].getW()[m] );
 	       qv.fill( val, evtvec[n].getPhi()[m], evtvec[n].getW()[m] );
+	       qv2.fill( val, evtvec[n].getPhi()[m], evtvec[n].getW()[m] );
+	       qv4.fill( val, evtvec[n].getPhi()[m], evtvec[n].getW()[m] );
+	       qv6.fill( val, evtvec[n].getPhi()[m], evtvec[n].getW()[m] );
 	   }
 	   LOG_S(INFO) << qv.print();
 	   cumulant::QVectorMap& q = qv.getQ();
+	   cumulant::QVectorMap& q2 = qv2.getQ();
+	   cumulant::QVectorMap& q4 = qv4.getQ();
+	   cumulant::QVectorMap& q6 = qv6.getQ();
 	   std::vector<cumulant::Correlator> cn;
            cn.resize(order/2);
 
            //c2
            bitset.set(0);
            bitset.set(4);
+           bitset2.set();
            LOG_S(INFO) << " bitset cn2 = " << bitset;
+           LOG_S(INFO) << " bitset c2 = " << bitset2;
            cn[0] = cumulant::Correlator( bitset.to_ulong(), q );
+	   cumulant::Correlator c2( bitset2.to_ulong(), q2 );
            //Bilandzic code
            rN2 = cstd->calculate(2, hstd);
            LOG_S(INFO) << " New FWK ~~> c_{" << harm << "}{2} = " << cn[0].calculate() << endl;
+           LOG_S(INFO) << " New FWK2~~> c_{" << harm << "}{2} = " << c2.calculate() << endl;
            LOG_S(INFO) << " Old FWK ~~> c_{" << harm << "}{2} = " << rN2.eval() << endl;
            //c4
            if(order > 2)
            {
               bitset.set(1);
               bitset.set(5);
+              bitset4.set();
               LOG_S(INFO) << " bitset cn4 = " << bitset;
+              LOG_S(INFO) << " bitset c4 = " << bitset4;
               cn[1] = cumulant::Correlator( bitset.to_ulong(), q );
+	      cumulant::Correlator c4( bitset4.to_ulong(), q4 );
               //Bilandzic code
               rN4 = cstd->calculate(4, hstd);
               LOG_S(INFO) << " New FWK ~~> c_{" << harm << "}{4} = " << cn[1].calculate() << endl;
+              LOG_S(INFO) << " New FWK2~~> c_{" << harm << "}{4} = " << c4.calculate() << endl;
               LOG_S(INFO) << " Old FWK ~~> c_{" << harm << "}{4} = " << rN4.eval() << endl;
            }
            //c6
@@ -267,11 +313,15 @@ void cumulants( const size_t order, size_t nset, size_t nevents,  size_t mult, i
            {
               bitset.set(2);
               bitset.set(6);
+              bitset6.set();
               LOG_S(INFO) << " bitset cn6 = " << bitset;
+              LOG_S(INFO) << " bitset c6 = " << bitset6;
               cn[2] = cumulant::Correlator( bitset.to_ulong(), q );
+	      cumulant::Correlator c6( bitset6.to_ulong(), q6 );
               //Bilandzic code
               rN6 = cstd->calculate(6, hstd);
               LOG_S(INFO) << " New FWK ~~> c_{" << harm << "}{6} = " << cn[2].calculate() << endl;
+              LOG_S(INFO) << " New FWK2~~> c_{" << harm << "}{6} = " << c6.calculate() << endl;
               LOG_S(INFO) << " Old FWK ~~> c_{" << harm << "}{6} = " << rN6.eval() << endl;
            }
            //c8

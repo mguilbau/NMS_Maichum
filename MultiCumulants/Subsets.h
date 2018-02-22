@@ -157,6 +157,10 @@ public:
                 this->_set.resize(size);
         }
 
+        Set(const Set& set){
+                this->_set = set.getSet();
+        }
+
         ~Set() {
                 this->_set.clear();
                 std::vector<Subset>().swap(this->_set);
@@ -204,7 +208,8 @@ public:
           this->_set.resize(size);
         }
 
-        virtual std::vector<Subset> getSet() { return _set; }
+        virtual std::vector<Subset> getSet()       { return _set; }
+        virtual std::vector<Subset> getSet() const { return _set; }
 
 	std::string toString(){
 		std::string s = "";
