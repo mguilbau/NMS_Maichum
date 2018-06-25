@@ -44,6 +44,7 @@ HEADERS         :=      MultiCumulants/QVector.h \
 			ToyMC/ToyMCGenerator.h \
 			ToyMC/ToyMCParticle.h \
                         ToyMC/ToyMCDistGenerator.h \
+                        ToyMC/ToyMCFlowDistGenerator.h \
 			correlations/Correlator.hh \
 			correlations/FromQVector.hh \
 			correlations/NestedLoops.hh \

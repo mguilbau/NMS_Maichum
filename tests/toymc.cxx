@@ -20,6 +20,7 @@
 #include "MultiCumulants/QVector.h"
 #include "MultiCumulants/QVectorSet.h"
 #include "MultiCumulants/Correlator.h"
+#include "ToyMC/ToyMCFlowDistGenerator.h"
 #include "ToyMC/ToyMCDistGenerator.h"
 #include "ToyMC/ToyMCGenerator.h"
 #include "ToyMC/BranchReader.h"
@@ -68,6 +69,7 @@ main(int argc, char** argv) {
 
 	cmdline::parser parser;
 
+	parser.add("flowdist", '\0', "generate flow distribution for ToyMC");
 	parser.add("partdist", '\0', "generate particle distribution for ToyMC");
 	parser.add("real", '\0', "generate realistic particle distribution for ToyMC");
 	parser.add("generate", '\0', "generate ToyMc");
@@ -87,6 +89,18 @@ main(int argc, char** argv) {
 
 	parser.parse_check( argc, argv );
 
+        if ( parser.exist( "flowdist" ) )
+        {
+           toymc::ToyMCDistGenerator dist_test;
+           TF1*f = dist_test.getFunction();
+            
+           TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), "test_flow_dist_prod"), "RECREATE");
+           //f->Write("mytestfunction");
+           fout->Close();
+           delete fout;
+       
+           delete f;
+        }
         if ( parser.exist( "partdist" ) )
         {
                 if ( parser.exist( "real" ) )
