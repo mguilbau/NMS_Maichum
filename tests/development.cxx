@@ -7,6 +7,8 @@
 #include "MultiCumulants/Correlator.h"
 #include "MultiCumulants/Cumulant.h"
 
+#include "ToyMC/ToyMCDistGenerator.h"
+
 #include <correlations/Types.hh>
 #include <correlations/Result.hh>
 #include <correlations/QVector.hh>
@@ -22,7 +24,9 @@
 #include <chrono>
 #include <fstream>
 #include <iterator>
- 
+
+#include "TH1D.h" 
+
 using namespace std;
 
 class Events {
@@ -120,8 +124,16 @@ main(int argc, char** argv) {
 	// logs everything to the debug.log file every run
 	loguru::add_file("bin/debug.log", loguru::Truncate, loguru::Verbosity_MAX);
 	
-	cumulants( parser.get<size_t>( "nevents" ),
-                   parser.get<size_t>( "multmax" ));
+	//cumulants( parser.get<size_t>( "nevents" ),
+        //           parser.get<size_t>( "multmax" ));
+
+        toymc::ToyMCDistGenerator g(10, 0., 200., "foo");
+        g.setFunction("0*x + 1");
+        g.generate();
+        TH1D* h = g.getHisto();
+        TF1* f = g.getFunction();
+        
+        g.saveHist("test.root");
 	
 	return 0;
 }

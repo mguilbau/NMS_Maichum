@@ -20,6 +20,7 @@
 #include "MultiCumulants/QVector.h"
 #include "MultiCumulants/QVectorSet.h"
 #include "MultiCumulants/Correlator.h"
+#include "ToyMC/ToyMCDistGenerator.h"
 #include "ToyMC/ToyMCGenerator.h"
 #include "ToyMC/BranchReader.h"
 #include "ToyMC/TClonesArrayReader.h"
@@ -44,6 +45,17 @@ void analyzeTree(std::string inFileName,
                  std::string outFileName,
                  int nEvt = -1);
 
+void distributionProd( double multmin,
+                       double multmax,
+                       std::string multformula,
+                       double ptmin,
+                       double ptmax,  
+                       std::string ptformula,
+                       double etamin,
+                       double etamax,
+                       std::string etaformula, 
+                       std::string outFileName);
+
 int 
 main(int argc, char** argv) {
 	loguru::set_thread_name("MAIN");
@@ -56,9 +68,11 @@ main(int argc, char** argv) {
 
 	cmdline::parser parser;
 
+	parser.add("partdist", '\0', "generate particle distribution for ToyMC");
+	parser.add("real", '\0', "generate realistic particle distribution for ToyMC");
 	parser.add("generate", '\0', "generate ToyMc");
 	parser.add("analyze", '\0', "analyze ToyMc output");
-        parser.add<size_t>("seed", '\0', "seed for all random number generators", true );
+        parser.add<size_t>("seed", '\0', "seed for all random number generators", false );
         parser.add<int>("nevents", '\0', "number of events to generate/analyze", false, -1);
 	parser.add<int>("harm", '\0', "harmonic to generate/analyze", false, 2);
 	parser.add<double>("ptmin", '\0', "ptmin to generate/analyze", false, 0.3);
@@ -73,7 +87,36 @@ main(int argc, char** argv) {
 
 	parser.parse_check( argc, argv );
 
-	if ( parser.exist( "generate" ) && !parser.exist( "analyze" )  ){
+        if ( parser.exist( "partdist" ) )
+        {
+                if ( parser.exist( "real" ) )
+                {
+                   distributionProd( parser.get<double>( "multmin" ),
+                                     parser.get<double>( "multmax" ),
+                                     "exp(log(0.569982) + TMath::LnGamma(2.799728+x) - TMath::LnGamma(2.799728) - TMath::LnGamma(x+1) + log(31.995258 / (31.995258+2.799728)) * x + log(1.0 + 31.995258/2.799728) * -2.799728)",
+                                     parser.get<double>( "ptmin" ),
+                                     parser.get<double>( "ptmax" ),
+                                     "x*exp(-1*(sqrt(pow(2.5,2)+pow(x,2)))/(5))",
+                                     parser.get<double>( "etamin" ),
+                                     parser.get<double>( "etamax" ),
+                                     "5.1*exp(-0.5*x*x/3.11/3.11)-5*exp(-0.5*x*x/3.06/3.06)", 
+                                     parser.get<std::string>( "output" ) );
+                }
+                else
+                {
+                   distributionProd( parser.get<double>( "multmin" ),
+                                     parser.get<double>( "multmax" ),
+                                     "0*x+1",
+                                     parser.get<double>( "ptmin" ),
+                                     parser.get<double>( "ptmax" ),
+                                     "0*x+1",
+                                     parser.get<double>( "etamin" ),
+                                     parser.get<double>( "etamax" ),
+                                     "0*x+1", 
+                                     parser.get<std::string>( "output" ) );
+                 }
+        }
+	else if ( parser.exist( "generate" ) && !parser.exist( "analyze" )  ){
         	genAndAnalyzeTree( parser.get<size_t>( "seed" ),
                                    parser.get<int>( "harm" ),
                                    parser.get<double>( "multmin" ),
@@ -99,6 +142,54 @@ main(int argc, char** argv) {
         return 0; 
 }
 //
+
+void distributionProd( double multmin,
+                       double multmax,
+                       std::string multformula,
+                       double ptmin,
+                       double ptmax,  
+                       std::string ptformula,
+                       double etamin,
+                       double etamax,
+                       std::string etaformula, 
+                       std::string outFileName)
+{
+        toymc::ToyMCDistGenerator gmult(static_cast<int>(multmax-multmin), 
+                                        multmin, 
+                                        multmax, 
+                                        "multDist");
+        gmult.setFunction(multformula);
+        gmult.generate();
+
+        toymc::ToyMCDistGenerator geta(static_cast<int>((etamax-etamin)*100), 
+                                        etamin, 
+                                        etamax, 
+                                        "etaDist");
+        geta.setFunction(etaformula);
+        geta.generate();
+
+        toymc::ToyMCDistGenerator gpt(static_cast<int>((ptmax-ptmin)*100), 
+                                        ptmin, 
+                                        ptmax, 
+                                        "ptDist");
+        gpt.setFunction(ptformula);
+        gpt.generate();
+
+        toymc::ToyMCDistGenerator gphi(static_cast<int>(2.*TMath::Pi()*100), 
+                                        0., 
+                                        2.*TMath::Pi(), 
+                                        "phiDist");
+        gphi.setFunction("0*x+1");
+        gphi.generate();
+
+        TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), outFileName.c_str()), "recreate");
+        TH1D* hmult = gmult.getHisto(); hmult->Write();
+        TH1D* heta  = geta.getHisto();  heta->Write();
+        TH1D* hpt   = gpt.getHisto() ;  hpt ->Write();
+        TH1D* hphi  = gphi.getHisto();  hphi->Write();
+        fout->Close();
+        delete fout;
+}
 
 void genAndAnalyzeTree(size_t seed,
                        int harm,

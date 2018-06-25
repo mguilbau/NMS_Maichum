@@ -32,27 +32,28 @@ GXXVERSIONGTEQ4 := $(shell expr `g++ -dumpversion | cut -f1,2 -d.` \>= $(MINGXXV
 
 
 #------------------------------------------------------------------------------
-HEADERS         :=          MultiCumulants/QVector.h \
-							MultiCumulants/QVectorSet.h \
-							MultiCumulants/NativeMaskLUT.h \
-							MultiCumulants/QTerms.h \
-							MultiCumulants/Subsets.h \
-							MultiCumulants/Algorithm.h \
-							MultiCumulants/Correlator.h \
-							MultiCumulants/Cumulant.h \
-							ToyMC/ToyMCEvent.h \
-							ToyMC/ToyMCGenerator.h \
-							ToyMC/ToyMCParticle.h \
-							correlations/Correlator.hh \
-							correlations/FromQVector.hh \
-							correlations/NestedLoops.hh \
-							correlations/QVector.hh \
-							correlations/Result.hh \
-							correlations/Types.hh \
-							correlations/closed/FromQVector.hh \
-							correlations/recurrence/FromQVector.hh \
-							correlations/recursive/FromQVector.hh \
-							correlations/recursive/NestedLoops.hh
+HEADERS         :=      MultiCumulants/QVector.h \
+			MultiCumulants/QVectorSet.h \
+			MultiCumulants/NativeMaskLUT.h \
+			MultiCumulants/QTerms.h \
+			MultiCumulants/Subsets.h \
+			MultiCumulants/Algorithm.h \
+			MultiCumulants/Correlator.h \
+			MultiCumulants/Cumulant.h \
+			ToyMC/ToyMCEvent.h \
+			ToyMC/ToyMCGenerator.h \
+			ToyMC/ToyMCParticle.h \
+                        ToyMC/ToyMCDistGenerator.h \
+			correlations/Correlator.hh \
+			correlations/FromQVector.hh \
+			correlations/NestedLoops.hh \
+			correlations/QVector.hh \
+			correlations/Result.hh \
+			correlations/Types.hh \
+			correlations/closed/FromQVector.hh \
+			correlations/recurrence/FromQVector.hh \
+			correlations/recursive/FromQVector.hh \
+			correlations/recursive/NestedLoops.hh
 
 # Objects to compile into ToyMc binary
 TOYMC           := tests/toymc.o
