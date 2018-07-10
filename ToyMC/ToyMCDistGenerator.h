@@ -63,13 +63,19 @@ public:
            }
 
            function_ = new TF1("function", formula_.c_str(), histo_->GetXaxis()->GetXmin(), histo_->GetXaxis()->GetXmax());
-           function_->SetNpx( 1000 );
+           function_->SetNpx( histo_->GetNbinsX() );
 
            for(int ibin = 0; ibin < histo_->GetNbinsX(); ++ibin)
            {
               histo_->SetBinContent(ibin+1, function_->Eval(histo_->GetBinLowEdge(ibin+1))); 
            }
         }      
+
+        void setHistoParam( int nbins, double min, double max, std::string title )
+        {
+                LOG_SCOPE_FUNCTION( INFO );
+                histo_ = new TH1D(title.c_str(), "", nbins, min, max);
+        }
 
         void saveHist( std::string fileName )
         {
@@ -88,6 +94,12 @@ public:
 
         TF1*  getFunction() { return function_; }
         TH1D* getHisto()    { return histo_; }
+
+        void printFormula()
+        {
+               LOG_S(INFO) << "ToyMCDistGenerator::Printing current formula...";
+               LOG_S(INFO) << formula_.c_str();
+        }
 
 private:
         TH1D* histo_;

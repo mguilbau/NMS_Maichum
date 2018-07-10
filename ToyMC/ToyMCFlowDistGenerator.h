@@ -31,13 +31,31 @@ public:
 	ToyMCFlowDistGenerator( )
 	{
                 LOG_SCOPE_FUNCTION( INFO );
-                formula_ = "x/TMath::Power([0],2)*TMath::Exp(-1.*(x*x + [1]*[1])/2./TMath::Power([0],2))*TMath::BesselI0(x*[1]/TMath::Power([0],2))";
+                mean_  = 0.1;
+                width_ = 0.4;
 	}
 
-	ToyMCFlowDistGenerator( int nbins, double min, double max, std::string title )
+	ToyMCFlowDistGenerator( int nbins, std::string title )
 	{
                 LOG_SCOPE_FUNCTION( INFO );
-                formula_ = "x/TMath::Power([0],2)*TMath::Exp(-1.*(x*x + [1]*[1])/2./TMath::Power([0],2))*TMath::BesselI0(x*[1]/TMath::Power([0],2))";
+                mean_  = 0.1;
+                width_ = 0.4;
+                setHistoParam( nbins, 0., 1., title );
+	}
+
+	ToyMCFlowDistGenerator( double mean, double width, int nbins, std::string title )
+	{
+                LOG_SCOPE_FUNCTION( INFO );
+                mean_  = mean;
+                width_ = width;
+                setHistoParam( nbins, 0., 1., title );
+	}
+
+	ToyMCFlowDistGenerator( double mean, double width)
+	{
+                LOG_SCOPE_FUNCTION( INFO );
+                mean_  = mean;
+                width_ = width;
 	}
 
         ~ToyMCFlowDistGenerator()
@@ -45,9 +63,26 @@ public:
                 LOG_SCOPE_FUNCTION( 9 );
         }
 
-private:
-        std::string formula_;
+        void setBGParam(double mean, double width)
+        {
+                mean_  = mean;
+                width_ = width;
+        }
 
+        void generateFormula()
+        {
+                setFunction( Form("x/TMath::Power(%f,2)*TMath::Exp(-1.*(x*x + %f*%f)/2./TMath::Power(%f,2))*TMath::BesselI0(x*%f/TMath::Power(%f,2))",
+                            width_, mean_, mean_, width_, mean_, width_));
+        }
+
+        void setHistoFlowDistParam( int nbins, std::string title )
+        {
+             setHistoParam( nbins, 0., 1., title );
+        }
+
+private:
+        double mean_;
+        double width_;
 };
 
 }

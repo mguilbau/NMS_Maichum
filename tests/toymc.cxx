@@ -57,6 +57,8 @@ void distributionProd( double multmin,
                        std::string etaformula, 
                        std::string outFileName);
 
+void distFlowProd( std::string outFileName );
+
 int 
 main(int argc, char** argv) {
 	loguru::set_thread_name("MAIN");
@@ -91,15 +93,7 @@ main(int argc, char** argv) {
 
         if ( parser.exist( "flowdist" ) )
         {
-           toymc::ToyMCDistGenerator dist_test;
-           TF1*f = dist_test.getFunction();
-            
-           TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), "test_flow_dist_prod"), "RECREATE");
-           //f->Write("mytestfunction");
-           fout->Close();
-           delete fout;
-       
-           delete f;
+            distFlowProd( parser.get<std::string>( "output" ) );
         }
         if ( parser.exist( "partdist" ) )
         {
@@ -156,6 +150,35 @@ main(int argc, char** argv) {
         return 0; 
 }
 //
+
+void distFlowProd( std::string outFileName )
+{
+        //generate the first flow distribution
+        toymc::ToyMCFlowDistGenerator flow_dist;
+        flow_dist.setBGParam(0.1,0.04);
+        flow_dist.generateFormula();
+        flow_dist.printFormula();
+
+        flow_dist.setHistoFlowDistParam( 1000, "flowdist_test" );
+        flow_dist.generate();
+
+        //generate a second flow distribution
+        toymc::ToyMCFlowDistGenerator flow_dist2;
+        flow_dist2.setBGParam(0.01,0.04);
+        flow_dist2.generateFormula();
+        flow_dist2.printFormula();
+
+        flow_dist2.setHistoFlowDistParam( 1000, "flowdist_test2" );
+        flow_dist2.generate();
+
+
+        //save all flow distribution in a root file
+        TFile* fout = new TFile(Form("%s/%s.root", getenv("OUTPUTDIR"), outFileName.c_str()), "recreate");
+        TH1D* hflow  = flow_dist.getHisto();  hflow->Write();
+        TH1D* hflow2 = flow_dist2.getHisto(); hflow2->Write();
+        fout->Close();
+        delete fout;
+}
 
 void distributionProd( double multmin,
                        double multmax,
